@@ -7,7 +7,7 @@ package fish;
 import java.util.LinkedList;
 
 import saito.objloader.OBJModel;
-import engine.Coordinate;
+import engine.Vector3D;
 import engine.Diet;
 import engine.HappinessStatus;
 import engine.Qualify;
@@ -43,7 +43,9 @@ public abstract class Fish {
 	public LinkedList <Qualify> properties;
 	public OBJModel model;
 	public String sprite;
-	public Coordinate position;
+	public Vector3D position;
+	public Vector3D orientation;
+	public Vector3D dimensions;
 	public int index;
 
 	public int setHealth(){

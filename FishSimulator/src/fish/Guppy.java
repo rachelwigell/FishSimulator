@@ -1,6 +1,6 @@
 package fish;
 
-import engine.Coordinate;
+import engine.Vector3D;
 import engine.Diet;
 import engine.Qualify;
 import graphics.Visual;
@@ -40,7 +40,9 @@ public class Guppy extends Fish{
     this.sprite = "guppy.png";
     this.model.scale(30);
     this.model.translateToCenter();
-    this.position = new Coordinate(0, 0, 0);
+    this.position = new Vector3D(0, 0, 0);
+    this.orientation = new Vector3D(0, 0, 0);
+    this.dimensions = new Vector3D(60, 22, 9);
     
     diet.add(Diet.FLAKE);
     diet.add(Diet.FROZEN);

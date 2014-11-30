@@ -40,6 +40,7 @@ public class Tank {
 	public int susceptibleFish;
 	public int predators;
 	public int prey;
+	public LinkedList<Poop> poops;
 
 	public final double roomTemp = 22;
 	public final double pi = 3.14159;
@@ -93,6 +94,7 @@ public class Tank {
 		this.susceptibleFish = 0;
 		this.predators = 0;
 		this.prey = 0;
+		this.poops = new LinkedList<Poop>();
 	}
 
 	Tank(double plants,
@@ -237,7 +239,7 @@ public class Tank {
 		return nitrobacter;
 	}
 
-	int changeWaste(){
+	public int changeWaste(Visual visual){
 		int waste = 0;
 		Random random = new Random();
 		for(Fish f: this.fish){
@@ -245,6 +247,7 @@ public class Tank {
 			int rand = random.nextInt(500);
 			if(rand < threshold){
 				waste++;
+				addPoop(visual, f);
 			}
 		}
 		return waste;
@@ -297,6 +300,10 @@ public class Tank {
 		this.nitrosomonas = percent*.01 + (1-percent)*this.nitrosomonas;
 		this.nitrobacter = percent*.01 + (1-percent)*this.nitrobacter;
 		return this;
+	}
+	
+	public void addPoop(Visual visual, Fish f){
+		this.poops.add(new Poop(visual, f));
 	}
 
 	/*String loneRecommendation(Fish aFish){
@@ -358,7 +365,7 @@ public class Tank {
 		double nitrate = Math.min(Math.max(this.nitrate + timeScale * this.changeNitrate(), 0), 1000000);
 		double nitrosomonas = Math.min(Math.max(this.nitrosomonas + timeScale * this.changeNitrosomonas(), .01), 1000000);
 		double nitrobacter = Math.min(Math.max(this.nitrobacter + timeScale * this.changeNitrobacter(), .01), 1000000);
-		int waste = this.waste + this.changeWaste();
+		int waste = this.waste + this.changeWaste(visual);
 		int time = this.getTime();
 
 		//do assignment after so that all calculations are accurate

@@ -15,18 +15,19 @@ import controlP5.ListBox;
 import controlP5.Slider;
 import controlP5.Textarea;
 import controlP5.Textfield;
-import engine.Coordinate;
+import engine.Poop;
 import engine.Tank;
 import engine.TankSize;
+import engine.Vector3D;
 import fish.Fish;
 import fish.Guppy;
 
 public class Visual extends PApplet{
 	private static final long serialVersionUID = 1L;
-	final int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width;
-	final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
-	final int fieldZ = 700;
-	final float zoomPercentage = (float) .85;
+	public final int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width;
+	public final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
+	public final int fieldZ = 700;
+	public final float zoomPercentage = (float) .85;
 	final Fish[] speciesList = {new Guppy(this, "Swimmy")};
 
 	ControlP5 infoPane;
@@ -174,7 +175,7 @@ public class Visual extends PApplet{
 		/**************************************************
 		 * OPTIONS TAB INITIALIZATION *
 		 *************************************************/
-		
+
 		/*****BUTTONS*****/
 
 		infoPane.addButton("addFish")
@@ -200,7 +201,7 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-90, 85)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0));
-		
+
 		/*****ADD FISH UI*****/
 
 		fishSpecies = new ListBox(infoPane, "fishspecies")
@@ -239,7 +240,7 @@ public class Visual extends PApplet{
 		.hide();
 
 		/*****WATER CHANGE UI*****/
-		
+
 		waterChangeInfo = new Textarea(infoPane, "waterChangeInfo")
 		.setSize(295, 100)
 		.setPosition(fieldX-315, 120)
@@ -247,9 +248,9 @@ public class Visual extends PApplet{
 		.setText("Changing the water can help bring chemistry back to neutral values,"
 				+ " but be careful of over-changing since this will also get rid of some of"
 				+ " the helpful bacteria that live in the water.")
-		.moveTo("default")
-		.hide();
-		
+				.moveTo("default")
+				.hide();
+
 		percentWater = new Slider(infoPane, "percentWater")
 		.setSize(220, 20)
 		.setPosition(fieldX-315, 200)
@@ -268,7 +269,7 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-80, 200)
 		.setLabel("OK")
 		.hide();
-		
+
 		/**************************************************
 		 * TANKINFO TAB INITIALIZATION *
 		 *************************************************/
@@ -437,11 +438,12 @@ public class Visual extends PApplet{
 	}
 
 	public void draw(){
-		Coordinate bcolor = backgroundColor();
+		Vector3D bcolor = backgroundColor();
 		background(bcolor.x, bcolor.y, bcolor.z);
 		int color = spotlightColor();
 		spotLight(color, color, color, fieldX/4, 0, 400, 0, 0, -1, PI/4, 0);
 		drawAllFish();
+		drawPoops();
 		drawTank();
 		if(updateCount > 150){ //operations to happen every 5 seconds
 			tank.progress(this);
@@ -475,7 +477,7 @@ public class Visual extends PApplet{
 			}
 		}
 		else if(key == 'q'){
-			tank.fish.remove(0);
+			//developer tests go here
 		}
 	}
 
@@ -590,8 +592,11 @@ public class Visual extends PApplet{
 	void drawFish(Fish fish){
 		noStroke();
 		pushMatrix();
-		translate(3*fieldX/8, fieldY/2, -fieldZ+zoomPercentage*fieldZ/4);
+		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
 		translate(fish.position.x, fish.position.y, fish.position.z);
+		rotateX(fish.orientation.x);
+		rotateY(fish.orientation.y);
+		rotateZ(fish.orientation.z);
 		fish.model.draw();
 		popMatrix();
 	}
@@ -600,6 +605,23 @@ public class Visual extends PApplet{
 		for(Fish f: this.tank.fish){
 			drawFish(f);
 		}
+	}
+
+	public void drawPoops(){
+		for(Poop p: this.tank.poops){
+			drawPoop(p);
+			p.updatePosition();
+		}
+	}
+
+	public void drawPoop(Poop p){
+		noStroke();
+		pushMatrix();
+		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
+		translate(p.position.x, p.position.y, p.position.z);
+		fill(p.color.x, p.color.y, p.color.z);
+		sphere(p.dimensions.x);
+		popMatrix();		
 	}
 
 	/**************************************************
@@ -671,7 +693,7 @@ public class Visual extends PApplet{
 
 				nicknameInput.show()
 				.setCaptionLabel("Choose a nickname!");	
-				
+
 				confirmAdd.show()
 				.setCaptionLabel("Add " + choice.name);
 			}
@@ -699,7 +721,7 @@ public class Visual extends PApplet{
 		percentWater.show();
 		confirmWaterChange.show();
 	}
-	
+
 	void confirmAdd(float theValue){
 		String nickname = nicknameInput.getText();
 		if(nickname.equals("")){
@@ -718,7 +740,7 @@ public class Visual extends PApplet{
 			nicknameInput.setCaptionLabel(species + " named " +  nickname + " added!");
 		}
 	}
-	
+
 	void confirmWaterChange(float theValue){
 		percentWater.setValueLabel(percentWater.getValue() + "% water change performed");
 		tank.waterChange(percentWater.getValue());
@@ -821,16 +843,16 @@ public class Visual extends PApplet{
 	 * HELPER FUNCTIONS *
 	 *************************************************/
 
-	public Coordinate backgroundColor(){
+	public Vector3D backgroundColor(){
 		int time = tank.time;
-		return new Coordinate((int) ((160.0/1020.0)*(720-Math.abs(720-time) + 300)), (int) ((180.0/1020.0)*(720-Math.abs(720-time) + 300)), (int) ((200.0/1020.0)*(720-Math.abs(720-time) + 300)));
+		return new Vector3D((int) ((160.0/1020.0)*(720-Math.abs(720-time) + 300)), (int) ((180.0/1020.0)*(720-Math.abs(720-time) + 300)), (int) ((200.0/1020.0)*(720-Math.abs(720-time) + 300)));
 	}
 
 	public int spotlightColor(){
 		int time = tank.time;
 		return (int) ((255.0/1020.0)*(720-Math.abs(720-time) + 300));
 	}
-	
+
 	public void addFishToTank(String speciesName, String nickname){
 		Fish toAdd = null;
 		switch(speciesName){
