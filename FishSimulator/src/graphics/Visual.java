@@ -198,7 +198,7 @@ public class Visual extends PApplet{
 
 		fishSpecies = new ListBox(infoPane, "fishspecies")
 		.setPosition(fieldX-315, 120)
-		.setSize(295, 300)
+		.setSize(295, 360)
 		.setLabel("fish species")
 		.setId(1)
 		.disableCollapse()
@@ -210,13 +210,13 @@ public class Visual extends PApplet{
 		}
 
 		speciesInfo = new Textarea(infoPane, "speciesInfo")
-		.setSize(295, 300)
-		.setPosition(fieldX-315, 460)
+		.setSize(295, 150)
+		.setPosition(fieldX-315, fieldY-380)
 		.setFont(createFont("arial", 12))
 		.moveTo("default");
 
 		speciesImage = new Button(infoPane, "speciesImage")
-		.setPosition(fieldX-135, 440)
+		.setPosition(fieldX-135, fieldY-390)
 		.moveTo("default")
 		.hide();
 
@@ -266,7 +266,7 @@ public class Visual extends PApplet{
 		fishChoices = new ListBox(infoPane, "fishChoices")
 		.setSize(295, fieldY-480)
 		.setPosition(fieldX-315, 420)
-		.setLabel("fish choices")
+		.setLabel("your fish")
 		.setId(0)
 		.disableCollapse()
 		.moveTo("fishinfo");
@@ -474,6 +474,7 @@ public class Visual extends PApplet{
 		fishSpecies.hide();
 		speciesImage.hide();
 		speciesInfo.hide();
+		nicknameInput.clear();
 		nicknameInput.hide();
 		confirmAdd.hide();
 	}
@@ -655,12 +656,17 @@ public class Visual extends PApplet{
 		if(nickname.equals("")){
 			nicknameInput.setCaptionLabel("Please input a nickname for your fish!");	
 		}
+		else if(nickname.length() > 20){
+			nicknameInput.setCaptionLabel("Name too long! Please choose another a name under 20 characters.");
+		}
 		else if(!tank.validateNickname(nickname)){
 			nicknameInput.setCaptionLabel("You already have a fish with that name! Please choose another name.");			
 		}
 		else{
 			String species = speciesList[(int) fishSpecies.value()].name;
-			addFish(species, nickname);
+			addFishToTank(species, nickname);
+			nicknameInput.clear();
+			nicknameInput.setCaptionLabel(species + " named " +  nickname + " added!");
 		}
 	}
 
@@ -771,7 +777,7 @@ public class Visual extends PApplet{
 		return (int) ((255.0/1020.0)*(720-Math.abs(720-time) + 300));
 	}
 	
-	public void addFish(String speciesName, String nickname){
+	public void addFishToTank(String speciesName, String nickname){
 		Fish toAdd = null;
 		switch(speciesName){
 		case "Guppy":
@@ -779,7 +785,7 @@ public class Visual extends PApplet{
 			tank.addFish(toAdd);
 			break;
 		}
-		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1); //TODO: enforce that no two fish of the same species can have the same nickname
+		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);
 	}
 
 }
