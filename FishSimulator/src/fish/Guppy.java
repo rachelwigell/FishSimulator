@@ -40,9 +40,10 @@ public class Guppy extends Fish{
     this.ratio = 2;
     this.schooling = 0;
     this.properties = new LinkedList <Qualify>();
-    this.sprite = new OBJModel(window, "guppy.obj", Visual.POLYGON);
-    this.sprite.scale(30);
-    this.sprite.translateToCenter();
+    this.model = new OBJModel(window, "guppy.obj", Visual.POLYGON);
+    this.sprite = "guppy.png";
+    this.model.scale(30);
+    this.model.translateToCenter();
     this.position = new Coordinate(0, 0, 0);
     
     diet.add(Diet.FLAKE);

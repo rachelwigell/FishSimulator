@@ -148,7 +148,7 @@ public class Tank {
 		}
 		return cmFish;
 	}
-	
+
 	public int getTime(){
 		Date date = new Date();
 		return 60 * date.getHours() + date.getMinutes();
@@ -207,7 +207,7 @@ public class Tank {
 	double changeCO2(){
 		double photosynthesis = (.5+.5*Math.sin(pi/720.0*this.time-pi/2.0))*this.plants*this.co2;
 		double respiration = (this.cmFish+this.plants)*this.o2;
-		double co2 = .2*(respiration-photosynthesis+this.surfaceArea)/this.volume+(this.co2+this.o2)*((100-this.temp)-(this.co2+this.o2))/this.volume;
+		double co2 = .15*(respiration-photosynthesis+this.surfaceArea)/this.volume+(this.co2+this.o2)*((100-this.temp)-(this.co2+this.o2))/this.volume;
 		return co2;
 	}
 
@@ -334,7 +334,7 @@ public class Tank {
 			f.setHealth(); //update fish's health
 			f.handleDeceased(visual); //check if fish is dead and perform necessary operations if so
 		}
-		
+
 		//tank operations
 		double cmFish = this.changeFish();
 		double pH = this.pH + timeScale * this.changePH();
@@ -367,11 +367,18 @@ public class Tank {
 		this.waste = waste;
 		this.time = time;
 	}
-	
+
 	public void skipAhead(Visual visual, int minutes){
 		for(int i = 0; i < minutes*12; i++){
 			this.progress(visual);
 		}
 		System.out.println("done calculating");
+	}
+
+	public boolean validateNickname(String nickname){
+		for(Fish f: fish){
+			if(f.nickname.equals(nickname)) return false;
+		}
+		return true;
 	}
 }

@@ -41,7 +41,8 @@ public abstract class Fish {
 	public double ratio;
 	public int schooling;
 	public LinkedList <Qualify> properties;
-	public OBJModel sprite;
+	public OBJModel model;
+	public String sprite;
 	public Coordinate position;
 	public int index;
 
