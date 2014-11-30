@@ -15,7 +15,10 @@ import controlP5.ListBox;
 import controlP5.Slider;
 import controlP5.Textarea;
 import controlP5.Textfield;
+import engine.ClickMode;
+import engine.Food;
 import engine.Poop;
+import engine.Sinkers;
 import engine.Tank;
 import engine.TankSize;
 import engine.Vector3D;
@@ -38,6 +41,7 @@ public class Visual extends PApplet{
 	Textarea speciesInfo;
 	Textfield nicknameInput;
 	Button confirmAdd;
+	Textarea foodCleanInfo;
 	Textarea waterChangeInfo;
 	Slider percentWater;
 	Button confirmWaterChange;
@@ -53,7 +57,12 @@ public class Visual extends PApplet{
 	int updateCount = 60; //cause text to be updated less frequently
 	public int fishChoice = -1;
 	public int activeTab = 0;
+	public ClickMode clickMode = ClickMode.INFO;
 
+	public int tankMinX = 99999;
+	public int tankMaxX = -1;
+	public int tankMinY = 99999;
+	public int tankMaxY = -1;
 
 	public Tank tank;
 
@@ -221,7 +230,8 @@ public class Visual extends PApplet{
 		.setSize(295, 150)
 		.setPosition(fieldX-315, fieldY-380)
 		.setFont(createFont("arial", 12))
-		.moveTo("default");
+		.moveTo("default")
+		.hide();
 
 		speciesImage = new Button(infoPane, "speciesImage")
 		.setPosition(fieldX-135, fieldY-390)
@@ -237,6 +247,14 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-315, fieldY-170)
 		.setSize(310, 20)
 		.align(CENTER, CENTER, CENTER, CENTER)
+		.hide();
+
+		/*****FEED / CLEAN UI*****/
+		foodCleanInfo = new Textarea(infoPane, "foodCleanInfo")
+		.setSize(295, 150)
+		.setPosition(fieldX-315, 120)
+		.setFont(createFont("arial", 12))
+		.moveTo("default")
 		.hide();
 
 		/*****WATER CHANGE UI*****/
@@ -435,6 +453,8 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-315, 135)
 		.setFont(createFont("arial", 12))
 		.moveTo("help");	
+		
+		determineBounds();
 	}
 
 	public void draw(){
@@ -443,8 +463,8 @@ public class Visual extends PApplet{
 		int color = spotlightColor();
 		spotLight(color, color, color, fieldX/4, 0, 400, 0, 0, -1, PI/4, 0);
 		drawAllFish();
-		drawPoops();
-		drawTank();
+		drawSinkers();
+		drawTank(true);
 		if(updateCount > 150){ //operations to happen every 5 seconds
 			tank.progress(this);
 			updateCount = 0;
@@ -477,7 +497,21 @@ public class Visual extends PApplet{
 			}
 		}
 		else if(key == 'q'){
-			//developer tests go here
+
+		}
+	}
+
+	public void mouseReleased(){
+		switch(clickMode){
+		case FEED:
+			if(mouseX >= tankMinX && mouseX <= tankMaxX && mouseY >= tankMinY && mouseY <= tankMaxY){
+				tank.addFood(this);
+			}
+			break;
+		case CLEAN:
+			break;
+		case INFO:
+			break;
 		}
 	}
 
@@ -525,6 +559,8 @@ public class Visual extends PApplet{
 		.setValueLabel("Change what percent of the water?")
 		.hide();
 		confirmWaterChange.hide();
+		foodCleanInfo.hide();
+		clickMode = ClickMode.INFO;
 	}
 
 	public void updateTankInfo(){
@@ -539,7 +575,7 @@ public class Visual extends PApplet{
 				+ "\n\n" + format.format(tank.co2) + "%"
 				+ "\n\n" + format.format(tank.nitrosomonas) + " bacteria"
 				+ "\n\n" + format.format(tank.nitrobacter) + " bactera"
-				+ "\n\n" + format.format(tank.food) + " noms"
+				+ "\n\n" + format.format(tank.food.size()) + " noms"
 				+ "\n\n" + format.format(tank.waste) + " poops");
 	}
 
@@ -566,7 +602,7 @@ public class Visual extends PApplet{
 		}
 	}
 
-	public void drawTank(){
+	public void drawTank(boolean withWater){
 		noStroke();
 		pushMatrix();
 		translate((int)(.4*fieldX), (int)(.8*fieldY), (int)(-fieldZ));
@@ -576,6 +612,7 @@ public class Visual extends PApplet{
 		translate(0, (int)(-.8*fieldY), 1);
 		fill(255);
 		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0);
+		fill(254);
 		translate((int)(zoomPercentage*.4*fieldX), 0, (int)(zoomPercentage*.25*fieldZ));
 		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ));
 		translate((int)(-zoomPercentage*.8*fieldX), 0, 0);
@@ -583,9 +620,11 @@ public class Visual extends PApplet{
 		translate((int)(zoomPercentage*.4*fieldX), (int)(zoomPercentage*.5*fieldY), 0);
 		fill(200);
 		box((int)(zoomPercentage*.8*fieldX), 0, (int)(zoomPercentage*.5*fieldZ));
-		fill(0, 0, 255, 30);
-		translate(0, (int)(-zoomPercentage*.5*fieldY) + (int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), 0);
-		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ));
+		if(withWater){
+			fill(0, 0, 255, 30);
+			translate(0, (int)(-zoomPercentage*.5*fieldY) + (int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), 0);
+			box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ));
+		}
 		popMatrix();
 	}
 
@@ -607,20 +646,24 @@ public class Visual extends PApplet{
 		}
 	}
 
-	public void drawPoops(){
+	public void drawSinkers(){
 		for(Poop p: this.tank.poops){
-			drawPoop(p);
+			drawSinker(p);
 			p.updatePosition();
+		}
+		for(Food f: this.tank.food){
+			drawSinker(f);
+			f.updatePosition();
 		}
 	}
 
-	public void drawPoop(Poop p){
+	public void drawSinker(Sinkers s){
 		noStroke();
 		pushMatrix();
 		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
-		translate(p.position.x, p.position.y, p.position.z);
-		fill(p.color.x, p.color.y, p.color.z);
-		sphere(p.dimensions.x);
+		translate(s.position.x, s.position.y, s.position.z);
+		fill(s.color.x, s.color.y, s.color.z);
+		sphere(s.dimensions.x);
 		popMatrix();		
 	}
 
@@ -709,10 +752,16 @@ public class Visual extends PApplet{
 
 	void feedFish(float theValue){
 		restoreDefaults();
+		foodCleanInfo.show()
+		.setText("Click inside the tank to drop food pellets.");
+		clickMode = ClickMode.FEED;
 	}
 
 	void cleanTank(float theValue){
 		restoreDefaults();
+		foodCleanInfo.show()
+		.setText("Click on visible waste to remove it from the tank.");
+		clickMode = ClickMode.CLEAN;
 	}
 
 	void changeWater(float theValue){
@@ -862,6 +911,28 @@ public class Visual extends PApplet{
 			break;
 		}
 		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);
+	}
+
+	public void determineBounds(){
+		noLights();
+		drawTank(true);
+		loadPixels();
+		draw();
+		int x = 0;
+		int y = 0;
+		for(int i: pixels){
+			if(i == -438181377){
+				if(x < tankMinX) tankMinX = x;
+				if(x > tankMaxX) tankMaxX = x;
+				if(y < tankMinY) tankMinY = y;
+				if(y > tankMaxY) tankMaxY = y;
+			}
+			x++;
+			if(x >= fieldX){
+				x = 0;
+				y++;
+			}
+		}
 	}
 
 }

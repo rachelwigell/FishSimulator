@@ -10,7 +10,6 @@ Make individuals unique with some randomness
 
 Non-functioning buttons:
 	Options:
-		feed fish
 		clean tank
 	Save:
 		save

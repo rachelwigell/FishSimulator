@@ -27,7 +27,7 @@ public class Tank {
 	public double nitrate; //ppm
 	public double nitrosomonas; //bacteria
 	public double nitrobacter; //bacteria
-	public double food; //pellets
+//	public double food; //pellets
 	public int waste; //poops
 	public int length; //cm
 	public int width; //cm
@@ -41,6 +41,7 @@ public class Tank {
 	public int predators;
 	public int prey;
 	public LinkedList<Poop> poops;
+	public LinkedList<Food> food;
 
 	public final double roomTemp = 22;
 	public final double pi = 3.14159;
@@ -86,7 +87,6 @@ public class Tank {
 		this.nitrate = 0;
 		this.nitrosomonas = .01;
 		this.nitrobacter = .01;
-		this.food=0;
 		this.waste=0;
 		this.time = getTime();
 		this.fish = new LinkedList<Fish>();
@@ -95,6 +95,7 @@ public class Tank {
 		this.predators = 0;
 		this.prey = 0;
 		this.poops = new LinkedList<Poop>();
+		this.food = new LinkedList<Food>();
 	}
 
 	Tank(double plants,
@@ -135,7 +136,6 @@ public class Tank {
 		this.nitrate=nitrate;
 		this.nitrosomonas=nitrosomonas;
 		this.nitrobacter=nitrobacter;
-		this.food=food;
 		this.waste=waste;
 		this.time = time;
 		this.fish = fish;
@@ -215,7 +215,7 @@ public class Tank {
 	}
 
 	double changeAmmonia(){
-		double ammonia = (.04*this.temp*this.pH*(this.waste + this.food + .5*this.cmFish) - .2*this.nitrosomonas*this.ammonia)/this.volume;
+		double ammonia = (.04*this.temp*this.pH*(this.waste + this.food.size() + .5*this.cmFish) - .2*this.nitrosomonas*this.ammonia)/this.volume;
 		return ammonia;
 	}
 
@@ -237,6 +237,10 @@ public class Tank {
 	double changeNitrobacter(){
 		double nitrobacter = .05*this.nitrite*this.nitrobacter-.4*this.nitrobacter;
 		return nitrobacter;
+	}
+	
+	public void addFood(Visual visual){
+		this.food.add(new Food(visual));
 	}
 
 	public int changeWaste(Visual visual){
@@ -266,25 +270,25 @@ public class Tank {
 	double eat(Fish aFish){
 		double total = totalHunger();
 		double eaten;
-		if(total > this.food){
-			double prop = this.food/total;
+		if(total > this.food.size()){
+			double prop = this.food.size()/total;
 			eaten = aFish.fullness * prop;
 		}
 		else{
 			eaten = aFish.fullness;
 		}
 		//		aFish.hunger = Math.max(aFish.hunger - eaten, 0);
-		this.food = Math.max(this.food - eaten, 0);
+//		this.food = Math.max(this.food.size() - eaten, 0);
 		return aFish.fullness;
 	}
 
 	public void cleaning(){
 		this.waste = 0;
-		this.food = 0;
+//		this.food = 0;
 	}
 
 	public void feeding(int food){
-		this.food = this.food + food;
+//		this.food = this.food + food;
 	}
 
 	public Tank waterChange(double percent){

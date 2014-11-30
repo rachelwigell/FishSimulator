@@ -3,7 +3,6 @@ package engine;
 import graphics.Visual;
 
 public abstract class Sinkers {
-	Visual visual;
 	public Vector3D position;
 	public Vector3D color;
 	public Vector3D velocity;
