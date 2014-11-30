@@ -1,4 +1,3 @@
-Ensure that nicknames are unique
 add food: click to place pellets in tank
 fish eat based on hunger and have to actually go to the food
 Save: write tank properties, fish properties, currentTimeMillis to a text file
@@ -6,10 +5,11 @@ Load: read tank, fish properties, compare currentTimeMillis to stored time, call
 clean tank: click waste to remove
 click a fish to see its status
 fish poop based on hunger and in discrete amounts w/ randomness
+reinstate aggression and predator/prey dynamics
+Make individuals unique with some randomness
 
 Non-functioning buttons:
 	Options:
-		add fish	
 		feed fish
 		clean tank
 		water change

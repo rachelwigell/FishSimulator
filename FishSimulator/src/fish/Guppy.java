@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package fish;
 
 import engine.Coordinate;
@@ -14,9 +10,9 @@ import java.util.LinkedList;
 import saito.objloader.OBJModel;
 
 public class Guppy extends Fish{
-    public Guppy(Visual window){
+    public Guppy(Visual window, String nickname){
     this.name = "Guppy";
-    this.nickname = "Swimmy";
+    this.nickname = nickname;
     this.timeWell = System.currentTimeMillis();
     this.ease = 5;
     this.health = this.ease;

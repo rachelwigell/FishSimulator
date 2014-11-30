@@ -153,7 +153,7 @@ public class Tank {
 		Date date = new Date();
 		return 60 * date.getHours() + date.getMinutes();
 	}
-
+	
 	public void addFish(Fish aFish){
 		this.fish.add(aFish);
 		this.cmFish = this.cmFish + aFish.size;

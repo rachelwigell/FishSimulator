@@ -14,6 +14,7 @@ import controlP5.ControlP5;
 import controlP5.ListBox;
 import controlP5.Slider;
 import controlP5.Textarea;
+import controlP5.Textfield;
 import engine.Coordinate;
 import engine.Tank;
 import engine.TankSize;
@@ -26,10 +27,16 @@ public class Visual extends PApplet{
 	final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
 	final int fieldZ = 700;
 	final float zoomPercentage = (float) .85;
+	final Fish[] speciesList = {new Guppy(this, "Swimmy")};
 
 	ControlP5 infoPane;
 	PeasyCam camera;
 
+	ListBox fishSpecies;
+	Button speciesImage;
+	Textarea speciesInfo;
+	Textfield nicknameInput;
+	Button confirmAdd;
 	Textarea tankInfo;
 	public ListBox fishChoices;
 	Textarea fishInfo;
@@ -64,7 +71,6 @@ public class Visual extends PApplet{
 		 *************************************************/
 
 		tank = new Tank(TankSize.MEDIUM);
-		tank.addFish(new Guppy(this));
 
 		/**************************************************
 		 * CONTROLP5 SETTINGS *
@@ -190,30 +196,65 @@ public class Visual extends PApplet{
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0));
 
+		fishSpecies = new ListBox(infoPane, "fishspecies")
+		.setPosition(fieldX-315, 120)
+		.setSize(295, 300)
+		.setLabel("fish species")
+		.setId(1)
+		.disableCollapse()
+		.moveTo("default")
+		.hide();
+
+		for(int i = 0; i < speciesList.length; i++){
+			fishSpecies.addItem(speciesList[i].name, i);
+		}
+
+		speciesInfo = new Textarea(infoPane, "speciesInfo")
+		.setSize(295, 300)
+		.setPosition(fieldX-315, 460)
+		.setFont(createFont("arial", 12))
+		.moveTo("default");
+
+		speciesImage = new Button(infoPane, "speciesImage")
+		.setPosition(fieldX-135, 440)
+		.moveTo("default")
+		.hide();
+
+		nicknameInput = new Textfield(infoPane, "nicknameInput")
+		.setPosition(fieldX-315, fieldY-220)
+		.setSize(310, 20)
+		.hide();
+
+		confirmAdd = new Button(infoPane, "confirmAdd")
+		.setPosition(fieldX-315, fieldY-170)
+		.setSize(310, 20)
+		.align(CENTER, CENTER, CENTER, CENTER)
+		.hide();
+
 		/**************************************************
 		 * TANKINFO TAB INITIALIZATION *
 		 *************************************************/
 
 		new Textarea(infoPane, "tankLabels")
-		.setSize(320, fieldY-136)
+		.setSize(295, fieldY-136)
 		.setPosition(fieldX-315, 85)
 		.setFont(createFont("arial", 12))
 		.setText("pH: "
-			+ "\n\nTemperature: "
-			+ "\n\nHardness: "
-			+ "\n\nAmmonia: "
-			+ "\n\nNitrite: "
-			+ "\n\nNitrate: "
-			+ "\n\nDissolved O2: "
-			+ "\n\nDissolved CO2: "
-			+ "\n\nNitrosomonas bacteria: "
-			+ "\n\nNitrobacter bacteria: "
-			+ "\n\nFood: "
-			+ "\n\nWaste: ")
-		.moveTo("tankinfo");
-		
+				+ "\n\nTemperature: "
+				+ "\n\nHardness: "
+				+ "\n\nAmmonia: "
+				+ "\n\nNitrite: "
+				+ "\n\nNitrate: "
+				+ "\n\nDissolved O2: "
+				+ "\n\nDissolved CO2: "
+				+ "\n\nNitrosomonas bacteria: "
+				+ "\n\nNitrobacter bacteria: "
+				+ "\n\nFood: "
+				+ "\n\nWaste: ")
+				.moveTo("tankinfo");
+
 		tankInfo = new Textarea(infoPane, "tankInfo")
-		.setSize(320, fieldY-136)
+		.setSize(295, fieldY-136)
 		.setPosition(fieldX-150, 85)
 		.setFont(createFont("arial", 12))
 		.moveTo("tankinfo");
@@ -223,20 +264,15 @@ public class Visual extends PApplet{
 		 *************************************************/
 
 		fishChoices = new ListBox(infoPane, "fishChoices")
-		.setSize(310, fieldY-480)
+		.setSize(295, fieldY-480)
 		.setPosition(fieldX-315, 420)
 		.setLabel("fish choices")
 		.setId(0)
 		.disableCollapse()
 		.moveTo("fishinfo");
 
-		for(int i = 0; i<tank.fish.size(); i++){
-			Fish f = tank.fish.get(i);
-			fishChoices.addItem(f.nickname + ": " + f.name, i); //TODO: enforce that no two fish of the same species can have the same nickname
-		}
-
 		fishInfo = new Textarea(infoPane, "fishInfo")
-		.setSize(320, 300)
+		.setSize(295, 300)
 		.setPosition(fieldX-315, 85)
 		.setFont(createFont("arial", 12))
 		.moveTo("fishinfo");
@@ -251,7 +287,7 @@ public class Visual extends PApplet{
 		.moveTo("fishinfo")
 		.hide();
 		fishHappiness.valueLabel().hide();
-		
+
 		fishFullness = new Slider(infoPane, "hunger")
 		.setSize(100, 20)
 		.setPosition(fieldX-315, 340)
@@ -262,7 +298,7 @@ public class Visual extends PApplet{
 		.moveTo("fishinfo")
 		.hide();
 		fishFullness.valueLabel().hide();
-		
+
 		fishHealth = new Slider(infoPane, "health")
 		.setSize(100, 20)
 		.setPosition(fieldX-315, 370)
@@ -273,7 +309,7 @@ public class Visual extends PApplet{
 		.moveTo("fishinfo")
 		.hide();
 		fishHealth.valueLabel().hide();
-		
+
 		fishImage = new Button(infoPane, "fishImage")
 		.setPosition(fieldX-135, 330)
 		.moveTo("fishinfo")
@@ -353,7 +389,7 @@ public class Visual extends PApplet{
 		infoPane.getController("fishHealth").moveTo("help");
 
 		helpText = new Textarea(infoPane, "helpText")
-		.setSize(320, fieldY-136)
+		.setSize(295, fieldY-136)
 		.setPosition(fieldX-315, 135)
 		.setFont(createFont("arial", 12))
 		.moveTo("help");	
@@ -435,6 +471,11 @@ public class Visual extends PApplet{
 		fishFullness.hide();
 		fishHealth.hide();
 		fishImage.hide();
+		fishSpecies.hide();
+		speciesImage.hide();
+		speciesInfo.hide();
+		nicknameInput.hide();
+		confirmAdd.hide();
 	}
 
 	public void updateTankInfo(){
@@ -461,9 +502,9 @@ public class Visual extends PApplet{
 			Fish f = tank.fish.get(fishChoice);
 			fishInfo.setText(f.nickname + ": " + f.name
 					+ "\n\nStatus: " + f.status.stringify()
-					+ "\n\nAmmonia ranges tolerated: 0-" + f.ammonia + "ppm"
-					+ "\nNitrite ranges tolerated: 0-" + f.nitrite + "ppm"
-					+ "\nNitrite ranges tolerated: 0-" + f.nitrate + "ppm"
+					+ "\n\nAmmonia ranges tolerated: 0-" + f.ammonia + " ppm"
+					+ "\nNitrite ranges tolerated: 0-" + f.nitrite + " ppm"
+					+ "\nNitrite ranges tolerated: 0-" + f.nitrate + " ppm"
 					+ "\npH ranges tolerated: " + f.minPH + "-" + f.maxPH
 					+ "\nTemperature ranges tolerated: " + f.minTemp + "-" + f.maxTemp + " C"
 					+ "\nHardness ranges tolerated: " + f.minHard + "-" + f.maxHard + " ppm"
@@ -542,46 +583,87 @@ public class Visual extends PApplet{
 			}
 		}
 		if(theControlEvent.isGroup()){
+			// fishinfo listbox
 			if(theControlEvent.group().id() == 0){
 				fishChoice = (int) fishChoices.value();
 				Fish choice = tank.fish.get(fishChoice);
-				
+
 				fishHappiness.show()
 				.setMax(choice.maxHappyFull)
 				.setValue(choice.happiness);
-				
+
 				fishFullness.show()
 				.setMax(choice.maxHappyFull)
 				.setValue(Math.max(0, choice.fullness));
-				
+
 				fishHealth.show()
 				.setMax(choice.ease)
 				.setValue(Math.max(0, choice.health));
-				
+
 				fishImage.show()
 				.setImage(loadImage(choice.sprite));
+			}
+			// speciesinfo listbox
+			if(theControlEvent.group().id() == 1){
+				int species = (int) fishSpecies.value();
+				Fish choice = speciesList[species];
+
+				speciesInfo.show()
+				.setText("Species: " + choice.name
+						+ "\nEase of care: " + choice.ease + "/5"
+						+ "\nSize: " + choice.size + "cm"
+						+ "\nAmmonia ranges tolerated: 0-" + choice.ammonia + " ppm"
+						+ "\nNitrite ranges tolerated: 0-" + choice.nitrite + " ppm"
+						+ "\nNitrite ranges tolerated: 0-" + choice.nitrate + " ppm"
+						+ "\npH ranges tolerated: " + choice.minPH + "-" + choice.maxPH
+						+ "\nTemperature ranges tolerated: " + choice.minTemp + "-" + choice.maxTemp + " C"
+						+ "\nHardness ranges tolerated: " + choice.minHard + "-" + choice.maxHard + " ppm");
+
+				speciesImage.show()
+				.setImage(loadImage(choice.sprite));
+
+				nicknameInput.show()
+				.setCaptionLabel("Choose a nickname!");	
+				
+				confirmAdd.show()
+				.setCaptionLabel("Add " + choice.name);
 			}
 		}
 	} 
 
 	/*****OPTIONS MENU BUTTONS*****/
-	
-	void addFish(float theValue){
 
+	void addFish(float theValue){
+		restoreDefaults();
+		fishSpecies.show();
 	}
 
 	void feedFish(float theValue){
-
+		restoreDefaults();
 	}
 
 	void cleanTank(float theValue){
-
+		restoreDefaults();
 	}
 
 	void changeWater(float theValue){
-
+		restoreDefaults();
 	}
 	
+	void confirmAdd(float theValue){
+		String nickname = nicknameInput.getText();
+		if(nickname.equals("")){
+			nicknameInput.setCaptionLabel("Please input a nickname for your fish!");	
+		}
+		else if(!tank.validateNickname(nickname)){
+			nicknameInput.setCaptionLabel("You already have a fish with that name! Please choose another name.");			
+		}
+		else{
+			String species = speciesList[(int) fishSpecies.value()].name;
+			addFish(species, nickname);
+		}
+	}
+
 	/*****SAVE MENU BUTTONS*****/
 
 	void save(float theValue){
@@ -591,7 +673,7 @@ public class Visual extends PApplet{
 	void load(float theValue){
 
 	}
-	
+
 	/*****HELP MENU BUTTONS*****/
 
 	void pH(float theValue){
@@ -687,6 +769,17 @@ public class Visual extends PApplet{
 	public int spotlightColor(){
 		int time = tank.time;
 		return (int) ((255.0/1020.0)*(720-Math.abs(720-time) + 300));
+	}
+	
+	public void addFish(String speciesName, String nickname){
+		Fish toAdd = null;
+		switch(speciesName){
+		case "Guppy":
+			toAdd = new Guppy(this, nickname);
+			tank.addFish(toAdd);
+			break;
+		}
+		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1); //TODO: enforce that no two fish of the same species can have the same nickname
 	}
 
 }
