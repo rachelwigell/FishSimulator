@@ -6,6 +6,7 @@ package engine;
  */
 import java.util.Date;
 import java.util.LinkedList;
+import java.util.Random;
 
 import fish.Fish;
 import graphics.Visual;
@@ -27,7 +28,7 @@ public class Tank {
 	public double nitrosomonas; //bacteria
 	public double nitrobacter; //bacteria
 	public double food; //pellets
-	public double waste; //poops
+	public int waste; //poops
 	public int length; //cm
 	public int width; //cm
 	public int height; //cm
@@ -109,7 +110,7 @@ public class Tank {
 			double nitrosomonas,
 			double nitrobacter,
 			double food,
-			double waste,
+			int waste,
 			int time,
 			LinkedList <Fish> fish,
 			int aggressiveFish,
@@ -212,7 +213,7 @@ public class Tank {
 	}
 
 	double changeAmmonia(){
-		double ammonia = (.1*this.temp*this.pH*(this.waste + this.food + .1*this.cmFish) - .2*this.nitrosomonas*this.ammonia)/this.volume;
+		double ammonia = (.04*this.temp*this.pH*(this.waste + this.food + .5*this.cmFish) - .2*this.nitrosomonas*this.ammonia)/this.volume;
 		return ammonia;
 	}
 
@@ -227,17 +228,25 @@ public class Tank {
 	}
 
 	double changeNitrosomonas(){
-		double nitrosomonas = .1*this.ammonia*this.nitrosomonas-.4*this.nitrosomonas;
+		double nitrosomonas = .05*this.ammonia*this.nitrosomonas-.4*this.nitrosomonas;
 		return nitrosomonas;
 	}
 
 	double changeNitrobacter(){
-		double nitrobacter = .1*this.nitrite*this.nitrobacter-.4*this.nitrobacter;
+		double nitrobacter = .05*this.nitrite*this.nitrobacter-.4*this.nitrobacter;
 		return nitrobacter;
 	}
 
-	double changeWaste(){
-		double waste = .001*this.cmFish;
+	int changeWaste(){
+		int waste = 0;
+		Random random = new Random();
+		for(Fish f: this.fish){
+			int threshold = (int) (((double) Math.max(f.fullness, 0)) / ((double) f.maxHappyFull) * f.size/2.0);
+			int rand = random.nextInt(500);
+			if(rand < threshold){
+				waste++;
+			}
+		}
 		return waste;
 	}
 
@@ -349,7 +358,7 @@ public class Tank {
 		double nitrate = Math.min(Math.max(this.nitrate + timeScale * this.changeNitrate(), 0), 1000000);
 		double nitrosomonas = Math.min(Math.max(this.nitrosomonas + timeScale * this.changeNitrosomonas(), .01), 1000000);
 		double nitrobacter = Math.min(Math.max(this.nitrobacter + timeScale * this.changeNitrobacter(), .01), 1000000);
-		double waste = this.waste + timeScale * this.changeWaste();
+		int waste = this.waste + this.changeWaste();
 		int time = this.getTime();
 
 		//do assignment after so that all calculations are accurate
