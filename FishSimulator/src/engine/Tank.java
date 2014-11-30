@@ -74,7 +74,7 @@ public class Tank {
 
 		this.cmFish = 0;
 		this.plants = 1;
-		this.pH=7.5;
+		this.pH=7;
 		this.temp = 24;
 		this.hardness = 1;
 		this.o2 = 11; //temp/2

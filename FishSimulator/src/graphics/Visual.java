@@ -37,6 +37,9 @@ public class Visual extends PApplet{
 	Textarea speciesInfo;
 	Textfield nicknameInput;
 	Button confirmAdd;
+	Textarea waterChangeInfo;
+	Slider percentWater;
+	Button confirmWaterChange;
 	Textarea tankInfo;
 	public ListBox fishChoices;
 	Textarea fishInfo;
@@ -171,6 +174,8 @@ public class Visual extends PApplet{
 		/**************************************************
 		 * OPTIONS TAB INITIALIZATION *
 		 *************************************************/
+		
+		/*****BUTTONS*****/
 
 		infoPane.addButton("addFish")
 		.setLabel("add fish")
@@ -195,6 +200,8 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-90, 85)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0));
+		
+		/*****ADD FISH UI*****/
 
 		fishSpecies = new ListBox(infoPane, "fishspecies")
 		.setPosition(fieldX-315, 120)
@@ -231,6 +238,37 @@ public class Visual extends PApplet{
 		.align(CENTER, CENTER, CENTER, CENTER)
 		.hide();
 
+		/*****WATER CHANGE UI*****/
+		
+		waterChangeInfo = new Textarea(infoPane, "waterChangeInfo")
+		.setSize(295, 100)
+		.setPosition(fieldX-315, 120)
+		.setFont(createFont("arial", 12))
+		.setText("Changing the water can help bring chemistry back to neutral values,"
+				+ " but be careful of over-changing since this will also get rid of some of"
+				+ " the helpful bacteria that live in the water.")
+		.moveTo("default")
+		.hide();
+		
+		percentWater = new Slider(infoPane, "percentWater")
+		.setSize(220, 20)
+		.setPosition(fieldX-315, 200)
+		.setColorBackground(color(20, 20, 20))
+		.setColorActive(color(60, 60, 60))
+		.setColorForeground(color(60, 60, 60))
+		.moveTo("default")
+		.setMax(100)
+		.setMin(0)
+		.setValue(50)
+		.setLabel("")
+		.setValueLabel("Change what percent of the water?")
+		.hide();
+
+		confirmWaterChange = new Button(infoPane, "confirmWaterChange")
+		.setPosition(fieldX-80, 200)
+		.setLabel("OK")
+		.hide();
+		
 		/**************************************************
 		 * TANKINFO TAB INITIALIZATION *
 		 *************************************************/
@@ -284,6 +322,7 @@ public class Visual extends PApplet{
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
 		.setLock(true)
+		.setMin(0)
 		.moveTo("fishinfo")
 		.hide();
 		fishHappiness.valueLabel().hide();
@@ -295,6 +334,7 @@ public class Visual extends PApplet{
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
 		.setLock(true)
+		.setMin(0)
 		.moveTo("fishinfo")
 		.hide();
 		fishFullness.valueLabel().hide();
@@ -306,6 +346,7 @@ public class Visual extends PApplet{
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
 		.setLock(true)
+		.setMin(0)
 		.moveTo("fishinfo")
 		.hide();
 		fishHealth.valueLabel().hide();
@@ -477,6 +518,11 @@ public class Visual extends PApplet{
 		nicknameInput.clear();
 		nicknameInput.hide();
 		confirmAdd.hide();
+		waterChangeInfo.hide();
+		percentWater.setValue(50)
+		.setValueLabel("Change what percent of the water?")
+		.hide();
+		confirmWaterChange.hide();
 	}
 
 	public void updateTankInfo(){
@@ -649,6 +695,9 @@ public class Visual extends PApplet{
 
 	void changeWater(float theValue){
 		restoreDefaults();
+		waterChangeInfo.show();
+		percentWater.show();
+		confirmWaterChange.show();
 	}
 	
 	void confirmAdd(float theValue){
@@ -668,6 +717,11 @@ public class Visual extends PApplet{
 			nicknameInput.clear();
 			nicknameInput.setCaptionLabel(species + " named " +  nickname + " added!");
 		}
+	}
+	
+	void confirmWaterChange(float theValue){
+		percentWater.setValueLabel(percentWater.getValue() + "% water change performed");
+		tank.waterChange(percentWater.getValue());
 	}
 
 	/*****SAVE MENU BUTTONS*****/
