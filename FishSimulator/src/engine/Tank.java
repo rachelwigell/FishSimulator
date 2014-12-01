@@ -239,8 +239,8 @@ public class Tank {
 		return nitrobacter;
 	}
 	
-	public void addFood(Visual visual){
-		this.food.add(new Food(visual));
+	public void addFood(Food food){
+		this.food.add(food);
 	}
 
 	public int changeWaste(Visual visual){

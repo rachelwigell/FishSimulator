@@ -14,5 +14,4 @@ public abstract class Sinkers {
 			this.position = this.position.addVector(velocity);
 		}
 	}
-
 }

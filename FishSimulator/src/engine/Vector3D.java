@@ -30,4 +30,21 @@ public class Vector3D {
 	public Vector3D multiplyScalar(float quantity){
 		return new Vector3D(this.x * quantity, this.y * quantity, this.z * quantity);
 	}
+	
+	public void printOut(String label){
+		System.out.println(label + " x: " + this.x + " y: " + this.y + " z: " + this.z);
+	}
+	
+	public float magnitude(){
+		return (float) Math.sqrt(Math.pow(this.x, 2) + Math.pow(this.y, 2) + Math.pow(this.z, 2));
+	}
+	
+	public Vector3D normalize(){
+		float magnitude = this.magnitude();
+		return new Vector3D(this.x/magnitude, this.y/magnitude, this.z/magnitude);
+	}
+	
+	public float dotProduct(Vector3D with){
+		return this.x*with.x + this.y*with.y + this.z*with.z;
+	}
 }
