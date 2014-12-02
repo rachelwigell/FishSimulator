@@ -388,7 +388,12 @@ public class Tank {
 		for(int i = 0; i < minutes*12; i++){
 			this.progress(visual);
 		}
-		System.out.println("done calculating");
+		for(Food f: this.food){
+			f.position = f.restingPosition;
+		}
+		for(Poop p: this.poops){
+			p.position = p.restingPosition;
+		}
 	}
 
 	public boolean validateNickname(String nickname){

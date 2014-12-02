@@ -536,7 +536,7 @@ public class Visual extends PApplet{
 		spotLight(color, color, color, fieldX/4, 0, 400, 0, 0, -1, PI/4, 0);
 		drawAllFish();
 		drawSinkers();
-		drawTank(true);
+		drawTank();
 		if(updateCount > 150){ //operations to happen every 5 seconds
 			tank.progress(this);
 			updateCount = 0;
@@ -564,6 +564,7 @@ public class Visual extends PApplet{
 				String input = br.readLine();
 				System.out.println("skipping ahead " + input + " minutes");
 				tank.skipAhead(this, Integer.parseInt(input));
+				System.out.println("done calculating");
 			}catch(IOException io){
 				io.printStackTrace();
 			}
@@ -690,7 +691,7 @@ public class Visual extends PApplet{
 		}
 	}
 
-	public void drawTank(boolean withWater){
+	public void drawTank(){
 		noStroke();
 		pushMatrix();
 		translate((int)(.4*fieldX), (int)(.8*fieldY), (int)(-fieldZ));
@@ -708,11 +709,9 @@ public class Visual extends PApplet{
 		translate((int)(zoomPercentage*.4*fieldX), (int)(zoomPercentage*.5*fieldY), 0);
 		fill(200);
 		box((int)(zoomPercentage*.8*fieldX), 0, (int)(zoomPercentage*.5*fieldZ));
-		if(withWater){
-			fill(0, 0, 255, 30);
-			translate(0, (int)(-zoomPercentage*.5*fieldY) + (int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), 0);
-			box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ));
-		}
+		fill(0, 0, 255, 30);
+		translate(0, (int)(-zoomPercentage*.5*fieldY) + (int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), 0);
+		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ));
 		popMatrix();
 	}
 
@@ -831,7 +830,7 @@ public class Visual extends PApplet{
 			if(theControlEvent.group().id() == 2){
 				String filename = compileFileList().get((int) savedTanks.value());
 				try{
-					confirmLoad.setLabel("Tank " + filename + " last saved: " + getDateSaved(filename + ".txt"));
+					confirmLoad.setLabel("Tank " + filename + " last saved: " + new Date(getDateSaved(filename)).toLocaleString());
 				}
 				catch(CorruptedSaveFileException e){
 					confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
@@ -953,7 +952,12 @@ public class Visual extends PApplet{
 	void confirmLoad(float theValue){
 		String filename = compileFileList().get((int) savedTanks.getValue());
 		try{
-			this.tank = parseFile(getFileText(filename + ".txt"));
+			confirmLoad.setLabel("Loading...");
+			draw();
+			this.tank = parseFile(getFileText(filename));
+			Long elapsed = System.currentTimeMillis() - getDateSaved(filename);
+			int iterations = (int) (elapsed/5000.0);
+			this.tank.skipAhead(this, iterations);
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
 		}
 		catch(CorruptedSaveFileException e){
@@ -1071,9 +1075,9 @@ public class Visual extends PApplet{
 
 	public void createSaveFile(String name) throws CorruptedSaveFileException{
 		BufferedWriter writer = null;
-		File html = new File(name + ".txt");		
+		File txt = new File(name + ".txt");		
 		try {
-			writer = new BufferedWriter(new FileWriter(html));
+			writer = new BufferedWriter(new FileWriter(txt));
 			writer.write(compileSaveText());
 			writer.close();
 		} catch (IOException e) {
@@ -1164,6 +1168,7 @@ public class Visual extends PApplet{
 	}
 
 	public String getFileText(String filename) throws CorruptedSaveFileException{
+		filename += ".txt";
 		String text = "";
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -1179,25 +1184,21 @@ public class Visual extends PApplet{
 		return text;
 	}
 
-	public String getDateSaved(String filename) throws CorruptedSaveFileException{
+	public long getDateSaved(String filename) throws CorruptedSaveFileException{
+		filename += ".txt";
 		try {
 			BufferedReader reader = new BufferedReader(new FileReader(filename));
 			String line;
 			line = reader.readLine();
 			line = reader.readLine();
 			reader.close();
-			Long millis = Long.parseLong(line);
-			Date date = new Date(millis);
-			return date.toLocaleString();
+			return Long.parseLong(line);
 		} catch (Exception e) {
 			throw new CorruptedSaveFileException();
 		}		
 	}
 
 	public Fish makeFish(String[] array, int start) throws CorruptedSaveFileException{
-		for(int i = 0; i < 9; i++){
-			System.out.println(array[start+i]);
-		}
 		switch(array[start]){
 		case "Guppy":
 			return new Guppy(this,
@@ -1210,7 +1211,6 @@ public class Visual extends PApplet{
 					new Vector3D(array[start+7]),
 					new Vector3D(array[start+8]));
 		default:
-			System.out.println("problem making fish");
 			throw new CorruptedSaveFileException();
 		}
 	}
@@ -1261,7 +1261,7 @@ public class Visual extends PApplet{
 
 	public void determineBounds(){
 		noLights();
-		drawTank(true);
+		drawTank();
 		loadPixels();
 		draw();
 		int x = 0;
