@@ -18,4 +18,12 @@ public class Food extends Sinkers{
 		this.color = new Vector3D(200, 200, 0);
 		this.restingPosition = new Vector3D(0, (float) (.5*visual.fieldY + .5*visual.zoomPercentage*visual.fieldY), 0);
 	}
+	
+	public Food(Visual visual, Vector3D position){
+		this.position = position;
+		this.velocity = new Vector3D(0, 1, 0);
+		this.dimensions = new Vector3D(5, 5, 5);
+		this.color = new Vector3D(200, 200, 0);
+		this.restingPosition = new Vector3D(0, (float) (.5*visual.fieldY + .5*visual.zoomPercentage*visual.fieldY), 0);
+	}
 }

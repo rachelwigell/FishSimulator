@@ -2,9 +2,15 @@ package graphics;
 
 import java.awt.Toolkit;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.text.DecimalFormat;
+import java.util.Date;
+import java.util.LinkedList;
 
 import peasy.PeasyCam;
 import processing.core.PApplet;
@@ -19,7 +25,9 @@ import controlP5.Slider;
 import controlP5.Textarea;
 import controlP5.Textfield;
 import engine.ClickMode;
+import engine.CorruptedSaveFileException;
 import engine.Food;
+import engine.HappinessStatus;
 import engine.Poop;
 import engine.Sinkers;
 import engine.Tank;
@@ -57,6 +65,12 @@ public class Visual extends PApplet{
 	Slider fishHappiness;
 	Slider fishFullness;
 	Slider fishHealth;
+	Textfield fileNameInput;
+	Button confirmSave;
+	ListBox savedTanks;
+	Button confirmLoad;
+	Textarea newText;
+	Button confirmNew;
 	Textarea helpText;
 
 	int updateCount = 60; //cause text to be updated less frequently
@@ -387,17 +401,68 @@ public class Visual extends PApplet{
 		 *************************************************/
 
 		infoPane.addButton("save")
-		.setPosition(fieldX-260, 85)
+		.setPosition(fieldX-280, 85)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("save");
 
 		infoPane.addButton("load")
-		.setPosition(fieldX-145, 85)
+		.setPosition(fieldX-200, 85)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("save");
 
-		infoPane.getController("save").moveTo("save");
-		infoPane.getController("load").moveTo("save");
+		infoPane.addButton("newTank")
+		.setPosition(fieldX-120, 85)
+		.setColorForeground(color(35, 35, 35))
+		.setColorActive(color(0, 0, 0))
+		.setLabel("new")
+		.moveTo("save");
+
+		fileNameInput = new Textfield(infoPane, "fileNameInput")
+		.setPosition(fieldX-315, 120)
+		.setSize(210, 20)
+		.moveTo("save")
+		.hide();
+
+		confirmSave = new Button(infoPane, "confirmSave")
+		.setPosition(fieldX-90, 120)
+		.setLabel("save")
+		.moveTo("save")
+		.hide();
+
+		savedTanks = new ListBox(infoPane, "savedTanks")
+		.setPosition(fieldX-315, 120)
+		.setSize(295, 300)
+		.setLabel("Your saved tanks")
+		.setId(2)
+		.disableCollapse()
+		.moveTo("save")
+		.hide();
+
+		confirmLoad = new Button(infoPane, "confirmLoad")
+		.setPosition(fieldX-315, 320)
+		.setSize(295, 20)
+		.setLabel("load")
+		.align(CENTER, CENTER, CENTER, CENTER)
+		.moveTo("save")
+		.hide();
+
+		newText = new Textarea(infoPane, "newText")
+		.setSize(295, 60)
+		.setPosition(fieldX-315, 120)
+		.setFont(createFont("arial", 12))
+		.setText("Are you sure you want to abandon this tank and start a new one? All unsaved changes to this tank will be lost.")
+		.moveTo("save")
+		.hide();
+
+		confirmNew = new Button(infoPane, "confirmNew")
+		.setPosition(fieldX-315, 180)
+		.setSize(295, 20)
+		.setLabel("OK")
+		.align(CENTER, CENTER, CENTER, CENTER)
+		.moveTo("save")
+		.hide();
 
 		/**************************************************
 		 * HELP TAB INITIALIZATION *
@@ -460,7 +525,7 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-315, 135)
 		.setFont(createFont("arial", 12))
 		.moveTo("help");	
-		
+
 		determineBounds();
 	}
 
@@ -504,7 +569,7 @@ public class Visual extends PApplet{
 			}
 		}
 		else if(key == 'q'){
-			
+
 		}
 	}
 
@@ -577,6 +642,13 @@ public class Visual extends PApplet{
 		confirmWaterChange.hide();
 		foodCleanInfo.hide();
 		clickMode = ClickMode.INFO;
+		fileNameInput.hide();
+		fileNameInput.clear();
+		confirmSave.hide();
+		confirmLoad.hide();
+		savedTanks.hide();
+		confirmNew.hide();
+		newText.hide();
 	}
 
 	public void updateTankInfo(){
@@ -664,30 +736,21 @@ public class Visual extends PApplet{
 
 	public void drawSinkers(){
 		for(Poop p: this.tank.poops){
-			drawPoop(p);
+			drawWaste(p);
 			p.updatePosition();
 		}
 		for(Food f: this.tank.food){
-			drawFood(f);
+			drawWaste(f);
 			f.updatePosition();
 		}
 	}
 
-	public void drawPoop(Poop p){
+	public void drawWaste(Sinkers s){
 		noStroke();
 		pushMatrix();
-		translate(p.position.x, p.position.y, p.position.z);
-		fill(p.color.x, p.color.y, p.color.z);
-		sphere(p.dimensions.x);
-		popMatrix();		
-	}
-	
-	public void drawFood(Food f){
-		noStroke();
-		pushMatrix();
-		translate(f.position.x, f.position.y, f.position.z);
-		fill(f.color.x, f.color.y, f.color.z);
-		sphere(f.dimensions.x);
+		translate(s.position.x, s.position.y, s.position.z);
+		fill(s.color.x, s.color.y, s.color.z);
+		sphere(s.dimensions.x);
 		popMatrix();		
 	}
 
@@ -764,6 +827,16 @@ public class Visual extends PApplet{
 				confirmAdd.show()
 				.setCaptionLabel("Add " + choice.name);
 			}
+			// savedTanks listbox
+			if(theControlEvent.group().id() == 2){
+				String filename = compileFileList().get((int) savedTanks.value());
+				try{
+					confirmLoad.setLabel("Tank " + filename + " last saved: " + getDateSaved(filename + ".txt"));
+				}
+				catch(CorruptedSaveFileException e){
+					confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
+				}
+			}
 		}
 	} 
 
@@ -822,11 +895,70 @@ public class Visual extends PApplet{
 	/*****SAVE MENU BUTTONS*****/
 
 	void save(float theValue){
-
+		restoreDefaults();
+		fileNameInput.show()
+		.setCaptionLabel("Give this tank a name!");
+		confirmSave.show();
 	}
 
 	void load(float theValue){
+		restoreDefaults();
+		savedTanks.show()
+		.clear();
+		confirmLoad.show();
+		LinkedList<String> files = compileFileList();
+		for(int i = 0; i < files.size(); i++){
+			savedTanks.addItem(files.get(i), i);
+		}
+	}
 
+	void newTank(float theValue){
+		restoreDefaults();
+		newText.show();
+		confirmNew.show();
+	}
+
+	void confirmNew(float theValue){
+		this.tank = new Tank(TankSize.MEDIUM);
+		confirmNew.setLabel("New tank created!");
+	}
+
+	void confirmSave(float theValue){
+		try{
+			String fileName = fileNameInput.getText();
+			if(compileFileList().contains(fileName) &&
+					fileNameInput.getCaptionLabel().getText().equals("You already have a tank with this name. Click again to overwrite.")){
+				createSaveFile(fileNameInput.getText());
+				fileNameInput.setCaptionLabel("Tank saved!");
+			}
+			else if(fileName.equals("")){
+				fileNameInput.setCaptionLabel("Please enter a name for the tank.");
+			}
+			else if(fileName.length() > 20){
+				fileNameInput.setCaptionLabel("Name too long! Please choose another a name under 20 characters.");
+			}
+			else if(compileFileList().contains(fileName)){
+				fileNameInput.setCaptionLabel("You already have a tank with this name. Click again to overwrite.");
+			}
+			else{
+				createSaveFile(fileNameInput.getText());
+				fileNameInput.setCaptionLabel("Tank saved!");
+			}
+		}
+		catch(CorruptedSaveFileException e){
+			fileNameInput.setCaptionLabel("Problem saving tank.");
+		}
+	}
+
+	void confirmLoad(float theValue){
+		String filename = compileFileList().get((int) savedTanks.getValue());
+		try{
+			this.tank = parseFile(getFileText(filename + ".txt"));
+			confirmLoad.setLabel("Tank " + filename + " loaded!");
+		}
+		catch(CorruptedSaveFileException e){
+			confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
+		}
 	}
 
 	/*****HELP MENU BUTTONS*****/
@@ -937,6 +1069,196 @@ public class Visual extends PApplet{
 		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);
 	}
 
+	public void createSaveFile(String name) throws CorruptedSaveFileException{
+		BufferedWriter writer = null;
+		File html = new File(name + ".txt");		
+		try {
+			writer = new BufferedWriter(new FileWriter(html));
+			writer.write(compileSaveText());
+			writer.close();
+		} catch (IOException e) {
+			throw new CorruptedSaveFileException();
+		}
+	}
+
+	public String compileSaveText(){
+		String saveText = "Start tank info\n";
+		saveText += System.currentTimeMillis() + "\n";
+		saveText += tank.plants + "\n";
+		saveText += tank.length + "\n";
+		saveText += tank.width + "\n";
+		saveText += tank.height + "\n";
+		saveText += tank.pH + "\n";
+		saveText += tank.temp + "\n";
+		saveText += tank.hardness + "\n";
+		saveText += tank.o2 + "\n";
+		saveText += tank.co2 + "\n";
+		saveText += tank.ammonia + "\n";
+		saveText += tank.nitrite + "\n";
+		saveText += tank.nitrate + "\n";
+		saveText += tank.nitrosomonas + "\n";
+		saveText += tank.nitrobacter + "\n";
+		saveText += tank.waste + "\n";
+		saveText += "Start poops info\n";
+		for(int i = 0; i < tank.poops.size(); i++){
+			Poop p = tank.poops.get(i);
+			saveText += p.position.toCommaSeparated();
+			saveText += p.dimensions.toCommaSeparated();
+		}
+		saveText += "Start food info\n";
+		for(int i = 0; i < tank.food.size(); i++){
+			Food f = tank.food.get(i);
+			saveText += f.position.toCommaSeparated();
+		}
+		saveText += "Start fish info\n";
+		for(int i = 0; i < tank.fish.size(); i++){
+			Fish f = tank.fish.get(i);
+			saveText += f.compileSaveText();
+		}
+		return saveText;
+	}
+
+	public LinkedList<String> compileFileList(){
+		LinkedList<String> saveFiles = new LinkedList<String>();
+		File folder = new File(System.getProperty("user.dir"));
+		for(File f: folder.listFiles()){
+			if(f.getName().endsWith(".txt")){
+				saveFiles.add(f.getName().substring(0, f.getName().length()-4));
+			}
+		}
+		return saveFiles;
+	}
+
+	public int indexOf(String[] array, String seeking) throws CorruptedSaveFileException{
+		for(int i = 0; i < array.length; i++){
+			if(array[i].equals(seeking)) return i;
+		}
+		throw new CorruptedSaveFileException();
+	}
+
+	public HappinessStatus parseStatus(String string){
+		switch(string){
+		case "HAPPY":
+			return HappinessStatus.HAPPY;
+		case "HUNGRY":
+			return HappinessStatus.HUNGRY;
+		case "AMMONIA":
+			return HappinessStatus.AMMONIA;
+		case "NITRITE":
+			return HappinessStatus.NITRITE;
+		case "NITRATE":
+			return HappinessStatus.NITRATE;
+		case "PHLOW":
+			return HappinessStatus.PHLOW;
+		case "PHHIGH":
+			return HappinessStatus.PHHIGH;
+		case "TEMPLOW":
+			return HappinessStatus.TEMPLOW;
+		case "TEMPHIGH":
+			return HappinessStatus.TEMPHIGH;
+		case "HARDLOW":
+			return HappinessStatus.HARDLOW;
+		default:
+			return HappinessStatus.HARDHIGH;
+		}
+	}
+
+	public String getFileText(String filename) throws CorruptedSaveFileException{
+		String text = "";
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			String line = reader.readLine();
+			while(line != null){
+				text += line + "\n";
+				line = reader.readLine();
+			}
+			reader.close();
+		} catch (Exception e) {
+			throw new CorruptedSaveFileException();
+		}
+		return text;
+	}
+
+	public String getDateSaved(String filename) throws CorruptedSaveFileException{
+		try {
+			BufferedReader reader = new BufferedReader(new FileReader(filename));
+			String line;
+			line = reader.readLine();
+			line = reader.readLine();
+			reader.close();
+			Long millis = Long.parseLong(line);
+			Date date = new Date(millis);
+			return date.toLocaleString();
+		} catch (Exception e) {
+			throw new CorruptedSaveFileException();
+		}		
+	}
+
+	public Fish makeFish(String[] array, int start) throws CorruptedSaveFileException{
+		for(int i = 0; i < 9; i++){
+			System.out.println(array[start+i]);
+		}
+		switch(array[start]){
+		case "Guppy":
+			return new Guppy(this,
+					array[start+1],
+					parseStatus(array[start+2]),
+					Long.parseLong(array[start+3]),
+					Long.parseLong(array[start+4]),
+					Long.parseLong(array[start+5]),
+					Integer.parseInt(array[start+6]),
+					new Vector3D(array[start+7]),
+					new Vector3D(array[start+8]));
+		default:
+			System.out.println("problem making fish");
+			throw new CorruptedSaveFileException();
+		}
+	}
+
+	public Tank parseFile(String text) throws CorruptedSaveFileException{
+		try{
+			String[] lines = text.split("\n");
+			int start = indexOf(lines, "Start poops info")+1;
+			int end = indexOf(lines, "Start food info");
+			LinkedList<Poop> poops = new LinkedList<Poop>();
+			for(int i = start; i < end; i+=2){
+				poops.add(new Poop(this, new Vector3D(lines[i]), new Vector3D(lines[i+1])));
+			}
+			start = indexOf(lines, "Start food info")+1;
+			end = indexOf(lines, "Start fish info");
+			LinkedList<Food> food = new LinkedList<Food>();
+			for(int i = start; i < end; i++){
+				food.add(new Food(this, new Vector3D(lines[i])));
+			}
+			start = indexOf(lines, "Start fish info")+1;
+			end = lines.length;
+			LinkedList<Fish> fish = new LinkedList<Fish>();
+			for(int i = start; i < end; i+=9){
+				fish.add(makeFish(lines, i));
+			}
+			Tank tank = new Tank(Double.parseDouble(lines[2]),
+					Integer.parseInt(lines[3]),
+					Integer.parseInt(lines[4]),
+					Integer.parseInt(lines[5]),
+					Double.parseDouble(lines[6]),
+					Double.parseDouble(lines[7]),
+					Double.parseDouble(lines[8]),
+					Double.parseDouble(lines[9]),
+					Double.parseDouble(lines[10]),
+					Double.parseDouble(lines[11]),
+					Double.parseDouble(lines[12]),
+					Double.parseDouble(lines[13]),
+					Double.parseDouble(lines[14]),
+					Double.parseDouble(lines[15]),
+					Integer.parseInt(lines[16]),
+					poops, food, fish);
+			return tank;
+		}
+		catch(CorruptedSaveFileException e){
+			throw new CorruptedSaveFileException();
+		}
+	}
+
 	public void determineBounds(){
 		noLights();
 		drawTank(true);
@@ -958,18 +1280,18 @@ public class Visual extends PApplet{
 			}
 		}
 	}
-	
+
 	public void removeWaste(Vector3D start, Vector3D end){
 		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
 		Sinkers closest = null;
 		float z = -1000;
 		for(Poop p: tank.poops){
-			 if(raySphereIntersect(start, normal, p.position, p.dimensions.x)){
-					if(p.position.z > z){
-						z = p.position.z;
-						closest = p;
-					} 
-			 }
+			if(raySphereIntersect(start, normal, p.position, p.dimensions.x)){
+				if(p.position.z > z){
+					z = p.position.z;
+					closest = p;
+				} 
+			}
 		}
 		for(Food f: tank.food){
 			if(raySphereIntersect(start, normal, f.position, f.dimensions.x)){
@@ -984,14 +1306,14 @@ public class Visual extends PApplet{
 			tank.food.remove(closest);
 		}
 	}
-	
+
 	public boolean raySphereIntersect(Vector3D rayOrigin, Vector3D rayNormal, Vector3D sphereCenter, float sphereRadius){
 		sphereCenter.printOut("center");
 		double determinant = Math.pow(rayNormal.dotProduct(rayOrigin.addVector(sphereCenter.multiplyScalar(-1))), 2) - Math.pow(rayOrigin.addVector(sphereCenter.multiplyScalar(-1)).magnitude(), 2) + Math.pow(sphereRadius, 2);
 		if(determinant < 0) return false;
 		else return true;
 	}
-	
+
 	public class Selection_in_P3D_OPENGL_A3D
 	{
 

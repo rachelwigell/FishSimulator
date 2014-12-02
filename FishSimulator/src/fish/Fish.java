@@ -18,7 +18,7 @@ public abstract class Fish {
 	public String name;
 	public String nickname;
 	public HappinessStatus status = HappinessStatus.HAPPY;
-	public long timeWell; //status == happy
+	public long timeWell; //if status == happy, this is the time at which it first became happy. else Long.MAX_VALUE
 	public long fullness;
 	public long maxHappyFull;
 	public long happiness;
@@ -46,7 +46,6 @@ public abstract class Fish {
 	public Vector3D position;
 	public Vector3D orientation;
 	public Vector3D dimensions;
-	public int index;
 
 	public int setHealth(){
 		if(this.health < this.ease //if its health is diminished (ease == maxHealth)
@@ -138,5 +137,18 @@ public abstract class Fish {
 			this.status = HappinessStatus.HAPPY;
 		}
 		return this.status;
+	}
+	
+	public String compileSaveText(){
+		String saveText = this.name + "\n";
+		saveText += this.nickname + "\n";
+		saveText += this.status + "\n";
+		saveText += this.timeWell + "\n";
+		saveText += this.fullness + "\n";
+		saveText += this.happiness + "\n";
+		saveText += this.health + "\n";
+		saveText += this.position.toCommaSeparated();
+		saveText += this.orientation.toCommaSeparated();
+		return saveText;
 	}
 }

@@ -27,7 +27,6 @@ public class Tank {
 	public double nitrate; //ppm
 	public double nitrosomonas; //bacteria
 	public double nitrobacter; //bacteria
-//	public double food; //pellets
 	public int waste; //poops
 	public int length; //cm
 	public int width; //cm
@@ -98,7 +97,7 @@ public class Tank {
 		this.food = new LinkedList<Food>();
 	}
 
-	Tank(double plants,
+	public Tank(double plants,
 			int length,
 			int width,
 			int height,
@@ -112,14 +111,10 @@ public class Tank {
 			double nitrate,
 			double nitrosomonas,
 			double nitrobacter,
-			double food,
 			int waste,
-			int time,
-			LinkedList <Fish> fish,
-			int aggressiveFish,
-			int susceptibleFish,
-			int predators,
-			int prey){
+			LinkedList<Poop> poops,
+			LinkedList<Food> food,
+			LinkedList <Fish> fish){
 		this.plants = plants;
 		this.length = length;
 		this.width = width;
@@ -137,7 +132,9 @@ public class Tank {
 		this.nitrosomonas=nitrosomonas;
 		this.nitrobacter=nitrobacter;
 		this.waste=waste;
-		this.time = time;
+		this.time = getTime();
+		this.poops = poops;
+		this.food = food;
 		this.fish = fish;
 		this.cmFish = this.calcTotalFish();
 	}
@@ -172,7 +169,6 @@ public class Tank {
 		if(aFish.properties.contains(Qualify.PREY)){
 			this.prey++;
 		}
-		aFish.index = this.fish.size()-1;
 	}
 
 	double changeFish(){

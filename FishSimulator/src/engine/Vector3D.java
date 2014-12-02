@@ -11,6 +11,19 @@ public class Vector3D {
 		this.z = z;
 	}
 	
+	public Vector3D(String commaSeparated) throws CorruptedSaveFileException{
+		try{
+			String[] components = commaSeparated.split(",");
+			this.x = Float.parseFloat(components[0]);
+			this.y = Float.parseFloat(components[1]);
+			this.z = Float.parseFloat(components[2]);
+		}
+		catch(Exception e){
+			System.out.println("problem parsing vector");
+			throw new CorruptedSaveFileException();
+		}
+	}
+	
 	public float distance(Vector3D to){
 		return (float) Math.sqrt(squareDistance(to));
 	}
@@ -46,5 +59,9 @@ public class Vector3D {
 	
 	public float dotProduct(Vector3D with){
 		return this.x*with.x + this.y*with.y + this.z*with.z;
+	}
+	
+	public String toCommaSeparated(){
+		return this.x + "," + this.y + "," + this.z + "\n";
 	}
 }

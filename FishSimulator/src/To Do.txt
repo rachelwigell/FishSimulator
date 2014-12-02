@@ -6,9 +6,8 @@ fish animations
 dead fish float upside down
 reinstate aggression and predator/prey dynamics
 Make individuals unique with some randomness
-
-Non-functioning buttons:
-	Options:
-	Save:
-		save
-		load
+visible plants
+decorate items
+when saving, give a warning if they're going to save over a tank they've previously saved
+reinstate tank sizes
+Encode save files so that user cannot alter them

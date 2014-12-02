@@ -20,7 +20,7 @@ public enum HappinessStatus {
 			readable = "Happy";
 			break;
 		case HUNGRY:
-			readable += "hungry!";
+			readable += "Hungry!";
 			break;
 		case AMMONIA:
 			readable += "Ammonia in the tank is too high. Check below to see what ammonia ranges this species can tolerate.";
