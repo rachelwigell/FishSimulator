@@ -725,6 +725,7 @@ public class Visual extends PApplet{
 		rotateZ(fish.orientation.z);
 		fish.model.draw();
 		popMatrix();
+		fish.updatePosition(this);
 	}
 
 	void drawAllFish(){

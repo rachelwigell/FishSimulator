@@ -1,13 +1,10 @@
 fish eat based on hunger and have to actually go to the food
-Save: write tank properties, fish properties, currentTimeMillis to a text file
-Load: read tank, fish properties, compare currentTimeMillis to stored time, call skipAhead
 click a fish to see its status
 fish animations
 dead fish float upside down
 reinstate aggression and predator/prey dynamics
 Make individuals unique with some randomness
 visible plants
-decorate items
-when saving, give a warning if they're going to save over a tank they've previously saved
+decorative items
 reinstate tank sizes
 Encode save files so that user cannot alter them

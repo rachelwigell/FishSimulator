@@ -43,6 +43,8 @@ public class Guppy extends Fish{
 		this.model.scale(30);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);
+		this.velocity = new Vector3D(0, 0, 0);
+		this.acceleration = new Vector3D(0, 0, 0);
 		this.orientation = new Vector3D(0, 0, 0);
 		this.dimensions = new Vector3D(60, 22, 9);
 
