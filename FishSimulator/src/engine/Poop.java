@@ -18,6 +18,7 @@ public class Poop extends Sinkers{
 	
 	public Poop(Visual visual, Vector3D position, Vector3D size){
 		this.position = position;
+		this.absolutePosition = this.position.addVector(new Vector3D((int)(.4*visual.fieldX), (int)(.5*visual.fieldY)+(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)), (int)(-visual.fieldZ)+(int)(visual.zoomPercentage*.25*visual.fieldZ)));
 		this.velocity = new Vector3D(0, 1, 0);
 		this.dimensions = size;
 		this.color = new Vector3D(150, 100, 0);

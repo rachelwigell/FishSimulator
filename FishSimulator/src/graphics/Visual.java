@@ -77,6 +77,7 @@ public class Visual extends PApplet{
 	public int fishChoice = -1;
 	public int activeTab = 0;
 	public ClickMode clickMode = ClickMode.INFO;
+	boolean loading = false;
 
 	public int tankMinX = 99999;
 	public int tankMaxX = -1;
@@ -534,16 +535,18 @@ public class Visual extends PApplet{
 		background(bcolor.x, bcolor.y, bcolor.z);
 		int color = spotlightColor();
 		spotLight(color, color, color, fieldX/4, 0, 400, 0, 0, -1, PI/4, 0);
-		drawAllFish();
-		drawSinkers();
-		drawTank();
-		allEat();
-		if(updateCount > 150){ //operations to happen every 5 seconds
-			tank.progress(this);
-			updateCount = 0;
+		if(!loading){
+			drawAllFish();
+			drawSinkers();
+			drawTank();
+			tank.allEat();
+			if(updateCount > 150){ //operations to happen every 5 seconds
+				tank.progress(this);
+				updateCount = 0;
+			}
+			updateCount++;
+			interfaceUpdates();
 		}
-		updateCount++;
-		interfaceUpdates();
 		gui();
 	}
 
@@ -956,15 +959,18 @@ public class Visual extends PApplet{
 		String filename = compileFileList().get((int) savedTanks.getValue());
 		try{
 			confirmLoad.setLabel("Loading...");
+			loading = true;
 			draw();
 			this.tank = parseFile(getFileText(filename));
 			Long elapsed = System.currentTimeMillis() - getDateSaved(filename);
 			int iterations = (int) (elapsed/5000.0);
-			this.tank.skipAhead(this, iterations);
+//			this.tank.skipAhead(this, iterations);
+			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
 		}
 		catch(CorruptedSaveFileException e){
 			confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
+			loading = false;
 		}
 	}
 
@@ -1210,9 +1216,7 @@ public class Visual extends PApplet{
 					Long.parseLong(array[start+3]),
 					Long.parseLong(array[start+4]),
 					Long.parseLong(array[start+5]),
-					Integer.parseInt(array[start+6]),
-					new Vector3D(array[start+7]),
-					new Vector3D(array[start+8]));
+					Integer.parseInt(array[start+6]));
 		default:
 			throw new CorruptedSaveFileException();
 		}
@@ -1236,7 +1240,7 @@ public class Visual extends PApplet{
 			start = indexOf(lines, "Start fish info")+1;
 			end = lines.length;
 			LinkedList<Fish> fish = new LinkedList<Fish>();
-			for(int i = start; i < end; i+=9){
+			for(int i = start; i < end; i+=7){
 				fish.add(makeFish(lines, i));
 			}
 			Tank tank = new Tank(Double.parseDouble(lines[2]),
@@ -1259,14 +1263,6 @@ public class Visual extends PApplet{
 		}
 		catch(CorruptedSaveFileException e){
 			throw new CorruptedSaveFileException();
-		}
-	}
-	
-	public void allEat(){
-		for(Fish fish: this.tank.fish){
-			for(Food food: this.tank.food){
-				this.tank.eat(fish, food);
-			}
 		}
 	}
 

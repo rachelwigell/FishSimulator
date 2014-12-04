@@ -244,7 +244,7 @@ public class Tank {
 		Random random = new Random();
 		for(Fish f: this.fish){
 			int threshold = (int) (((double) Math.max(f.fullness, 0)) / ((double) f.maxHappyFull) * f.size/2.0);
-			int rand = random.nextInt(500);
+			int rand = random.nextInt(2000);
 			if(rand < threshold){
 				waste++;
 				addPoop(visual, f);
@@ -259,32 +259,6 @@ public class Tank {
 			total += f.fullness;
 		}
 		return total;
-	}
-
-	//change, make random
-	//chance that a fish will find food proportionate to amount of food in tank and hunger level
-	double eat(Fish aFish){
-		double total = totalHunger();
-		double eaten;
-		if(total > this.food.size()){
-			double prop = this.food.size()/total;
-			eaten = aFish.fullness * prop;
-		}
-		else{
-			eaten = aFish.fullness;
-		}
-		//		aFish.hunger = Math.max(aFish.hunger - eaten, 0);
-//		this.food = Math.max(this.food.size() - eaten, 0);
-		return aFish.fullness;
-	}
-
-	public void cleaning(){
-		this.waste = 0;
-//		this.food = 0;
-	}
-
-	public void feeding(int food){
-//		this.food = this.food + food;
 	}
 
 	public Tank waterChange(double percent){
@@ -387,6 +361,8 @@ public class Tank {
 	public void skipAhead(Visual visual, int minutes){
 		for(int i = 0; i < minutes*12; i++){
 			this.progress(visual);
+			moveAllFish(visual);
+			allRandomizedEat();
 		}
 	}
 
@@ -414,6 +390,38 @@ public class Tank {
 		if(fish.position.distance(food.position) < food.dimensions.x*4){
 			fish.fullness = Math.min(fish.fullness+fish.ease*1800, fish.maxHappyFull);
 			this.food.remove(food);
+		}
+	}
+	
+	public void allEat(){
+		for(Fish fish: this.fish){
+			for(Food food: this.food){
+				this.eat(fish, food);
+			}
+		}
+	}
+	
+	public void randomizedEating(Fish fish, Food food){
+		double percentChance = .005*Math.max(1-((double) Math.max(fish.fullness, 0)/(double) fish.maxHappyFull), 0);
+		Random random = new Random();
+		float rand = random.nextFloat();
+		if(rand < percentChance){
+			fish.fullness = Math.min(fish.fullness+fish.ease*1800, fish.maxHappyFull);
+			this.food.remove(food);
+		}
+	}
+	
+	public void allRandomizedEat(){
+		for(Fish fish: this.fish){
+			for(Food food: this.food){
+				this.randomizedEating(fish, food);
+			}
+		}
+	}
+	
+	public void moveAllFish(Visual visual){
+		for(Fish f: this.fish){
+			f.skipAhead(visual);
 		}
 	}
 }

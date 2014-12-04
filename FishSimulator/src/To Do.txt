@@ -6,4 +6,3 @@ visible plants
 decorative items
 reinstate tank sizes
 Encode save files so that user cannot alter them
-Food disappears and is eaten when a fish touches it - might have to let them angle to get food on the ground

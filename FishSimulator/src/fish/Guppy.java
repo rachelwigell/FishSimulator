@@ -61,9 +61,7 @@ public class Guppy extends Fish{
 			long timeWell,
 			long fullness,
 			long happiness,
-			int health,
-			Vector3D position,
-			Vector3D orientation){
+			int health){
 		this.name = "Guppy";
 		this.nickname = nickname;
 		this.timeWell = timeWell;
@@ -94,9 +92,11 @@ public class Guppy extends Fish{
 		this.sprite = "guppy.png";
 		this.model.scale(30);
 		this.model.translateToCenter();
-		this.position = position;
-		this.orientation = orientation;
+		this.position = new Vector3D(0, 0, 0);
+		this.orientation = new Vector3D(0, 0, 0);
 		this.dimensions = new Vector3D(60, 22, 9);
+		this.velocity = new Vector3D(0, 0, 0);
+		this.acceleration = new Vector3D(0, 0, 0);
 
 		diet.add(Diet.FLAKE);
 		diet.add(Diet.FROZEN);
