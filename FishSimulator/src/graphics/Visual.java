@@ -537,6 +537,7 @@ public class Visual extends PApplet{
 		drawAllFish();
 		drawSinkers();
 		drawTank();
+		allEat();
 		if(updateCount > 150){ //operations to happen every 5 seconds
 			tank.progress(this);
 			updateCount = 0;
@@ -570,7 +571,7 @@ public class Visual extends PApplet{
 			}
 		}
 		else if(key == 'q'){
-
+			tank.addPoop(this, this.tank.fish.getFirst());
 		}
 	}
 
@@ -748,7 +749,8 @@ public class Visual extends PApplet{
 	public void drawWaste(Sinkers s){
 		noStroke();
 		pushMatrix();
-		translate(s.position.x, s.position.y, s.position.z);
+//		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
+		translate(s.absolutePosition.x, s.absolutePosition.y, s.absolutePosition.z);
 		fill(s.color.x, s.color.y, s.color.z);
 		sphere(s.dimensions.x);
 		popMatrix();		
@@ -1259,6 +1261,14 @@ public class Visual extends PApplet{
 			throw new CorruptedSaveFileException();
 		}
 	}
+	
+	public void allEat(){
+		for(Fish fish: this.tank.fish){
+			for(Food food: this.tank.food){
+				this.tank.eat(fish, food);
+			}
+		}
+	}
 
 	public void determineBounds(){
 		noLights();
@@ -1287,29 +1297,27 @@ public class Visual extends PApplet{
 		Sinkers closest = null;
 		float z = -1000;
 		for(Poop p: tank.poops){
-			if(raySphereIntersect(start, normal, p.position, p.dimensions.x)){
-				if(p.position.z > z){
-					z = p.position.z;
+			if(raySphereIntersect(start, normal, p.absolutePosition, p.dimensions.x)){
+				if(p.absolutePosition.z > z){
+					z = p.absolutePosition.z;
 					closest = p;
 				} 
 			}
 		}
 		for(Food f: tank.food){
-			if(raySphereIntersect(start, normal, f.position, f.dimensions.x)){
-				if(f.position.z > z){
-					z = f.position.z;
+			if(raySphereIntersect(start, normal, f.absolutePosition, f.dimensions.x)){
+				if(f.absolutePosition.z > z){
+					z = f.absolutePosition.z;
 					closest = f;
 				}
 			}
 		}
 		if(closest != null){
-			tank.poops.remove(closest);
-			tank.food.remove(closest);
+			closest.removeFromTank(this.tank);
 		}
 	}
 
 	public boolean raySphereIntersect(Vector3D rayOrigin, Vector3D rayNormal, Vector3D sphereCenter, float sphereRadius){
-		sphereCenter.printOut("center");
 		double determinant = Math.pow(rayNormal.dotProduct(rayOrigin.addVector(sphereCenter.multiplyScalar(-1))), 2) - Math.pow(rayOrigin.addVector(sphereCenter.multiplyScalar(-1)).magnitude(), 2) + Math.pow(sphereRadius, 2);
 		if(determinant < 0) return false;
 		else return true;

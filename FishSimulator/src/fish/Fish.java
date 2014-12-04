@@ -165,6 +165,18 @@ public abstract class Fish {
 		else if(velocity.x == 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI/2.0);
 		else if(velocity.z == 0 && velocity.x > 0) this.orientation.y = (float) Visual.PI;
 		else if(velocity.x == 0 && velocity.z < 0) this.orientation.y = (float) (3*Visual.PI/2.0);
+		this.orientation.z = -this.velocity.y * Visual.PI/6;
+	}
+	
+	public Vector3D hungerContribution(Tank tank){
+		Vector3D nearestFood = tank.nearestFood(this.position);
+		if(nearestFood == null) return new Vector3D(0,0,0);
+		double percent = Math.max((.8-((double) Math.max(this.fullness, 0)/(double) this.maxHappyFull))*5, 0);
+//		Vector3D mouth = new Vector3D((float) (this.position.x - Math.cos(this.orientation.y) * this.dimensions.x/2.0),
+//				(float) (this.position.y - Math.sin(this.orientation.z)*this.dimensions.x/2.0),
+//				(float) (this.position.z + Math.sin(this.orientation.y) * this.dimensions.x/2.0));
+		Vector3D normal = nearestFood.addVector(this.position.multiplyScalar(-1)).normalize();
+		return normal.multiplyScalar((float) percent);
 	}
 	
 	public void updateAcceleration(){
@@ -174,19 +186,24 @@ public abstract class Fish {
 		this.acceleration.z += random.nextFloat()*.25-.125;
 	}
 	
-	public void updateVelocity(){
-		this.velocity.x = centermost(-1, this.velocity.x + this.acceleration.x, 1);
-		this.velocity.y = centermost(-1, this.velocity.x + this.acceleration.y, 1);
-		this.velocity.z = centermost(-1, this.velocity.x + this.acceleration.z, 1);
+	public void updateVelocity(Tank tank){
+//		this.velocity = hungerContribution(tank);
+		
+//		if(this.velocity.x == 0 && this.velocity.y == 0 && this.velocity.z == 0){
+			this.velocity.x = centermost(-1, this.velocity.x + this.acceleration.x, 1);
+			this.velocity.y = centermost(-1, this.velocity.x + this.acceleration.y, 1);
+			this.velocity.z = centermost(-1, this.velocity.x + this.acceleration.z, 1);
+//		}
+			this.velocity = this.velocity.addVector(hungerContribution(tank));
 		this.updateOrientationRelativeToVelocity(this.velocity);
 		this.updateAcceleration();
 	}
 	
 	public void updatePosition(Visual visual){
 		this.position.x = centermost((int)(-.4*visual.zoomPercentage*visual.fieldX+this.dimensions.x/2.0), this.position.x+this.velocity.x, (int)(.4*visual.zoomPercentage*visual.fieldX-this.dimensions.x/2.0));
-		this.position.y = centermost((int)(-.5*visual.zoomPercentage*visual.zoomPercentage*visual.tank.waterLevel+this.dimensions.y/2.0), this.position.y+this.velocity.y, (int)(.5*visual.zoomPercentage*visual.zoomPercentage*visual.tank.waterLevel-this.dimensions.y/2.0));
+		this.position.y = centermost((int)(-.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0), this.position.y+this.velocity.y, (int)(.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0));
 		this.position.z = centermost((int)(-.25*visual.zoomPercentage*visual.fieldZ+this.dimensions.x/2.0), this.position.z+this.velocity.z, (int)(.25*visual.zoomPercentage*visual.fieldZ-this.dimensions.x/2.0));
-		this.updateVelocity();
+		this.updateVelocity(visual.tank);
 	}
 	
 	public float centermost(float one, float two, float three){

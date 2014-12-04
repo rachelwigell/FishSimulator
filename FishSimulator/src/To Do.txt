@@ -1,6 +1,4 @@
-fish eat based on hunger and have to actually go to the food
 click a fish to see its status
-fish animations
 dead fish float upside down
 reinstate aggression and predator/prey dynamics
 Make individuals unique with some randomness
@@ -8,3 +6,4 @@ visible plants
 decorative items
 reinstate tank sizes
 Encode save files so that user cannot alter them
+Food disappears and is eaten when a fish touches it - might have to let them angle to get food on the ground

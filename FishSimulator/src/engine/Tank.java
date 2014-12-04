@@ -388,12 +388,6 @@ public class Tank {
 		for(int i = 0; i < minutes*12; i++){
 			this.progress(visual);
 		}
-		for(Food f: this.food){
-			f.position = f.restingPosition;
-		}
-		for(Poop p: this.poops){
-			p.position = p.restingPosition;
-		}
 	}
 
 	public boolean validateNickname(String nickname){
@@ -401,5 +395,25 @@ public class Tank {
 			if(f.nickname.equals(nickname)) return false;
 		}
 		return true;
+	}
+	
+	public Vector3D nearestFood(Vector3D position){
+		Vector3D closest = null;
+		float distance = Float.MAX_VALUE;
+		for(Food f: this.food){
+			float fDistance = f.position.squareDistance(position);
+			if(fDistance < distance){
+				distance = fDistance;
+				closest = f.position;
+			}
+		}
+		return closest;
+	}
+	
+	public void eat(Fish fish, Food food){
+		if(fish.position.distance(food.position) < food.dimensions.x*4){
+			fish.fullness = Math.min(fish.fullness+fish.ease*1800, fish.maxHappyFull);
+			this.food.remove(food);
+		}
 	}
 }

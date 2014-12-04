@@ -12,7 +12,8 @@ public class Food extends Sinkers{
 		float percent = random.nextFloat();
 		float z = (float) (percent*(.5*visual.zoomPercentage*visual.fieldZ-20) + -visual.fieldZ + 10);
 		float factor = (z-start.z)/normal.z;
-		this.position = start.addVector(normal.multiplyScalar(factor));
+		this.absolutePosition = start.addVector(normal.multiplyScalar(factor));
+		this.position = this.absolutePosition.addVector(new Vector3D((int)(-.4*visual.fieldX), (int)(-.5*visual.fieldY)-(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)), (int)(visual.fieldZ)-(int)(visual.zoomPercentage*.25*visual.fieldZ)));
 		this.velocity = new Vector3D(0, 1, 0);
 		this.dimensions = new Vector3D(5, 5, 5);
 		this.color = new Vector3D(200, 200, 0);
@@ -25,5 +26,9 @@ public class Food extends Sinkers{
 		this.dimensions = new Vector3D(5, 5, 5);
 		this.color = new Vector3D(200, 200, 0);
 		this.restingPosition = new Vector3D(0, (float) (.5*visual.fieldY + .5*visual.zoomPercentage*visual.fieldY), 0);
+	}
+	
+	public void removeFromTank(Tank t){
+		t.food.remove(this);
 	}
 }
