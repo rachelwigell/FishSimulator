@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import saito.objloader.OBJModel;
+import engine.DeadFish;
 import engine.Diet;
 import engine.HappinessStatus;
 import engine.Qualify;
@@ -84,6 +85,7 @@ public abstract class Fish {
 			visual.tank.waste += this.size;
 			visual.fishChoice = -1;
 			visual.fishChoices.removeItem(this.nickname +": " + this.name);
+			visual.tank.addDeadFish(visual, this);
 		}
 	}
 

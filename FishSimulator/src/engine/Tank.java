@@ -41,6 +41,7 @@ public class Tank {
 	public int prey;
 	public LinkedList<Poop> poops;
 	public LinkedList<Food> food;
+	public LinkedList<DeadFish> deadFish;
 
 	public final double roomTemp = 22;
 	public final double pi = 3.14159;
@@ -95,6 +96,7 @@ public class Tank {
 		this.prey = 0;
 		this.poops = new LinkedList<Poop>();
 		this.food = new LinkedList<Food>();
+		this.deadFish = new LinkedList<DeadFish>();
 	}
 
 	public Tank(double plants,
@@ -114,6 +116,7 @@ public class Tank {
 			int waste,
 			LinkedList<Poop> poops,
 			LinkedList<Food> food,
+			LinkedList<DeadFish> deadFish,
 			LinkedList <Fish> fish){
 		this.plants = plants;
 		this.length = length;
@@ -134,6 +137,7 @@ public class Tank {
 		this.waste=waste;
 		this.time = getTime();
 		this.poops = poops;
+		this.deadFish = deadFish;
 		this.food = food;
 		this.fish = fish;
 		this.cmFish = this.calcTotalFish();
@@ -278,6 +282,10 @@ public class Tank {
 	
 	public void addPoop(Visual visual, Fish f){
 		this.poops.add(new Poop(visual, f));
+	}
+	
+	public void addDeadFish(Visual visual, Fish f){
+		this.deadFish.add(new DeadFish(visual, f));
 	}
 
 	/*String loneRecommendation(Fish aFish){

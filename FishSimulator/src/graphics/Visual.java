@@ -26,6 +26,7 @@ import controlP5.Textarea;
 import controlP5.Textfield;
 import engine.ClickMode;
 import engine.CorruptedSaveFileException;
+import engine.DeadFish;
 import engine.Food;
 import engine.HappinessStatus;
 import engine.Poop;
@@ -44,7 +45,7 @@ public class Visual extends PApplet{
 	public final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
 	public final int fieldZ = 700;
 	public final float zoomPercentage = (float) .85;
-	final Fish[] speciesList = {new Guppy(this, "Swimmy"), new WhiteCloudMountainMinnow(this, "Swimmy"), new CherryBarb(this, "Swimmy")};
+	final Fish[] speciesList = { new CherryBarb(this, "Swimmy"), new Guppy(this, "Swimmy"), new WhiteCloudMountainMinnow(this, "Swimmy")};
 
 	ControlP5 infoPane;
 	PeasyCam camera;
@@ -576,7 +577,8 @@ public class Visual extends PApplet{
 			}
 		}
 		else if(key == 'q'){
-			tank.addPoop(this, this.tank.fish.getFirst());
+			tank.fish.getFirst().health = 0;
+			tank.fish.getFirst().handleDeceased(this);
 		}
 	}
 
@@ -697,6 +699,14 @@ public class Visual extends PApplet{
 		}
 	}
 
+	public void drawDummyBox(){
+		noLights();
+		noStroke();
+		fill(255, 0, 0);
+		translate((int)(.4*fieldX), (int)(.5*fieldY), (int)(-fieldZ));
+		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0);
+	}
+	
 	public void drawTank(){
 		noStroke();
 		pushMatrix();
@@ -707,7 +717,6 @@ public class Visual extends PApplet{
 		translate(0, (int)(-.8*fieldY), 1);
 		fill(255);
 		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0);
-		fill(254);
 		translate((int)(zoomPercentage*.4*fieldX), 0, (int)(zoomPercentage*.25*fieldZ));
 		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ));
 		translate((int)(-zoomPercentage*.8*fieldX), 0, 0);
@@ -717,6 +726,8 @@ public class Visual extends PApplet{
 		box((int)(zoomPercentage*.8*fieldX), 0, (int)(zoomPercentage*.5*fieldZ));
 		fill(0, 0, 255, 30);
 		translate(0, (int)(-zoomPercentage*.5*fieldY) + (int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), 0);
+		stroke(0, 0, 100, 30);
+		hint(DISABLE_DEPTH_TEST);
 		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ));
 		popMatrix();
 	}
@@ -749,12 +760,26 @@ public class Visual extends PApplet{
 			drawWaste(f);
 			f.updatePosition();
 		}
+		for(DeadFish d: this.tank.deadFish){
+			drawDeadFish(d);
+			d.updatePosition();
+		}
+	}
+	
+	public void drawDeadFish(DeadFish d){
+		noStroke();
+		pushMatrix();
+		translate(d.absolutePosition.x, d.absolutePosition.y, d.absolutePosition.z);
+		rotateX(d.orientation.x);
+		rotateY(d.orientation.y);
+		rotateZ(d.orientation.z);
+		d.model.draw();
+		popMatrix();
 	}
 
 	public void drawWaste(Waste s){
 		noStroke();
 		pushMatrix();
-//		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
 		translate(s.absolutePosition.x, s.absolutePosition.y, s.absolutePosition.z);
 		fill(s.color.x, s.color.y, s.color.z);
 		sphere(s.dimensions.x);
@@ -1263,6 +1288,9 @@ public class Visual extends PApplet{
 			for(int i = start; i < end; i++){
 				food.add(new Food(this, new Vector3D(lines[i])));
 			}
+//			TODO: Fix save/load to accommodate dead fish
+			LinkedList<DeadFish> deadFish = new LinkedList<DeadFish>();
+			
 			start = indexOf(lines, "Start fish info")+1;
 			end = lines.length;
 			LinkedList<Fish> fish = new LinkedList<Fish>();
@@ -1284,7 +1312,7 @@ public class Visual extends PApplet{
 					Double.parseDouble(lines[14]),
 					Double.parseDouble(lines[15]),
 					Integer.parseInt(lines[16]),
-					poops, food, fish);
+					poops, food, deadFish, fish);
 			return tank;
 		}
 		catch(CorruptedSaveFileException e){
@@ -1293,14 +1321,13 @@ public class Visual extends PApplet{
 	}
 
 	public void determineBounds(){
-		noLights();
-		drawTank();
+		drawDummyBox();
 		loadPixels();
 		draw();
 		int x = 0;
 		int y = 0;
 		for(int i: pixels){
-			if(i == -438181377){
+			if(i == -65536){
 				if(x < tankMinX) tankMinX = x;
 				if(x > tankMaxX) tankMaxX = x;
 				if(y < tankMinY) tankMinY = y;
@@ -1334,6 +1361,14 @@ public class Visual extends PApplet{
 				}
 			}
 		}
+		for(DeadFish d: tank.deadFish){
+			if(clickedDeadFish(d, start, normal)){
+				if(d.absolutePosition.z > z){
+					z = d.absolutePosition.z;
+					closest = d;
+				}				
+			}
+		}
 		if(closest != null){
 			closest.removeFromTank(this.tank);
 		}
@@ -1343,6 +1378,20 @@ public class Visual extends PApplet{
 		double determinant = Math.pow(rayNormal.dotProduct(rayOrigin.addVector(sphereCenter.multiplyScalar(-1))), 2) - Math.pow(rayOrigin.addVector(sphereCenter.multiplyScalar(-1)).magnitude(), 2) + Math.pow(sphereRadius, 2);
 		if(determinant < 0) return false;
 		else return true;
+	}
+	
+	public boolean clickedDeadFish(DeadFish d, Vector3D rayOrigin, Vector3D rayNormal){
+//		d.absolutePosition.printOut("fish position");
+//		rayOrigin.printOut("rayOrigin");
+//		rayNormal.printOut("rayNormal");
+		float width = (float) Math.abs((Math.cos(d.orientation.y)*d.dimensions.x) + Math.abs(Math.sin(d.orientation.y)*d.dimensions.z));
+//		System.out.println("width: " + width);
+		float height = d.dimensions.y;
+		float dist = rayOrigin.z-d.absolutePosition.z;
+		Vector3D pointAt = rayOrigin.addVector(rayNormal.multiplyScalar(dist));
+//		pointAt.printOut("PointAt");
+		return pointAt.x < (d.absolutePosition.x + width/2.0) && pointAt.x > (d.absolutePosition.x - width/2.0)
+				&& pointAt.y < (d.absolutePosition.y + height/2.0) && pointAt.y > (d.absolutePosition.y - height/2.0);
 	}
 
 	public class Selection_in_P3D_OPENGL_A3D
