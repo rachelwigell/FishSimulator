@@ -1,0 +1,321 @@
+Fish tank chemistry info
+
+pH:
+* almost all freshwater fish inhabit waters with a pH from 5-9; majority in 6-7.5
+* falls with decaying material (plant and animal wastes)
+* when falls below 5.5, bacteria that break down ammonia die and ammonia level rises
+* can be lowered using phosphate based chemicals, which encourages algae growth
+* lowered by plants and fish during respiration
+* difficult to lower in hard water
+* raised by adding baking soda
+* raised by water change
+* lowered by agent like "pH Down"
+* lowered by adding water of low pH during water changes
+
+hardness:
+* amount of dissolved minerals, especially calcium and magnesium
+* usually expressed in amount of calcium carbonate (CaCO3)
+* measured in ppm and dH (degrees of hardness) or gH (general hardness)
+* very soft = 0-70 ppm, 0-4 gH/dH
+* soft = 70-135 ppm, 4-8 gH/dH
+* medium hard = 135-200 ppm, 8-12 gH/dH
+* hard = 200-350 ppm, 12-20 gH/dH
+* very hard >350 ppm, >20 gH/dH
+* softened by peat filtration, reverse osmosis, ion exchange resins, or boiling water
+* hardened by filtering through dolomite or crushed coral
+* very soft water subject to pH crashes
+* can test by running electrical current through water; higher conductivity = higher hardness
+
+dissolved gases
+* dissolved oxygen in water necessary for respiration
+* oxygen added through air pump, higher exposed surface area
+* plants add oxygen in day with photosynthesis and use oxygen at night with respiration
+* less oxygen present at higher temperature
+* CO2 present as byproduct of respiration
+* plants use CO2 during photosynthesis but produce CO2 during respiration
+* low CO2 causes yellowing of plant leaves and slow growth
+* CO2 prescence lowers pH and hardness
+* too much CO2 harms fish
+* Co2 can be added using CO2 system
+
+Nitrogen cycle
+* fish waste, uneaten food, dead plants or fish broken down into ammonia
+* ammonium is present if pH<7 and is not toxic; ammonia present if pH>7 and is highly toxic
+* levels of ammonia >2ppm very dangerous; rises by third day
+* nitrosomonas bacteria grow which convert ammonia into nitrite, also highly toxic
+* nitrite can be lethal at 1 mg/L; rises by end of first week
+* nitrobacter bacteria convert nitrites to nitrates; not highly toxic at low levels
+* partial water changes keep nitrate levels at safe range
+* test for ammonia on day three, continue until reaches zero
+* signs of fish distress: rapid breathing, clamped fins, erratic swimming, hanging at surface for air
+* ammonia reduced quickly by chemicals like "ammo-lock"
+* test for nitrites on day 7, continue until reaches zero
+* if nitrate levels are high perform 25-50% water change
+* during cycling, don't add fish, change filter media (bacteria grow there), overfeed fish, or alter pH (unless serious problem, as bacteria will be disturbed)
+* changing water will slow bacteria growth but also lower ammonia and nitrite levels
+* testing ammonia: if at >2ppm, or fish show signs of distress, perform 50% water change, chemically neutralize ammonia, lower pH below 7, withhold feedings
+* if ammonia at 1-2ppm, perform 25-50% water change, reduce feedings by half, watch fish for distress
+* if ammonia at .25-1ppm, perform 25% water change, reduce feedings by half
+* ammonia below .25ppm good.
+* testing nitrite: if at >1ppm or fish distressed, perform 50% water change, withhold feedings
+* if nitrite at .5-1ppm, perform 25-50% water change, reduce feedings by half, add .5oz salt per 1 gall water, increase aeration
+* if nitrite at .1-.5ppm, perform 25% water change, reduce feedings by half
+* nitrite below .1ppm good
+* water changes are the only way to reduce nitrites
+* bacteria can die at pH below 5.5
+
+Fish species
+
+Dwarf Puffer
+Care difficulty: 2/5
+Size: 2.5cm
+pH: 6.5-8.3 (not strict)
+Temperature: 24-28C,
+Hardness: 5-20dH
+Lifespan: years
+Peacefulness: 2/5 (fin nippers, eat snails and shrimp)
+Tank size: >=5gall per fish recommended
+Tank setup: Like to have many plants and hiding places
+Compatability: susceptible to being eaten by larger fish, might nip at smaller fish. Cooperate with Otocinclus but not many other fish
+Diet: picky, will accept frozen bloodworms, snails, live blackworms, shrimp
+Tank region: middle
+Nitrates: requires 0 ammonia, 0 nitrite, <20ppm nitrate, <10ppm nitrate optimal
+Gender ratio: 1 male to 2-3 females recommended if genders mixed
+Breeding: doesn't happen often
+Schooling: not necessary
+
+Cherry Shrimp
+Care difficulty: 1/5
+Size: 3cm
+pH: 7-8 (not strict)
+Temperature: 15-28C,
+Hardness: 3-15dH
+Lifespan: 1-2yr
+Peacefulness: 5/5
+Tank size: >=1gall recommended, many can live per gall
+Tank setup: prefer plants and algae presence
+Compatability: cannot live with big or aggressive fish
+Diet: algae, flake. may need calcium supplement
+Tank region: bottom
+Nitrates: requires nitrates <=25mg/L (25ppm)
+Gender ratio: not important
+Breeding: easy to breed, young might be eaten by other fish
+Schooling: not necessary
+Comments: sensitive to metal in water
+
+Inca Snail
+Care difficulty: 1/5
+Size: 5cm
+pH: 7-8.5
+Temperature: 18-27C
+Hardness: 8->20dH
+Lifespan: 1-6yr
+Peacefulness: 5/5
+Tank size: >=5gall recommended
+Tank setup: like algae, hiding places
+Compatability: cannot coexist with loaches, aggressive fish may nip at them
+Diet: algae, algae wafers, calcium supplements recommended
+Tank region: surfaces
+Nitrates: unimportant
+Gender ratio: unimportant
+Breeding: will breed easily
+Schooling: unimportant
+Comments: sensitive to metal in water
+
+Guppy
+Care difficulty: 1/5
+Size: 5cm
+pH: 7-8.5
+Temperature: 20-29C
+Hardness: 8-20dH
+Lifespan: 3-5yr
+Peacefulness: 5/5
+Tank size: >=10gall recommended
+Tank setup: prefer plants presence
+Compatability: often a target for fin nippers
+Diet: flake, freeze-dried, live foods; variety optimal
+Tank region: middle to top
+Nitrates: Don't thrive while tank is cycling
+Gender ratio: 2-3 females per male recommended if genders mixed
+Breeding: Breed very prolifically every 5 weeks, fry subject to being eaten
+Schooling: not necessary
+
+Platy
+Care difficulty: 1/5
+Size: 6cm
+pH: 7-8.5
+Temperature: 18-26C
+Hardness: 8-25dH
+Lifespan: 2-3yr
+Peacefulness: 5/5
+Tank size: >=10gall recommended
+Tank setup: like hiding spots
+Compatability: all
+Diet: flake, granular, frozen, live
+Tank region: 
+Nitrates: not important
+Gender ratio: 1M:2-3F recommended if genders mixed
+Breeding: breed very easily every 4-6 weeks, fry may be eaten
+Schooling: not necessary
+
+Neon Tetra
+Care difficulty: 2/5
+Size: 4cm
+pH: 5-7.5
+Temperature: 20-26C
+Hardness: 1-12dH
+Lifespan: 5-8yrs
+Peacefulness: 5/5
+Tank size: >=10gall recommended
+Tank setup: like plants in tank
+Compatability: avoid keeping with fish large enough to eat them
+Diet: flake, live, freeze dried
+Tank region: middle to bottom
+Nitrates: don't tolerate nitrates well
+Gender ratio: unimportant
+Breeding: difficult
+Schooling: like to school; keep at least 6
+
+Bristlenose Plec
+Care difficulty: 2/5
+Size: 10-15cm
+pH: 5.5-8 (not strict)
+Temperature: 20-28C
+Hardness: 2-20dH (not strict)
+Lifespan: 3-4yr
+Peacefulness: 4/5 might be aggressive towards other plecs
+Tank size: >=30gall recommended
+Tank setup: like algae
+Compatability: many
+Diet: algae, algae wafer
+Tank region: bottom and sides
+Nitrates: can cause ammonia spikes
+Gender ratio: not important
+Breeding: difficult
+Schooling: not necessary
+
+Kuhli Loach
+Care difficulty: 2/5
+Size: 8-11cm
+pH: 5.5-7.5
+Temperature: 21-30C
+Hardness: 1-12dH
+Lifespan: 10yr
+Peacefulness: 5/5
+Tank size: >=20gall
+Tank setup: no sharp objects, like small spaces
+Compatability: avoid fish big enough to eat them
+Diet: pellets, bloodworms, shrimp
+Tank region: bottom
+Nitrates: not suitable for tanks still cycling
+Gender ratio: not important
+Breeding: difficult
+Schooling: prefer to be in groups of 3 or more
+
+White Cloud Mountain Minnow
+Care difficulty: 1/5
+Size: 4cm
+pH: 6-8.5
+Temperature: 7-24C
+Hardness: 5-25dH
+Lifespan: 3-7yr
+Peacefulness: 4/5 fast, nippy
+Tank size: >=5gall recommended
+Tank setup: like vegetation, open swimming areas
+Compatability: wide, might bother slower fish
+Diet: flake, frozen, freeze dried, live
+Tank region: middle, all
+Nitrates: hardy
+Gender ratio: unimportant
+Breeding: easy, fry might be eaten
+Schooling: not necessary
+
+Gold Barb
+Care difficulty: 1/5
+Size: 8cm
+pH: 6-8 (not strict)
+Temperature: 18-28C
+Hardness: 5-25dH (not strict)
+Lifespan: 5-7yr
+Peacefulness: 4/5
+Tank size: >=20gall recommended
+Tank setup: will nip at plants
+Compatability: might nip at long finned fish
+Diet: flake, live, freeze dried
+Tank region: middle to bottom
+Nitrates: hardy
+Gender ratio: not important
+Breeding: moderate, eggs and fry might be eaten
+Schooling: prefer schools of 5 or more
+
+Cherry Barb
+Care difficulty: 1/5
+Size: 5cm
+pH: 5.5-8
+Temperature: 22-28C
+Hardness: 5-25dH
+Lifespan: 5-7yr
+Peacefulness: 5/5
+Tank size: >=5gall recommended
+Tank setup: like hiding places, plants, open swimming space
+Compatability: avoid predatory fish
+Diet: flake, live, freeze dried, blood worms, shrimp
+Tank region: all
+Nitrates: hardy
+Gender ratio: 2 females to a male recommended
+Breeding: moderate, eggs and fry might be eaten
+Schooling: prefer schools of 6 or more
+
+Glassfish
+Care difficulty: 2/5
+Size: 8cm
+pH: 6.5-7.5
+Temperature: 20-30C
+Hardness: 7-19dH
+Lifespan: 
+Peacefulness: 5/5
+Tank size: >=20gall recommended
+Tank setup: 
+Compatability: avoid large predators
+Diet: flakes and freeze-dried
+Tank region: all
+Nitrates:
+Gender ratio:
+Breeding: 
+Schooling: prefer groups of 5 or more
+
+Corydoras Catfish
+Care difficulty: 1/5
+Size: 6cm
+pH: 6-8
+Temperature: 21-27C
+Hardness: 5-18dH
+Lifespan: 3-5yr
+Peacefulness: 5/5
+Tank size: >=10gall
+Tank setup: 
+Compatability: wide
+Diet: algae wafers, shrimp pellets
+Tank region: bottom
+Nitrates:
+Gender ratio:
+Breeding: difficult
+Schooling: prefer to be in schools of 6 or more
+
+Otocinclus catfish
+Care difficulty: 3/5
+Size: 5cm
+pH: 6-7.5
+Temperature: 20-26C
+Hardness: 6-15dH
+Lifespan: 3-7yr
+Peacefulness: 5/5
+Tank size: >=20gall
+Tank setup: like algae and plants
+Compatability: avoid keeping with aggressive or large fish
+Diet: algae, algae wafers
+Tank region: middle to top
+Nitrates: Only add to tanks that have completed the nitrogen cycle, try to keep nitrate <10ppm
+Gender ratio:
+Breeding: difficult
+Schooling: like to school
