@@ -3,7 +3,7 @@ package engine;
 import fish.Fish;
 import graphics.Visual;
 
-public class Poop extends Sinkers{
+public class Poop extends Waste{
 	
 	public Poop(Visual visual, Fish origin){
 		this.position = new Vector3D((float) (origin.position.x + Math.cos(origin.orientation.y) * origin.dimensions.x/2.0),

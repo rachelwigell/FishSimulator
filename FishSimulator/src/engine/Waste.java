@@ -2,7 +2,7 @@ package engine;
 
 import graphics.Visual;
 
-public abstract class Sinkers {
+public abstract class Waste {
 	public Vector3D position;
 	public Vector3D absolutePosition;
 	public Vector3D color;

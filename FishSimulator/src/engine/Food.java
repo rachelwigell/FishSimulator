@@ -4,13 +4,13 @@ import graphics.Visual;
 
 import java.util.Random;
 
-public class Food extends Sinkers{
+public class Food extends Waste{
 
 	public Food(Visual visual, Vector3D start, Vector3D end){
 		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
 		Random random = new Random();
 		float percent = random.nextFloat();
-		float z = (float) (percent*(.5*visual.zoomPercentage*visual.fieldZ-20) + -visual.fieldZ + 10);
+		float z = (float) (-visual.fieldZ + 30 + percent*(.5*visual.zoomPercentage*visual.fieldZ-30));
 		float factor = (z-start.z)/normal.z;
 		this.absolutePosition = start.addVector(normal.multiplyScalar(factor));
 		this.position = this.absolutePosition.addVector(new Vector3D((int)(-.4*visual.fieldX), (int)(-.5*visual.fieldY)-(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)), (int)(visual.fieldZ)-(int)(visual.zoomPercentage*.25*visual.fieldZ)));

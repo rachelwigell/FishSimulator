@@ -29,12 +29,14 @@ import engine.CorruptedSaveFileException;
 import engine.Food;
 import engine.HappinessStatus;
 import engine.Poop;
-import engine.Sinkers;
 import engine.Tank;
 import engine.TankSize;
 import engine.Vector3D;
+import engine.Waste;
+import fish.CherryBarb;
 import fish.Fish;
 import fish.Guppy;
+import fish.WhiteCloudMountainMinnow;
 
 public class Visual extends PApplet{
 	private static final long serialVersionUID = 1L;
@@ -42,7 +44,7 @@ public class Visual extends PApplet{
 	public final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
 	public final int fieldZ = 700;
 	public final float zoomPercentage = (float) .85;
-	final Fish[] speciesList = {new Guppy(this, "Swimmy")};
+	final Fish[] speciesList = {new Guppy(this, "Swimmy"), new WhiteCloudMountainMinnow(this, "Swimmy"), new CherryBarb(this, "Swimmy")};
 
 	ControlP5 infoPane;
 	PeasyCam camera;
@@ -256,7 +258,7 @@ public class Visual extends PApplet{
 		.hide();
 
 		speciesImage = new Button(infoPane, "speciesImage")
-		.setPosition(fieldX-135, fieldY-390)
+		.setPosition(fieldX-245, fieldY-440)
 		.moveTo("default")
 		.hide();
 
@@ -749,7 +751,7 @@ public class Visual extends PApplet{
 		}
 	}
 
-	public void drawWaste(Sinkers s){
+	public void drawWaste(Waste s){
 		noStroke();
 		pushMatrix();
 //		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
@@ -1078,6 +1080,14 @@ public class Visual extends PApplet{
 			toAdd = new Guppy(this, nickname);
 			tank.addFish(toAdd);
 			break;
+		case "White Cloud Mountain Minnow":
+			toAdd = new WhiteCloudMountainMinnow(this, nickname);
+			tank.addFish(toAdd);
+			break;
+		case "Cherry Barb":
+			toAdd = new CherryBarb(this, nickname);
+			tank.addFish(toAdd);
+			break;
 		}
 		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);
 	}
@@ -1217,6 +1227,22 @@ public class Visual extends PApplet{
 					Long.parseLong(array[start+4]),
 					Long.parseLong(array[start+5]),
 					Integer.parseInt(array[start+6]));
+		case "White Cloud Mountain Minnow":
+			return new WhiteCloudMountainMinnow(this,
+					array[start+1],
+					parseStatus(array[start+2]),
+					Long.parseLong(array[start+3]),
+					Long.parseLong(array[start+4]),
+					Long.parseLong(array[start+5]),
+					Integer.parseInt(array[start+6]));
+		case "Cherry Barb":
+			return new CherryBarb(this,
+					array[start+1],
+					parseStatus(array[start+2]),
+					Long.parseLong(array[start+3]),
+					Long.parseLong(array[start+4]),
+					Long.parseLong(array[start+5]),
+					Integer.parseInt(array[start+6]));
 		default:
 			throw new CorruptedSaveFileException();
 		}
@@ -1290,7 +1316,7 @@ public class Visual extends PApplet{
 
 	public void removeWaste(Vector3D start, Vector3D end){
 		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
-		Sinkers closest = null;
+		Waste closest = null;
 		float z = -1000;
 		for(Poop p: tank.poops){
 			if(raySphereIntersect(start, normal, p.absolutePosition, p.dimensions.x)){

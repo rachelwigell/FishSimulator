@@ -38,9 +38,9 @@ public class Guppy extends Fish{
 		this.ratio = 2;
 		this.schooling = 0;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "guppy.obj", Visual.POLYGON);
-		this.sprite = "guppy.png";
-		this.model.scale(30);
+		this.model = new OBJModel(window, "endlerslivebearer.obj", Visual.POLYGON);
+		this.sprite = "endlerslivebearer.png";
+		this.model.scale(10);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);
 		this.velocity = new Vector3D(0, 0, 0);
@@ -88,9 +88,9 @@ public class Guppy extends Fish{
 		this.ratio = 2;
 		this.schooling = 0;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "guppy.obj", Visual.POLYGON);
-		this.sprite = "guppy.png";
-		this.model.scale(30);
+		this.model = new OBJModel(window, "endlerslivebearer.obj", Visual.POLYGON);
+		this.sprite = "endlerslivebearer.png";
+		this.model.scale(10);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);
 		this.orientation = new Vector3D(0, 0, 0);

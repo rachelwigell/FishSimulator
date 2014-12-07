@@ -169,7 +169,7 @@ public abstract class Fish {
 	public Vector3D hungerContribution(Tank tank){
 		Vector3D nearestFood = tank.nearestFood(this.position);
 		if(nearestFood == null) return new Vector3D(0,0,0);
-		double percent = Math.max((.8-((double) Math.max(this.fullness, 0)/(double) this.maxHappyFull))*5, 0);
+		double percent = Math.max((.8-((double) Math.max(this.fullness, 0)/(double) this.maxHappyFull))*6, 0);
 		Vector3D normal = nearestFood.addVector(this.position.multiplyScalar(-1)).normalize();
 		return normal.multiplyScalar((float) percent);
 	}
