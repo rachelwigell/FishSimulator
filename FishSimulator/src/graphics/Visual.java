@@ -994,6 +994,7 @@ public class Visual extends PApplet{
 //			this.tank.skipAhead(this, iterations);
 			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
+			System.out.println("loaded");
 		}
 		catch(CorruptedSaveFileException e){
 			confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
@@ -1158,6 +1159,13 @@ public class Visual extends PApplet{
 			Food f = tank.food.get(i);
 			saveText += f.position.toCommaSeparated();
 		}
+		saveText += "Start dead fish info\n";
+		for(int i = 0; i < tank.deadFish.size(); i++){
+			DeadFish d = tank.deadFish.get(i);
+			saveText += d.position.toCommaSeparated();
+			saveText += d.orientation.toCommaSeparated();
+			saveText += d.species + "\n";
+		}
 		saveText += "Start fish info\n";
 		for(int i = 0; i < tank.fish.size(); i++){
 			Fish f = tank.fish.get(i);
@@ -1283,14 +1291,17 @@ public class Visual extends PApplet{
 				poops.add(new Poop(this, new Vector3D(lines[i]), new Vector3D(lines[i+1])));
 			}
 			start = indexOf(lines, "Start food info")+1;
-			end = indexOf(lines, "Start fish info");
+			end = indexOf(lines, "Start dead fish info");
 			LinkedList<Food> food = new LinkedList<Food>();
 			for(int i = start; i < end; i++){
 				food.add(new Food(this, new Vector3D(lines[i])));
 			}
-//			TODO: Fix save/load to accommodate dead fish
+			start = indexOf(lines, "Start dead fish info")+1;
+			end = indexOf(lines, "Start fish info");
 			LinkedList<DeadFish> deadFish = new LinkedList<DeadFish>();
-			
+			for(int i = start; i < end; i+=3){
+				deadFish.add(new DeadFish(this, new Vector3D(lines[i]), new Vector3D(lines[i+1]), lines[i+2]));
+			}
 			start = indexOf(lines, "Start fish info")+1;
 			end = lines.length;
 			LinkedList<Fish> fish = new LinkedList<Fish>();
@@ -1381,15 +1392,10 @@ public class Visual extends PApplet{
 	}
 	
 	public boolean clickedDeadFish(DeadFish d, Vector3D rayOrigin, Vector3D rayNormal){
-//		d.absolutePosition.printOut("fish position");
-//		rayOrigin.printOut("rayOrigin");
-//		rayNormal.printOut("rayNormal");
 		float width = (float) Math.abs((Math.cos(d.orientation.y)*d.dimensions.x) + Math.abs(Math.sin(d.orientation.y)*d.dimensions.z));
-//		System.out.println("width: " + width);
 		float height = d.dimensions.y;
-		float dist = rayOrigin.z-d.absolutePosition.z;
+		float dist = (d.absolutePosition.z-rayOrigin.z)/rayNormal.z;
 		Vector3D pointAt = rayOrigin.addVector(rayNormal.multiplyScalar(dist));
-//		pointAt.printOut("PointAt");
 		return pointAt.x < (d.absolutePosition.x + width/2.0) && pointAt.x > (d.absolutePosition.x - width/2.0)
 				&& pointAt.y < (d.absolutePosition.y + height/2.0) && pointAt.y > (d.absolutePosition.y - height/2.0);
 	}

@@ -46,7 +46,7 @@ public class CherryBarb extends Fish{
 		this.velocity = new Vector3D(0, 0, 0);
 		this.acceleration = new Vector3D(0, 0, 0);
 		this.orientation = new Vector3D(0, 0, 0);
-		this.dimensions = new Vector3D(60, 22, 9);
+		this.dimensions = new Vector3D(59, 24, 9);
 
 		diet.add(Diet.FLAKE);
 		diet.add(Diet.FROZEN);
@@ -94,7 +94,7 @@ public class CherryBarb extends Fish{
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);
 		this.orientation = new Vector3D(0, 0, 0);
-		this.dimensions = new Vector3D(60, 22, 9);
+		this.dimensions = new Vector3D(59, 24, 9);
 		this.velocity = new Vector3D(0, 0, 0);
 		this.acceleration = new Vector3D(0, 0, 0);
 
