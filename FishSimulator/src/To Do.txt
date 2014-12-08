@@ -1,5 +1,4 @@
 click a fish to see its status
-dead fish float upside down
 reinstate aggression and predator/prey dynamics
 Make individuals unique with some randomness
 visible plants

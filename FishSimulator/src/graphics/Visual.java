@@ -21,6 +21,7 @@ import controlP5.Button;
 import controlP5.ControlEvent;
 import controlP5.ControlP5;
 import controlP5.ListBox;
+import controlP5.ListBoxItem;
 import controlP5.Slider;
 import controlP5.Textarea;
 import controlP5.Textfield;
@@ -396,7 +397,7 @@ public class Visual extends PApplet{
 		fishHealth.valueLabel().hide();
 
 		fishImage = new Button(infoPane, "fishImage")
-		.setPosition(fieldX-135, 330)
+		.setPosition(fieldX-155, 320)
 		.moveTo("fishinfo")
 		.hide();
 
@@ -601,6 +602,11 @@ public class Visual extends PApplet{
 			removeWaste(new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z));
 			break;
 		case INFO:
+			picker.captureViewMatrix(p3d);
+			picker.calculatePickPoints(mouseX,height-mouseY);
+			start = picker.ptStartPos;
+			end = picker.ptEndPos;
+			selectFish(new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z));
 			break;
 		}
 	}
@@ -1351,6 +1357,32 @@ public class Visual extends PApplet{
 			}
 		}
 	}
+	
+	public void selectFish(Vector3D start, Vector3D end){
+		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
+		Fish closest = null;
+		float z = -1000;
+		for(Fish f: tank.fish){
+			if(clickedFish(f, start, normal)){
+				Vector3D absolutePosition = f.position.addVector(new Vector3D((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ)));
+				if(absolutePosition.z > z){
+					z = absolutePosition.z;
+					closest = f;
+				}				
+			}
+		}
+		if(closest != null){
+			infoPane.getTab("default").setActive(false);
+			infoPane.getTab("tankinfo").setActive(false);
+			infoPane.getTab("save").setActive(false);
+			infoPane.getTab("help").setActive(false);
+			infoPane.getTab("fishinfo").setActive(true);
+			activeTab = 2;
+			int selected = fishChoices.getItem(closest.nickname + ": " + closest.name).getValue();
+			fishChoices.setValue(selected);
+			controlEvent(new ControlEvent(fishChoices));
+		}
+	}
 
 	public void removeWaste(Vector3D start, Vector3D end){
 		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
@@ -1389,6 +1421,16 @@ public class Visual extends PApplet{
 		double determinant = Math.pow(rayNormal.dotProduct(rayOrigin.addVector(sphereCenter.multiplyScalar(-1))), 2) - Math.pow(rayOrigin.addVector(sphereCenter.multiplyScalar(-1)).magnitude(), 2) + Math.pow(sphereRadius, 2);
 		if(determinant < 0) return false;
 		else return true;
+	}
+	
+	public boolean clickedFish(Fish f, Vector3D rayOrigin, Vector3D rayNormal){
+		Vector3D absolutePosition = f.position.addVector(new Vector3D((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ)));
+		float width = (float) Math.abs((Math.cos(f.orientation.y)*f.dimensions.x) + Math.abs(Math.sin(f.orientation.y)*f.dimensions.z));
+		float height = f.dimensions.y;
+		float dist = (absolutePosition.z-rayOrigin.z)/rayNormal.z;
+		Vector3D pointAt = rayOrigin.addVector(rayNormal.multiplyScalar(dist));
+		return pointAt.x < (absolutePosition.x + width/2.0) && pointAt.x > (absolutePosition.x - width/2.0)
+				&& pointAt.y < (absolutePosition.y + height/2.0) && pointAt.y > (absolutePosition.y - height/2.0);
 	}
 	
 	public boolean clickedDeadFish(DeadFish d, Vector3D rayOrigin, Vector3D rayNormal){
