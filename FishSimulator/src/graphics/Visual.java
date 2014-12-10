@@ -21,7 +21,6 @@ import controlP5.Button;
 import controlP5.ControlEvent;
 import controlP5.ControlP5;
 import controlP5.ListBox;
-import controlP5.ListBoxItem;
 import controlP5.Slider;
 import controlP5.Textarea;
 import controlP5.Textfield;
@@ -36,8 +35,10 @@ import engine.TankSize;
 import engine.Vector3D;
 import engine.Waste;
 import fish.CherryBarb;
+import fish.DwarfPuffer;
 import fish.Fish;
 import fish.Guppy;
+import fish.IncaSnail;
 import fish.WhiteCloudMountainMinnow;
 
 public class Visual extends PApplet{
@@ -46,7 +47,6 @@ public class Visual extends PApplet{
 	public final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
 	public final int fieldZ = 700;
 	public final float zoomPercentage = (float) .85;
-	final Fish[] speciesList = { new CherryBarb(this, "Swimmy"), new Guppy(this, "Swimmy"), new WhiteCloudMountainMinnow(this, "Swimmy")};
 
 	ControlP5 infoPane;
 	PeasyCam camera;
@@ -85,7 +85,7 @@ public class Visual extends PApplet{
 
 	public int tankMinX = 99999;
 	public int tankMaxX = -1;
-	public int tankMinY = 99999;
+	public int tankMinY = 0;
 	public int tankMaxY = -1;
 
 	public Tank tank;
@@ -248,6 +248,7 @@ public class Visual extends PApplet{
 		.moveTo("default")
 		.hide();
 
+		Fish[] speciesList = getSpeciesList();
 		for(int i = 0; i < speciesList.length; i++){
 			fishSpecies.addItem(speciesList[i].name, i);
 		}
@@ -260,7 +261,7 @@ public class Visual extends PApplet{
 		.hide();
 
 		speciesImage = new Button(infoPane, "speciesImage")
-		.setPosition(fieldX-245, fieldY-440)
+		.setPosition(fieldX-245, fieldY-460)
 		.moveTo("default")
 		.hide();
 
@@ -712,7 +713,7 @@ public class Visual extends PApplet{
 		translate((int)(.4*fieldX), (int)(.5*fieldY), (int)(-fieldZ));
 		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0);
 	}
-	
+
 	public void drawTank(){
 		noStroke();
 		pushMatrix();
@@ -771,7 +772,7 @@ public class Visual extends PApplet{
 			d.updatePosition();
 		}
 	}
-	
+
 	public void drawDeadFish(DeadFish d){
 		noStroke();
 		pushMatrix();
@@ -843,7 +844,7 @@ public class Visual extends PApplet{
 			// speciesinfo listbox
 			if(theControlEvent.group().id() == 1){
 				int species = (int) fishSpecies.value();
-				Fish choice = speciesList[species];
+				Fish choice = getSpeciesList()[species];
 
 				speciesInfo.show()
 				.setText("Species: " + choice.name
@@ -918,7 +919,7 @@ public class Visual extends PApplet{
 			nicknameInput.setCaptionLabel("You already have a fish with that name! Please choose another name.");			
 		}
 		else{
-			String species = speciesList[(int) fishSpecies.value()].name;
+			String species = getSpeciesList()[(int) fishSpecies.value()].name;
 			addFishToTank(species, nickname);
 			nicknameInput.clear();
 			nicknameInput.setCaptionLabel(species + " named " +  nickname + " added!");
@@ -997,7 +998,7 @@ public class Visual extends PApplet{
 			this.tank = parseFile(getFileText(filename));
 			Long elapsed = System.currentTimeMillis() - getDateSaved(filename);
 			int iterations = (int) (elapsed/5000.0);
-//			this.tank.skipAhead(this, iterations);
+			this.tank.skipAhead(this, iterations);
 			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
 			System.out.println("loaded");
@@ -1107,19 +1108,11 @@ public class Visual extends PApplet{
 
 	public void addFishToTank(String speciesName, String nickname){
 		Fish toAdd = null;
-		switch(speciesName){
-		case "Guppy":
-			toAdd = new Guppy(this, nickname);
-			tank.addFish(toAdd);
-			break;
-		case "White Cloud Mountain Minnow":
-			toAdd = new WhiteCloudMountainMinnow(this, nickname);
-			tank.addFish(toAdd);
-			break;
-		case "Cherry Barb":
-			toAdd = new CherryBarb(this, nickname);
-			tank.addFish(toAdd);
-			break;
+		for(Fish f: getSpeciesList()){
+			if(f.name.equals(speciesName)){
+				toAdd = f.createFromNickname(nickname);
+				tank.addFish(toAdd);
+			}
 		}
 		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);
 	}
@@ -1257,34 +1250,17 @@ public class Visual extends PApplet{
 	}
 
 	public Fish makeFish(String[] array, int start) throws CorruptedSaveFileException{
-		switch(array[start]){
-		case "Guppy":
-			return new Guppy(this,
-					array[start+1],
-					parseStatus(array[start+2]),
-					Long.parseLong(array[start+3]),
-					Long.parseLong(array[start+4]),
-					Long.parseLong(array[start+5]),
-					Integer.parseInt(array[start+6]));
-		case "White Cloud Mountain Minnow":
-			return new WhiteCloudMountainMinnow(this,
-					array[start+1],
-					parseStatus(array[start+2]),
-					Long.parseLong(array[start+3]),
-					Long.parseLong(array[start+4]),
-					Long.parseLong(array[start+5]),
-					Integer.parseInt(array[start+6]));
-		case "Cherry Barb":
-			return new CherryBarb(this,
-					array[start+1],
-					parseStatus(array[start+2]),
-					Long.parseLong(array[start+3]),
-					Long.parseLong(array[start+4]),
-					Long.parseLong(array[start+5]),
-					Integer.parseInt(array[start+6]));
-		default:
-			throw new CorruptedSaveFileException();
+		for(Fish f: getSpeciesList()){
+			if(f.name.equals(array[start])){
+				return f.createFromParameters(array[start+1],
+						parseStatus(array[start+2]),
+						Long.parseLong(array[start+3]),
+						Long.parseLong(array[start+4]),
+						Long.parseLong(array[start+5]),
+						Integer.parseInt(array[start+6]));
+			}
 		}
+		throw new CorruptedSaveFileException();
 	}
 
 	public Tank parseFile(String text) throws CorruptedSaveFileException{
@@ -1337,6 +1313,15 @@ public class Visual extends PApplet{
 		}
 	}
 
+	public Fish[] getSpeciesList(){
+		Fish[] speciesList = { new CherryBarb(this, "Swimmy"),
+				new DwarfPuffer(this, "Swimmy"),
+				new Guppy(this, "Swimmy"),
+				new IncaSnail(this, "Swimmy"),
+				new WhiteCloudMountainMinnow(this, "Swimmy")};
+		return speciesList;
+	}
+
 	public void determineBounds(){
 		drawDummyBox();
 		loadPixels();
@@ -1347,7 +1332,6 @@ public class Visual extends PApplet{
 			if(i == -65536){
 				if(x < tankMinX) tankMinX = x;
 				if(x > tankMaxX) tankMaxX = x;
-				if(y < tankMinY) tankMinY = y;
 				if(y > tankMaxY) tankMaxY = y;
 			}
 			x++;
@@ -1357,7 +1341,7 @@ public class Visual extends PApplet{
 			}
 		}
 	}
-	
+
 	public void selectFish(Vector3D start, Vector3D end){
 		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
 		Fish closest = null;
@@ -1389,7 +1373,7 @@ public class Visual extends PApplet{
 		Waste closest = null;
 		float z = -1000;
 		for(Poop p: tank.poops){
-			if(raySphereIntersect(start, normal, p.absolutePosition, p.dimensions.x)){
+			if(raySphereIntersect(start, normal, p.absolutePosition, p.dimensions.x*2)){
 				if(p.absolutePosition.z > z){
 					z = p.absolutePosition.z;
 					closest = p;
@@ -1397,7 +1381,7 @@ public class Visual extends PApplet{
 			}
 		}
 		for(Food f: tank.food){
-			if(raySphereIntersect(start, normal, f.absolutePosition, f.dimensions.x)){
+			if(raySphereIntersect(start, normal, f.absolutePosition, f.dimensions.x*2)){
 				if(f.absolutePosition.z > z){
 					z = f.absolutePosition.z;
 					closest = f;
@@ -1422,7 +1406,7 @@ public class Visual extends PApplet{
 		if(determinant < 0) return false;
 		else return true;
 	}
-	
+
 	public boolean clickedFish(Fish f, Vector3D rayOrigin, Vector3D rayNormal){
 		Vector3D absolutePosition = f.position.addVector(new Vector3D((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ)));
 		float width = (float) Math.abs((Math.cos(f.orientation.y)*f.dimensions.x) + Math.abs(Math.sin(f.orientation.y)*f.dimensions.z));
@@ -1432,7 +1416,7 @@ public class Visual extends PApplet{
 		return pointAt.x < (absolutePosition.x + width/2.0) && pointAt.x > (absolutePosition.x - width/2.0)
 				&& pointAt.y < (absolutePosition.y + height/2.0) && pointAt.y > (absolutePosition.y - height/2.0);
 	}
-	
+
 	public boolean clickedDeadFish(DeadFish d, Vector3D rayOrigin, Vector3D rayNormal){
 		float width = (float) Math.abs((Math.cos(d.orientation.y)*d.dimensions.x) + Math.abs(Math.sin(d.orientation.y)*d.dimensions.z));
 		float height = d.dimensions.y;

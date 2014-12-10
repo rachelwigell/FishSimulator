@@ -1,6 +1,5 @@
 package engine;
 
-import graphics.Visual;
 
 public abstract class Waste {
 	public Vector3D position;

@@ -16,7 +16,7 @@ public class Food extends Waste{
 		this.position = this.absolutePosition.addVector(new Vector3D((int)(-.4*visual.fieldX), (int)(-.5*visual.fieldY)-(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)), (int)(visual.fieldZ)-(int)(visual.zoomPercentage*.25*visual.fieldZ)));
 		this.speedChangeLocation = new Vector3D(0, (int)(.5*visual.fieldY + .5*visual.zoomPercentage*visual.fieldY - visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel), 0);
 		if(this.absolutePosition.y < speedChangeLocation.y){
-			this.velocity = new Vector3D(0, 5, 0);
+			this.velocity = new Vector3D(0, 8, 0);
 		}
 		else{
 			this.velocity = new Vector3D(0, 1, 0);

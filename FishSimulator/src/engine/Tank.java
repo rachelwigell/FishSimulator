@@ -215,7 +215,7 @@ public class Tank {
 	}
 
 	double changeAmmonia(){
-		double ammonia = (.04*this.temp*this.pH*(this.waste + this.food.size() + .5*this.cmFish) - .2*this.nitrosomonas*this.ammonia)/this.volume;
+		double ammonia = (.1*this.temp*this.pH*(this.waste + this.food.size() + .5*this.cmFish) - .1*this.nitrosomonas*this.ammonia)/this.volume;
 		return ammonia;
 	}
 
@@ -230,12 +230,12 @@ public class Tank {
 	}
 
 	double changeNitrosomonas(){
-		double nitrosomonas = .05*this.ammonia*this.nitrosomonas-.4*this.nitrosomonas;
+		double nitrosomonas = .002*this.ammonia*this.nitrosomonas-.0019*this.nitrosomonas;
 		return nitrosomonas;
 	}
 
 	double changeNitrobacter(){
-		double nitrobacter = .05*this.nitrite*this.nitrobacter-.4*this.nitrobacter;
+		double nitrobacter = .002*this.nitrite*this.nitrobacter-.0019*this.nitrobacter;
 		return nitrobacter;
 	}
 	

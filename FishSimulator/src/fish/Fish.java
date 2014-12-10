@@ -8,7 +8,6 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import saito.objloader.OBJModel;
-import engine.DeadFish;
 import engine.Diet;
 import engine.HappinessStatus;
 import engine.Qualify;
@@ -50,6 +49,26 @@ public abstract class Fish {
 	public Vector3D dimensions;
 	public Vector3D velocity;
 	public Vector3D acceleration;
+	
+	public Fish createFromNickname(String nickname){
+		this.nickname = nickname;
+		return this;
+	}
+	
+	public Fish createFromParameters(String nickname,
+			HappinessStatus status,
+			long timeWell,
+			long fullness,
+			long happiness,
+			int health){
+		this.nickname = nickname;
+		this.status = status;
+		this.timeWell = timeWell;
+		this.fullness = fullness;
+		this.happiness = happiness;
+		this.health = health;
+		return this;
+	}
 
 	public int setHealth(){
 		if(this.health < this.ease //if its health is diminished (ease == maxHealth)
@@ -165,7 +184,7 @@ public abstract class Fish {
 		else if(velocity.x == 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI/2.0);
 		else if(velocity.z == 0 && velocity.x > 0) this.orientation.y = (float) Visual.PI;
 		else if(velocity.x == 0 && velocity.z < 0) this.orientation.y = (float) (3*Visual.PI/2.0);
-		this.orientation.z = -this.velocity.y * Visual.PI/6;
+		this.orientation.z = centermost(-1, -this.velocity.y, 1) * Visual.PI/6;
 	}
 
 	public Vector3D hungerContribution(Tank tank){
