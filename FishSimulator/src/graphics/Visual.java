@@ -532,9 +532,16 @@ public class Visual extends PApplet{
 		.setColorActive(color(50, 50, 50))
 		.setColorForeground(color(50, 50, 50))
 		.moveTo("save");
+		
+		new Textarea(infoPane, "newInfo")
+		.setSize(295, 150)
+		.setPosition(fieldX-315, 480)
+		.setFont(createFont("arial", 12))
+		.setText("Creating a new tank will cause any unsaved changes on this tank to be lost.")
+		.moveTo("save");
 
 		confirmNew = new Button(infoPane, "confirmNew")
-		.setPosition(fieldX-315, 480)
+		.setPosition(fieldX-315, 520)
 		.setSize(295, 20)
 		.setLabel("OK")
 		.align(CENTER, CENTER, CENTER, CENTER)
@@ -972,7 +979,7 @@ public class Visual extends PApplet{
 
 	void confirmNew(float theValue){
 		if(confirmNew.getLabel().equals("OK")){
-			confirmNew.setCaptionLabel("Unsaved changes will be lost. Continue?");
+			confirmNew.setCaptionLabel("Are you sure?");
 		}
 		else{
 			this.tank = new Tank(TankSize.MEDIUM);
@@ -993,6 +1000,10 @@ public class Visual extends PApplet{
 			}
 			else if(fileName.length() > 20){
 				fileNameInput.setCaptionLabel("Name too long! Please choose another a name under 20 characters.");
+			}
+			else if(fileName.equals(this.tank.name)){
+				createSaveFile(fileNameInput.getText());
+				fileNameInput.setCaptionLabel("Tank saved!");
 			}
 			else if(compileFileList().contains(fileName)){
 				fileNameInput.setCaptionLabel("You already have a tank with this name. Click again to overwrite.");
