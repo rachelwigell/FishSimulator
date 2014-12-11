@@ -54,11 +54,11 @@ public class Visual extends PApplet{
 	Selection_in_P3D_OPENGL_A3D picker;
 
 	ListBox fishSpecies;
+	ListBox plantSpecies;
 	Button speciesImage;
 	Textarea speciesInfo;
 	Textfield nicknameInput;
 	Button confirmAdd;
-	Textarea foodCleanInfo;
 	Textarea waterChangeInfo;
 	Slider percentWater;
 	Button confirmWaterChange;
@@ -124,8 +124,8 @@ public class Visual extends PApplet{
 
 		infoPane.window().setPositionOfTabs(fieldX-320, 60);
 
-		infoPane.addTab("tankinfo")
-		.setTitle("tank info")
+		infoPane.addTab("fishinfo")
+		.setTitle("fish info")
 		.setId(1)
 		.setColorBackground(color(50, 50, 50))
 		.setColorLabel(color(255))
@@ -135,15 +135,15 @@ public class Visual extends PApplet{
 
 		infoPane.getTab("default")
 		.setId(0)
-		.setTitle("options")
+		.setTitle("tank info")
 		.setColorBackground(color(50, 50, 50))
 		.setColorLabel(color(255))
 		.setColorActive(color(90, 90, 90))
 		.setColorForeground(color(35, 35, 35))
 		.activateEvent(true);
 
-		infoPane.addTab("fishinfo")
-		.setTitle("fish info")
+		infoPane.addTab("add")
+		.setTitle("add")
 		.setId(2)
 		.setColorBackground(color(50, 50, 50))
 		.setColorLabel(color(255))
@@ -202,126 +202,26 @@ public class Visual extends PApplet{
 		.setSize(320, fieldY-136)
 		.setPosition(fieldX-320, 76);
 
-		infoPane.getController(" ").moveTo("tankinfo");
-		infoPane.getController("  ").moveTo("fishinfo");
+		infoPane.getController(" ").moveTo("fishinfo");
+		infoPane.getController("  ").moveTo("add");
 		infoPane.getController("   ").moveTo("save");
 		infoPane.getController("    ").moveTo("help");
-
-		/**************************************************
-		 * OPTIONS TAB INITIALIZATION *
-		 *************************************************/
-
-		/*****BUTTONS*****/
-
-		infoPane.addButton("addFish")
-		.setLabel("add fish")
-		.setPosition(fieldX-315, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
-
-		infoPane.addButton("feedFish")
-		.setLabel("feed fish")
-		.setPosition(fieldX-240, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
-
-		infoPane.addButton("cleanTank")
-		.setLabel("clean tank")
-		.setPosition(fieldX-165, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
-
-		infoPane.addButton("changeWater")
-		.setLabel("change water")
-		.setPosition(fieldX-90, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
-
-		/*****ADD FISH UI*****/
-
-		fishSpecies = new ListBox(infoPane, "fishspecies")
-		.setPosition(fieldX-315, 120)
-		.setSize(295, 360)
-		.setLabel("fish species")
-		.setId(1)
-		.disableCollapse()
-		.moveTo("default")
-		.hide();
-
-		Fish[] speciesList = getSpeciesList();
-		for(int i = 0; i < speciesList.length; i++){
-			fishSpecies.addItem(speciesList[i].name, i);
-		}
-
-		speciesInfo = new Textarea(infoPane, "speciesInfo")
-		.setSize(295, 150)
-		.setPosition(fieldX-315, fieldY-380)
-		.setFont(createFont("arial", 12))
-		.moveTo("default")
-		.hide();
-
-		speciesImage = new Button(infoPane, "speciesImage")
-		.setPosition(fieldX-245, fieldY-460)
-		.moveTo("default")
-		.hide();
-
-		nicknameInput = new Textfield(infoPane, "nicknameInput")
-		.setPosition(fieldX-315, fieldY-220)
-		.setSize(310, 20)
-		.hide();
-
-		confirmAdd = new Button(infoPane, "confirmAdd")
-		.setPosition(fieldX-315, fieldY-170)
-		.setSize(310, 20)
-		.align(CENTER, CENTER, CENTER, CENTER)
-		.hide();
-
-		/*****FEED / CLEAN UI*****/
-		foodCleanInfo = new Textarea(infoPane, "foodCleanInfo")
-		.setSize(295, 150)
-		.setPosition(fieldX-315, 120)
-		.setFont(createFont("arial", 12))
-		.moveTo("default")
-		.hide();
-
-		/*****WATER CHANGE UI*****/
-
-		waterChangeInfo = new Textarea(infoPane, "waterChangeInfo")
-		.setSize(295, 100)
-		.setPosition(fieldX-315, 120)
-		.setFont(createFont("arial", 12))
-		.setText("Changing the water can help bring chemistry back to neutral values,"
-				+ " but be careful of over-changing since this will also get rid of some of"
-				+ " the helpful bacteria that live in the water.")
-				.moveTo("default")
-				.hide();
-
-		percentWater = new Slider(infoPane, "percentWater")
-		.setSize(220, 20)
-		.setPosition(fieldX-315, 200)
-		.setColorBackground(color(20, 20, 20))
-		.setColorActive(color(60, 60, 60))
-		.setColorForeground(color(60, 60, 60))
-		.moveTo("default")
-		.setMax(100)
-		.setMin(0)
-		.setValue(50)
-		.setLabel("")
-		.setValueLabel("Change what percent of the water?")
-		.hide();
-
-		confirmWaterChange = new Button(infoPane, "confirmWaterChange")
-		.setPosition(fieldX-80, 200)
-		.setLabel("OK")
-		.hide();
 
 		/**************************************************
 		 * TANKINFO TAB INITIALIZATION *
 		 *************************************************/
 
-		new Textarea(infoPane, "tankLabels")
-		.setSize(295, fieldY-136)
+		new Button(infoPane, "tankInfoBanner")
+		.setSize(295, 20)
 		.setPosition(fieldX-315, 85)
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.setLabel("Tank Status");
+
+		new Textarea(infoPane, "tankLabels")
+		.setSize(295, 400)
+		.setPosition(fieldX-315, 120)
 		.setFont(createFont("arial", 12))
 		.setText("pH: "
 				+ "\n\nTemperature: "
@@ -335,30 +235,104 @@ public class Visual extends PApplet{
 				+ "\n\nNitrobacter bacteria: "
 				+ "\n\nFood: "
 				+ "\n\nWaste: ")
-				.moveTo("tankinfo");
+				.moveTo("default");
 
 		tankInfo = new Textarea(infoPane, "tankInfo")
-		.setSize(295, fieldY-136)
-		.setPosition(fieldX-150, 85)
+		.setSize(295, 400)
+		.setPosition(fieldX-150, 120)
 		.setFont(createFont("arial", 12))
-		.moveTo("tankinfo");
+		.moveTo("default");
+
+		/*****CLEAN UI*****/
+
+		new Button(infoPane, "cleanBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 430)
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.setLabel("Cleaning the tank");
+
+		new Textarea(infoPane, "cleanInfo")
+		.setSize(295, 150)
+		.setPosition(fieldX-315, 460)
+		.setFont(createFont("arial", 12))
+		.setText("On this screen, click on visible waste to remove it from the tank.")
+		.moveTo("default");
+
+		/*****WATER CHANGE UI*****/
+
+		new Button(infoPane, "waterChangeBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 500)
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.setLabel("Water changes");
+
+		waterChangeInfo = new Textarea(infoPane, "waterChangeInfo")
+		.setSize(295, 100)
+		.setPosition(fieldX-315, 530)
+		.setFont(createFont("arial", 12))
+		.setText("Changing the water can help bring chemistry back to neutral values,"
+				+ " but be careful of over-changing since this will also get rid of some of"
+				+ " the helpful bacteria that live in the water.")
+				.moveTo("default");
+
+		percentWater = new Slider(infoPane, "percentWater")
+		.setSize(220, 20)
+		.setPosition(fieldX-315, 600)
+		.setColorBackground(color(20, 20, 20))
+		.setColorActive(color(60, 60, 60))
+		.setColorForeground(color(60, 60, 60))
+		.moveTo("default")
+		.setMax(100)
+		.setMin(0)
+		.setValue(50)
+		.setLabel("")
+		.setValueLabel("Change what percent of the water?");
+
+		confirmWaterChange = new Button(infoPane, "confirmWaterChange")
+		.setPosition(fieldX-80, 600)
+		.setLabel("OK");
 
 		/**************************************************
 		 * FISHINFO TAB INITIALIZATION *
 		 *************************************************/
+		
+		/*****CHOICES UI*****/
+
+		new Button(infoPane, "fishInfoBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 85)
+		.setLabel("Fish Status")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.moveTo("fishinfo");
 
 		fishChoices = new ListBox(infoPane, "fishChoices")
-		.setSize(295, fieldY-480)
-		.setPosition(fieldX-315, 420)
+		.setSize(295, 120)
+		.setPosition(fieldX-315, 150)
 		.setLabel("your fish")
 		.setId(0)
 		.disableCollapse()
 		.moveTo("fishinfo");
 
+		new Textarea(infoPane, "fishInstructions")
+		.setSize(295, 30)
+		.setPosition(fieldX-315, 110)
+		.setFont(createFont("arial", 12))
+		.setText("Select a fish below to see how it's doing.")
+		.moveTo("fishinfo");
+		
+		/*****STATUS UI*****/
+
 		fishInfo = new Textarea(infoPane, "fishInfo")
 		.setSize(295, 300)
-		.setPosition(fieldX-315, 85)
+		.setPosition(fieldX-315, 400)
 		.setFont(createFont("arial", 12))
+		.setText("")
 		.moveTo("fishinfo");
 
 		fishHappiness = new Slider(infoPane, "happiness")
@@ -401,74 +375,170 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-155, 320)
 		.moveTo("fishinfo")
 		.hide();
+		
+		/*****FEEDING UI*****/
+
+		new Button(infoPane, "feedBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 620)
+		.setLabel("Feeding your fish")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.moveTo("fishinfo");
+
+		new Textarea(infoPane, "feedInfo")
+		.setSize(295, 150)
+		.setPosition(fieldX-315, 650)
+		.setFont(createFont("arial", 12))
+		.setText("On this screen, click anywhere in the tank to drop food.")
+		.moveTo("fishinfo");
+		
+		/**************************************************
+		 * ADD TAB INITIALIZATION *
+		 *************************************************/
+
+		/*****ADD FISH UI*****/
+
+		new Button(infoPane, "addFishBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 85)
+		.setLabel("Add fish")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.moveTo("add");
+
+		fishSpecies = new ListBox(infoPane, "fishspecies")
+		.setPosition(fieldX-315, 120)
+		.setSize(295, 120)
+		.setLabel("fish species")
+		.setId(1)
+		.disableCollapse()
+		.moveTo("add");
+		
+		Fish[] speciesList = getSpeciesList();
+		for(int i = 0; i < speciesList.length; i++){
+			fishSpecies.addItem(speciesList[i].name, i);
+		}
+		
+		/*****ADD PLANT UI*****/
+
+		new Button(infoPane, "addPlantBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 270)
+		.setLabel("Add Plant")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.moveTo("add");
+
+		plantSpecies = new ListBox(infoPane, "plantSpecies")
+		.setPosition(fieldX-315, 305)
+		.setSize(295, 120)
+		.setLabel("plant species")
+		.setId(3)
+		.disableCollapse()
+		.moveTo("add");
+		
+		/*****PREVIEW UI*****/
+
+		speciesInfo = new Textarea(infoPane, "speciesInfo")
+		.setSize(295, 150)
+		.setPosition(fieldX-315, 520)
+		.setFont(createFont("arial", 12))
+		.moveTo("add")
+		.hide();
+
+		speciesImage = new Button(infoPane, "speciesImage")
+		.setPosition(fieldX-245, 440)
+		.moveTo("add")
+		.hide();
+
+		nicknameInput = new Textfield(infoPane, "nicknameInput")
+		.setPosition(fieldX-315, 650)
+		.setSize(310, 20)
+		.moveTo("add")
+		.hide();
+
+		confirmAdd = new Button(infoPane, "confirmAdd")
+		.setPosition(fieldX-315, 700)
+		.setSize(310, 20)
+		.align(CENTER, CENTER, CENTER, CENTER)
+		.moveTo("add")
+		.hide();
+
 
 		/**************************************************
 		 * SAVE TAB INITIALIZATION *
 		 *************************************************/
+		
+		/*****SAVING UI*****/
 
-		infoPane.addButton("save")
-		.setPosition(fieldX-280, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0))
-		.moveTo("save");
-
-		infoPane.addButton("load")
-		.setPosition(fieldX-200, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0))
-		.moveTo("save");
-
-		infoPane.addButton("newTank")
-		.setPosition(fieldX-120, 85)
-		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0))
-		.setLabel("new")
+		new Button(infoPane, "saveBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 85)
+		.setLabel("Save your tank")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
 		.moveTo("save");
 
 		fileNameInput = new Textfield(infoPane, "fileNameInput")
 		.setPosition(fieldX-315, 120)
 		.setSize(210, 20)
-		.moveTo("save")
-		.hide();
+		.setCaptionLabel("Give this tank a name!")
+		.setText(this.tank.name)
+		.moveTo("save");
 
 		confirmSave = new Button(infoPane, "confirmSave")
 		.setPosition(fieldX-90, 120)
 		.setLabel("save")
-		.moveTo("save")
-		.hide();
+		.moveTo("save");
+		
+		/*****LOADING UI******/
+
+		new Button(infoPane, "loadBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 180)
+		.setLabel("Load a tank")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.moveTo("save");
 
 		savedTanks = new ListBox(infoPane, "savedTanks")
-		.setPosition(fieldX-315, 120)
-		.setSize(295, 300)
+		.setPosition(fieldX-315, 220)
+		.setSize(295, 150)
 		.setLabel("Your saved tanks")
 		.setId(2)
 		.disableCollapse()
-		.moveTo("save")
-		.hide();
+		.moveTo("save");
 
 		confirmLoad = new Button(infoPane, "confirmLoad")
-		.setPosition(fieldX-315, 320)
+		.setPosition(fieldX-315, 400)
 		.setSize(295, 20)
 		.setLabel("load")
 		.align(CENTER, CENTER, CENTER, CENTER)
-		.moveTo("save")
-		.hide();
+		.moveTo("save");
+		
+		/*****NEW TANK UI*****/
 
-		newText = new Textarea(infoPane, "newText")
-		.setSize(295, 60)
-		.setPosition(fieldX-315, 120)
-		.setFont(createFont("arial", 12))
-		.setText("Are you sure you want to abandon this tank and start a new one? All unsaved changes to this tank will be lost.")
-		.moveTo("save")
-		.hide();
+		new Button(infoPane, "newBanner")
+		.setSize(295, 20)
+		.setPosition(fieldX-315, 450)
+		.setLabel("Make a new tank")
+		.setColorBackground(color(50, 50, 50))
+		.setColorActive(color(50, 50, 50))
+		.setColorForeground(color(50, 50, 50))
+		.moveTo("save");
 
 		confirmNew = new Button(infoPane, "confirmNew")
-		.setPosition(fieldX-315, 180)
+		.setPosition(fieldX-315, 480)
 		.setSize(295, 20)
 		.setLabel("OK")
 		.align(CENTER, CENTER, CENTER, CENTER)
-		.moveTo("save")
-		.hide();
+		.moveTo("save");
 
 		/**************************************************
 		 * HELP TAB INITIALIZATION *
@@ -477,54 +547,53 @@ public class Visual extends PApplet{
 		infoPane.addButton("pH")
 		.setPosition(fieldX-315, 85)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("temperature")
 		.setPosition(fieldX-240, 85)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("hardness")
 		.setPosition(fieldX-165, 85)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("nitrogenCycle")
 		.setLabel("nitrogen cycle")
 		.setPosition(fieldX-90, 85)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("bacteria")
 		.setPosition(fieldX-315, 110)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("gases")
 		.setPosition(fieldX-240, 110)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("waterChanges")
 		.setLabel("water changes")
 		.setPosition(fieldX-165, 110)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		infoPane.addButton("fishHealth")
 		.setLabel("fish health")
 		.setPosition(fieldX-90, 110)
 		.setColorForeground(color(35, 35, 35))
-		.setColorActive(color(0, 0, 0));
-
-		infoPane.getController("pH").moveTo("help");
-		infoPane.getController("temperature").moveTo("help");
-		infoPane.getController("hardness").moveTo("help");
-		infoPane.getController("nitrogenCycle").moveTo("help");
-		infoPane.getController("bacteria").moveTo("help");
-		infoPane.getController("gases").moveTo("help");
-		infoPane.getController("waterChanges").moveTo("help");
-		infoPane.getController("fishHealth").moveTo("help");
+		.setColorActive(color(0, 0, 0))
+		.moveTo("help");
 
 		helpText = new Textarea(infoPane, "helpText")
 		.setSize(295, fieldY-136)
@@ -620,16 +689,18 @@ public class Visual extends PApplet{
 	/**************************************************
 	 * DRAWING *
 	 *************************************************/
+	
+	/*****MENU*****/
 
 	public void interfaceUpdates(){
 		switch(activeTab){
 		case 0:
-			break;
-		case 1:
 			updateTankInfo();
 			break;
-		case 2:
+		case 1:
 			updateFishInfo();
+			break;
+		case 2:
 			break;
 		case 3:
 			break;
@@ -641,30 +712,11 @@ public class Visual extends PApplet{
 	public void restoreDefaults(){
 		helpText.setText("What topic would you like to know more about?");
 		fishChoice = -1;
-		fishHappiness.hide();
-		fishFullness.hide();
-		fishHealth.hide();
-		fishImage.hide();
-		fishSpecies.hide();
-		speciesImage.hide();
-		speciesInfo.hide();
 		nicknameInput.clear();
-		nicknameInput.hide();
-		confirmAdd.hide();
-		waterChangeInfo.hide();
 		percentWater.setValue(50)
-		.setValueLabel("Change what percent of the water?")
-		.hide();
-		confirmWaterChange.hide();
-		foodCleanInfo.hide();
-		clickMode = ClickMode.INFO;
-		fileNameInput.hide();
-		fileNameInput.clear();
-		confirmSave.hide();
-		confirmLoad.hide();
-		savedTanks.hide();
-		confirmNew.hide();
-		newText.hide();
+		.setValueLabel("Change what percent of the water?");
+		fileNameInput.setText(this.tank.name);
+		confirmNew.setCaptionLabel("OK");
 	}
 
 	public void updateTankInfo(){
@@ -685,7 +737,7 @@ public class Visual extends PApplet{
 
 	public void updateFishInfo(){
 		if(fishChoice == -1){
-			fishInfo.setText("Select a fish below to see how it's doing.");
+			fishInfo.setText("");
 		}
 		else{
 			Fish f = tank.fish.get(fishChoice);
@@ -705,6 +757,8 @@ public class Visual extends PApplet{
 			fishHealth.setValue(f.health);
 		}
 	}
+	
+	/*****TANK*****/
 
 	public void drawDummyBox(){
 		noLights();
@@ -805,18 +859,24 @@ public class Visual extends PApplet{
 			switch(theControlEvent.getTab().getId()){
 			case 0:
 				activeTab = 0;
+				clickMode = ClickMode.CLEAN;
 				break;
 			case 1:
 				activeTab = 1;
+				clickMode = ClickMode.FEED;
 				break;
 			case 2:
 				activeTab = 2;
+				clickMode = ClickMode.INFO;
 				break;
 			case 3:
 				activeTab = 3;
+				clickMode = ClickMode.INFO;
+				updateSavedTanksList();
 				break;
 			case 4:
 				activeTab = 4;
+				clickMode = ClickMode.INFO;
 				break;
 			}
 		}
@@ -825,6 +885,7 @@ public class Visual extends PApplet{
 			if(theControlEvent.group().id() == 0){
 				fishChoice = (int) fishChoices.value();
 				Fish choice = tank.fish.get(fishChoice);
+				System.out.println(fishChoice);
 
 				fishHappiness.show()
 				.setMax(choice.maxHappyFull)
@@ -879,33 +940,14 @@ public class Visual extends PApplet{
 		}
 	} 
 
-	/*****OPTIONS MENU BUTTONS*****/
+	/*****TANK INFO BUTTONS*****/
 
-	void addFish(float theValue){
-		restoreDefaults();
-		fishSpecies.show();
+	void confirmWaterChange(float theValue){
+		percentWater.setValueLabel(percentWater.getValue() + "% water change performed");
+		tank.waterChange(percentWater.getValue());
 	}
 
-	void feedFish(float theValue){
-		restoreDefaults();
-		foodCleanInfo.show()
-		.setText("Click inside the tank to drop food pellets.");
-		clickMode = ClickMode.FEED;
-	}
-
-	void cleanTank(float theValue){
-		restoreDefaults();
-		foodCleanInfo.show()
-		.setText("Click on visible waste to remove it from the tank.");
-		clickMode = ClickMode.CLEAN;
-	}
-
-	void changeWater(float theValue){
-		restoreDefaults();
-		waterChangeInfo.show();
-		percentWater.show();
-		confirmWaterChange.show();
-	}
+	/*****ADD MENU BUTTONS*****/
 
 	void confirmAdd(float theValue){
 		String nickname = nicknameInput.getText();
@@ -926,40 +968,16 @@ public class Visual extends PApplet{
 		}
 	}
 
-	void confirmWaterChange(float theValue){
-		percentWater.setValueLabel(percentWater.getValue() + "% water change performed");
-		tank.waterChange(percentWater.getValue());
-	}
-
 	/*****SAVE MENU BUTTONS*****/
 
-	void save(float theValue){
-		restoreDefaults();
-		fileNameInput.show()
-		.setCaptionLabel("Give this tank a name!");
-		confirmSave.show();
-	}
-
-	void load(float theValue){
-		restoreDefaults();
-		savedTanks.show()
-		.clear();
-		confirmLoad.show();
-		LinkedList<String> files = compileFileList();
-		for(int i = 0; i < files.size(); i++){
-			savedTanks.addItem(files.get(i), i);
-		}
-	}
-
-	void newTank(float theValue){
-		restoreDefaults();
-		newText.show();
-		confirmNew.show();
-	}
-
 	void confirmNew(float theValue){
-		this.tank = new Tank(TankSize.MEDIUM);
-		confirmNew.setLabel("New tank created!");
+		if(confirmNew.getLabel().equals("OK")){
+			confirmNew.setCaptionLabel("Unsaved changes will be lost. Continue?");
+		}
+		else{
+			this.tank = new Tank(TankSize.MEDIUM);
+			confirmNew.setLabel("New tank created!");	
+		}
 	}
 
 	void confirmSave(float theValue){
@@ -980,8 +998,10 @@ public class Visual extends PApplet{
 				fileNameInput.setCaptionLabel("You already have a tank with this name. Click again to overwrite.");
 			}
 			else{
+				this.tank.name = fileName;
 				createSaveFile(fileNameInput.getText());
 				fileNameInput.setCaptionLabel("Tank saved!");
+				updateSavedTanksList();
 			}
 		}
 		catch(CorruptedSaveFileException e){
@@ -1001,6 +1021,7 @@ public class Visual extends PApplet{
 			this.tank.skipAhead(this, iterations);
 			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
+			fileNameInput.setText(this.tank.name);
 			System.out.println("loaded");
 		}
 		catch(CorruptedSaveFileException e){
@@ -1114,9 +1135,28 @@ public class Visual extends PApplet{
 				tank.addFish(toAdd);
 			}
 		}
-		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);
+		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);;
+	}
+	
+	public Fish[] getSpeciesList(){
+		Fish[] speciesList = { new CherryBarb(this, "Swimmy"),
+				new DwarfPuffer(this, "Swimmy"),
+				new Guppy(this, "Swimmy"),
+				new IncaSnail(this, "Swimmy"),
+				new WhiteCloudMountainMinnow(this, "Swimmy")};
+		return speciesList;
 	}
 
+	public void updateSavedTanksList(){
+		savedTanks.clear();
+		LinkedList<String> files = compileFileList();
+		for(int i = 0; i < files.size(); i++){
+			savedTanks.addItem(files.get(i), i);
+		}
+	}
+
+	/*****SAVE / LOAD*****/
+	
 	public void createSaveFile(String name) throws CorruptedSaveFileException{
 		BufferedWriter writer = null;
 		File txt = new File(name + ".txt");		
@@ -1147,6 +1187,7 @@ public class Visual extends PApplet{
 		saveText += tank.nitrosomonas + "\n";
 		saveText += tank.nitrobacter + "\n";
 		saveText += tank.waste + "\n";
+		saveText += tank.name + "\n";
 		saveText += "Start poops info\n";
 		for(int i = 0; i < tank.poops.size(); i++){
 			Poop p = tank.poops.get(i);
@@ -1305,6 +1346,7 @@ public class Visual extends PApplet{
 					Double.parseDouble(lines[14]),
 					Double.parseDouble(lines[15]),
 					Integer.parseInt(lines[16]),
+					lines[17],
 					poops, food, deadFish, fish);
 			return tank;
 		}
@@ -1313,14 +1355,7 @@ public class Visual extends PApplet{
 		}
 	}
 
-	public Fish[] getSpeciesList(){
-		Fish[] speciesList = { new CherryBarb(this, "Swimmy"),
-				new DwarfPuffer(this, "Swimmy"),
-				new Guppy(this, "Swimmy"),
-				new IncaSnail(this, "Swimmy"),
-				new WhiteCloudMountainMinnow(this, "Swimmy")};
-		return speciesList;
-	}
+	/*****RAY TRACING*****/
 
 	public void determineBounds(){
 		drawDummyBox();
@@ -1357,7 +1392,7 @@ public class Visual extends PApplet{
 		}
 		if(closest != null){
 			infoPane.getTab("default").setActive(false);
-			infoPane.getTab("tankinfo").setActive(false);
+			infoPane.getTab("add").setActive(false);
 			infoPane.getTab("save").setActive(false);
 			infoPane.getTab("help").setActive(false);
 			infoPane.getTab("fishinfo").setActive(true);

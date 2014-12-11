@@ -42,6 +42,7 @@ public class Tank {
 	public LinkedList<Poop> poops;
 	public LinkedList<Food> food;
 	public LinkedList<DeadFish> deadFish;
+	public String name;
 
 	public final double roomTemp = 22;
 	public final double pi = 3.14159;
@@ -97,6 +98,7 @@ public class Tank {
 		this.poops = new LinkedList<Poop>();
 		this.food = new LinkedList<Food>();
 		this.deadFish = new LinkedList<DeadFish>();
+		this.name = "";
 	}
 
 	public Tank(double plants,
@@ -114,6 +116,7 @@ public class Tank {
 			double nitrosomonas,
 			double nitrobacter,
 			int waste,
+			String name,
 			LinkedList<Poop> poops,
 			LinkedList<Food> food,
 			LinkedList<DeadFish> deadFish,
@@ -141,6 +144,7 @@ public class Tank {
 		this.food = food;
 		this.fish = fish;
 		this.cmFish = this.calcTotalFish();
+		this.name = name;
 	}
 
 	//helper functions
