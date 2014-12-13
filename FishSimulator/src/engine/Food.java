@@ -29,8 +29,8 @@ public class Food extends Waste{
 	public Food(Visual visual, Vector3D start, Vector3D end, boolean left){
 		Vector3D normal = end.addVector(start.multiplyScalar(-1)).normalize();
 		float x;
-		if(left) x = (float) (.4*visual.fieldX - visual.zoomPercentage*.4*visual.fieldX + 30);
-		else x = (float) (.4*visual.fieldX + visual.zoomPercentage*.4*visual.fieldX) - 30;
+		if(left) x = (float) (.4*visual.fieldX - visual.zoomPercentage*.4*visual.fieldX);
+		else x = (float) (.4*visual.fieldX + visual.zoomPercentage*.4*visual.fieldX);
 		float factor = (x-start.x)/normal.x;
 		this.absolutePosition = start.addVector(normal.multiplyScalar(factor));
 		this.position = this.absolutePosition.addVector(new Vector3D((int)(-.4*visual.fieldX), (int)(-.5*visual.fieldY)-(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)), (int)(visual.fieldZ)-(int)(visual.zoomPercentage*.25*visual.fieldZ)));

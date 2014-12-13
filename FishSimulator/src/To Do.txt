@@ -7,7 +7,4 @@ Encode save files so that user cannot alter them
 
 Separate visual class into tab class
 
-allow user to place food when they click sides of tank too
-ray trace the sides to find z value that will allow food to fall inside of tank
-
 create a plant that users can add and allow them to place it by clicking on the tank floor
