@@ -83,10 +83,12 @@ public class Visual extends PApplet{
 	public ClickMode clickMode = ClickMode.INFO;
 	boolean loading = false;
 
-	public int tankMinX = 99999;
-	public int tankMaxX = -1;
-	public int tankMinY = 0;
-	public int tankMaxY = -1;
+	public int backMinX = 99999;
+	public int backMaxX = -1;
+	public int backMaxY = -1;
+	public int leftMinX = 99999;
+	public int rightMaxX = -1;
+	public int sidesMaxY = -1;
 
 	public Tank tank;
 
@@ -667,8 +669,14 @@ public class Visual extends PApplet{
 			picker.calculatePickPoints(mouseX,height-mouseY);
 			PVector start = picker.ptStartPos;
 			PVector end = picker.ptEndPos;
-			if(mouseX >= tankMinX && mouseX <= tankMaxX && mouseY >= tankMinY && mouseY <= tankMaxY){
+			if(mouseX >= backMinX && mouseX <= backMaxX && mouseY <= backMaxY){
 				tank.addFood(new Food(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z)));
+			}
+			else if(mouseX >= leftMinX && mouseX <= backMinX && mouseY <= sidesMaxY){
+				tank.addFood(new Food(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z), true));
+			}
+			else if(mouseX >= backMaxX && mouseX <= rightMaxX && mouseY <= sidesMaxY){
+				tank.addFood(new Food(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z), false));
 			}
 			break;
 		case CLEAN:
@@ -771,8 +779,15 @@ public class Visual extends PApplet{
 		noLights();
 		noStroke();
 		fill(255, 0, 0);
+		pushMatrix();
 		translate((int)(.4*fieldX), (int)(.5*fieldY), (int)(-fieldZ));
-		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0);
+		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0); //back
+		fill(255, 255, 0);
+		translate((int)(zoomPercentage*.4*fieldX), 0, (int)(zoomPercentage*.25*fieldZ));
+		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ)); //right
+		translate((int)(-zoomPercentage*.8*fieldX), 0, 0);
+		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ)); //left
+		popMatrix();
 	}
 
 	public void drawTank(){
@@ -784,19 +799,19 @@ public class Visual extends PApplet{
 		box(2*fieldX, fieldY, 0);
 		translate(0, (int)(-.8*fieldY), 1);
 		fill(255);
-		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0);
+		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY), 0); //back
 		translate((int)(zoomPercentage*.4*fieldX), 0, (int)(zoomPercentage*.25*fieldZ));
-		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ));
+		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ)); //right
 		translate((int)(-zoomPercentage*.8*fieldX), 0, 0);
-		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ));
+		box(0, (int)(zoomPercentage*fieldY), (int)(zoomPercentage*.5*fieldZ)); //left
 		translate((int)(zoomPercentage*.4*fieldX), (int)(zoomPercentage*.5*fieldY), 0);
 		fill(200);
-		box((int)(zoomPercentage*.8*fieldX), 0, (int)(zoomPercentage*.5*fieldZ));
-		fill(0, 0, 255, 30);
+		box((int)(zoomPercentage*.8*fieldX), 0, (int)(zoomPercentage*.5*fieldZ)); //bottom
+		fill(0, 0, 255, 20);
 		translate(0, (int)(-zoomPercentage*.5*fieldY) + (int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), 0);
 		stroke(0, 0, 100, 30);
 		hint(DISABLE_DEPTH_TEST);
-		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ));
+		box((int)(zoomPercentage*.8*fieldX), (int)(zoomPercentage*fieldY*tank.waterLevel), (int)(zoomPercentage*.5*fieldZ)); //water
 		popMatrix();
 	}
 
@@ -1376,9 +1391,14 @@ public class Visual extends PApplet{
 		int y = 0;
 		for(int i: pixels){
 			if(i == -65536){
-				if(x < tankMinX) tankMinX = x;
-				if(x > tankMaxX) tankMaxX = x;
-				if(y > tankMaxY) tankMaxY = y;
+				if(x < backMinX) backMinX = x;
+				else if(x > backMaxX) backMaxX = x;
+				if(y > backMaxY) backMaxY = y;
+			}
+			else if (i == -256){
+				if( x < leftMinX) leftMinX = x;
+				else if(x > rightMaxX) rightMaxX = x;
+				if(y > sidesMaxY) sidesMaxY = y;
 			}
 			x++;
 			if(x >= fieldX){

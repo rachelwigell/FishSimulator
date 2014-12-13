@@ -41,13 +41,13 @@ public class IncaSnail extends Fish{
 		this.properties = new LinkedList <Qualify>();
 		this.model = new OBJModel(window, "incasnail.obj", Visual.POLYGON);
 		this.sprite = "incasnail.png";
-		this.model.scale(20);
+		this.model.scale(8);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);
 		this.velocity = new Vector3D(0, 0, 0);
 		this.acceleration = new Vector3D(0, 0, 0);
 		this.orientation = new Vector3D(0, 0, 0);
-		this.dimensions = new Vector3D(75, 36, 41);
+		this.dimensions = new Vector3D(70, 49, 46);
 
 		diet.add(Diet.ALGAE);
 		properties.add(Qualify.PREY);

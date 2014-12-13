@@ -10,7 +10,7 @@ d 1
 Ns 10
 illum 2
 
-newmtl ID59
+newmtl ID35
 Kd 1 0.854902 0.72549
 Ka 0.1 0.1 0.1
 Ks 0.4 0.4 0.4
@@ -19,7 +19,7 @@ d 1
 Ns 10
 illum 2
 
-newmtl ID68
+newmtl ID62
 Kd 1 1 1
 Ka 0.1 0.1 0.1
 Ks 0.4 0.4 0.4
