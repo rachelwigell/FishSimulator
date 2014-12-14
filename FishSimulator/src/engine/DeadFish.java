@@ -29,7 +29,7 @@ public class DeadFish extends Waste{
 		this.orientation = orientation;
 		this.restingPosition = new Vector3D(0, (int)(.5*visual.fieldY + .5*visual.zoomPercentage*visual.fieldY - visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel), 0);
 		this.species = species;
-		for(Fish f: visual.getSpeciesList()){
+		for(Fish f: visual.getFishSpeciesList()){
 			if(f.name.equals(species)){
 				this.model = f.model;
 				this.dimensions = f.dimensions;

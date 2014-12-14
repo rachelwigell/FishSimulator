@@ -39,6 +39,8 @@ import fish.DwarfPuffer;
 import fish.Fish;
 import fish.Guppy;
 import fish.IncaSnail;
+import fish.Plant;
+import fish.TallPlant;
 import fish.WhiteCloudMountainMinnow;
 
 public class Visual extends PApplet{
@@ -82,6 +84,7 @@ public class Visual extends PApplet{
 	public int activeTab = 0;
 	public ClickMode clickMode = ClickMode.INFO;
 	boolean loading = false;
+	Plant previewPlant = null;
 
 	public int backMinX = 99999;
 	public int backMaxX = -1;
@@ -301,7 +304,7 @@ public class Visual extends PApplet{
 		/**************************************************
 		 * FISHINFO TAB INITIALIZATION *
 		 *************************************************/
-		
+
 		/*****CHOICES UI*****/
 
 		new Button(infoPane, "fishInfoBanner")
@@ -327,7 +330,7 @@ public class Visual extends PApplet{
 		.setFont(createFont("arial", 12))
 		.setText("Select a fish below to see how it's doing.")
 		.moveTo("fishinfo");
-		
+
 		/*****STATUS UI*****/
 
 		fishInfo = new Textarea(infoPane, "fishInfo")
@@ -377,7 +380,7 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-155, 320)
 		.moveTo("fishinfo")
 		.hide();
-		
+
 		/*****FEEDING UI*****/
 
 		new Button(infoPane, "feedBanner")
@@ -395,7 +398,7 @@ public class Visual extends PApplet{
 		.setFont(createFont("arial", 12))
 		.setText("On this screen, click anywhere in the tank to drop food.")
 		.moveTo("fishinfo");
-		
+
 		/**************************************************
 		 * ADD TAB INITIALIZATION *
 		 *************************************************/
@@ -418,12 +421,12 @@ public class Visual extends PApplet{
 		.setId(1)
 		.disableCollapse()
 		.moveTo("add");
-		
-		Fish[] speciesList = getSpeciesList();
+
+		Fish[] speciesList = getFishSpeciesList();
 		for(int i = 0; i < speciesList.length; i++){
 			fishSpecies.addItem(speciesList[i].name, i);
 		}
-		
+
 		/*****ADD PLANT UI*****/
 
 		new Button(infoPane, "addPlantBanner")
@@ -443,6 +446,11 @@ public class Visual extends PApplet{
 		.disableCollapse()
 		.moveTo("add");
 		
+		Plant[] plantList = getPlantSpeciesList();
+		for(int i = 0; i < plantList.length; i++){
+			plantSpecies.addItem(plantList[i].name, i);
+		}
+
 		/*****PREVIEW UI*****/
 
 		speciesInfo = new Textarea(infoPane, "speciesInfo")
@@ -474,7 +482,7 @@ public class Visual extends PApplet{
 		/**************************************************
 		 * SAVE TAB INITIALIZATION *
 		 *************************************************/
-		
+
 		/*****SAVING UI*****/
 
 		new Button(infoPane, "saveBanner")
@@ -497,7 +505,7 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-90, 120)
 		.setLabel("save")
 		.moveTo("save");
-		
+
 		/*****LOADING UI******/
 
 		new Button(infoPane, "loadBanner")
@@ -523,7 +531,7 @@ public class Visual extends PApplet{
 		.setLabel("load")
 		.align(CENTER, CENTER, CENTER, CENTER)
 		.moveTo("save");
-		
+
 		/*****NEW TANK UI*****/
 
 		new Button(infoPane, "newBanner")
@@ -534,7 +542,7 @@ public class Visual extends PApplet{
 		.setColorActive(color(50, 50, 50))
 		.setColorForeground(color(50, 50, 50))
 		.moveTo("save");
-		
+
 		new Textarea(infoPane, "newInfo")
 		.setSize(295, 150)
 		.setPosition(fieldX-315, 480)
@@ -620,6 +628,7 @@ public class Visual extends PApplet{
 		spotLight(color, color, color, fieldX/4, 0, 400, 0, 0, -1, PI/4, 0);
 		if(!loading){
 			drawAllFish();
+			drawAllPlants();
 			drawSinkers();
 			drawTank();
 			tank.allEat();
@@ -693,6 +702,20 @@ public class Visual extends PApplet{
 			end = picker.ptEndPos;
 			selectFish(new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z));
 			break;
+		case PLACEPLANT:
+			System.out.println("this code is executing");
+			picker.captureViewMatrix(p3d);
+			picker.calculatePickPoints(mouseX,height-mouseY);
+			start = picker.ptStartPos;
+			end = picker.ptEndPos;
+			if(mouseX > leftMinX && mouseX < rightMaxX && mouseY > backMaxY && mouseY < sidesMaxY){
+				for(Plant p: getPlantSpeciesList()){
+					if(p.name.equals(previewPlant.name)){
+						tank.plants.add(previewPlant.setChosenPosition(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z)));
+					}
+				}
+			}
+			break;
 		}
 	}
 
@@ -704,7 +727,7 @@ public class Visual extends PApplet{
 	/**************************************************
 	 * DRAWING *
 	 *************************************************/
-	
+
 	/*****MENU*****/
 
 	public void interfaceUpdates(){
@@ -772,7 +795,7 @@ public class Visual extends PApplet{
 			fishHealth.setValue(f.health);
 		}
 	}
-	
+
 	/*****TANK*****/
 
 	public void drawDummyBox(){
@@ -826,6 +849,22 @@ public class Visual extends PApplet{
 		fish.model.draw();
 		popMatrix();
 		fish.updatePosition(this);
+	}
+
+	void drawPlant(Plant plant){
+		noStroke();
+		pushMatrix();
+		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
+		translate(plant.position.x, plant.position.y, plant.position.z);
+		rotateY(plant.orientation.y);
+		plant.model.draw();
+		popMatrix();
+	}
+
+	void drawAllPlants(){
+		for(Plant p: this.tank.plants){
+			drawPlant(p);
+		}
 	}
 
 	void drawAllFish(){
@@ -927,7 +966,7 @@ public class Visual extends PApplet{
 			// speciesinfo listbox
 			if(theControlEvent.group().id() == 1){
 				int species = (int) fishSpecies.value();
-				Fish choice = getSpeciesList()[species];
+				Fish choice = getFishSpeciesList()[species];
 
 				speciesInfo.show()
 				.setText("Species: " + choice.name
@@ -959,6 +998,12 @@ public class Visual extends PApplet{
 					confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
 				}
 			}
+			//plantSpecies listbox
+			if(theControlEvent.group().id() == 3){
+				previewPlant = getPlantSpeciesList()[(int) plantSpecies.value()];
+				System.out.println("set click mode to placeplant");
+				clickMode = ClickMode.PLACEPLANT;
+			}
 		}
 	} 
 
@@ -983,7 +1028,7 @@ public class Visual extends PApplet{
 			nicknameInput.setCaptionLabel("You already have a fish with that name! Please choose another name.");			
 		}
 		else{
-			String species = getSpeciesList()[(int) fishSpecies.value()].name;
+			String species = getFishSpeciesList()[(int) fishSpecies.value()].name;
 			addFishToTank(species, nickname);
 			nicknameInput.clear();
 			nicknameInput.setCaptionLabel(species + " named " +  nickname + " added!");
@@ -1155,7 +1200,7 @@ public class Visual extends PApplet{
 
 	public void addFishToTank(String speciesName, String nickname){
 		Fish toAdd = null;
-		for(Fish f: getSpeciesList()){
+		for(Fish f: getFishSpeciesList()){
 			if(f.name.equals(speciesName)){
 				toAdd = f.createFromNickname(nickname);
 				tank.addFish(toAdd);
@@ -1164,12 +1209,21 @@ public class Visual extends PApplet{
 		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);;
 	}
 	
-	public Fish[] getSpeciesList(){
+	public void addPlantToTank(){
+		
+	}
+
+	public Fish[] getFishSpeciesList(){
 		Fish[] speciesList = { new CherryBarb(this, "Swimmy"),
 				new DwarfPuffer(this, "Swimmy"),
 				new Guppy(this, "Swimmy"),
 				new IncaSnail(this, "Swimmy"),
 				new WhiteCloudMountainMinnow(this, "Swimmy")};
+		return speciesList;
+	}
+
+	public Plant[] getPlantSpeciesList(){
+		Plant[] speciesList = { new TallPlant(this) };
 		return speciesList;
 	}
 
@@ -1182,7 +1236,7 @@ public class Visual extends PApplet{
 	}
 
 	/*****SAVE / LOAD*****/
-	
+
 	public void createSaveFile(String name) throws CorruptedSaveFileException{
 		BufferedWriter writer = null;
 		File txt = new File(name + ".txt");		
@@ -1198,7 +1252,6 @@ public class Visual extends PApplet{
 	public String compileSaveText(){
 		String saveText = "Start tank info\n";
 		saveText += System.currentTimeMillis() + "\n";
-		saveText += tank.plants + "\n";
 		saveText += tank.length + "\n";
 		saveText += tank.width + "\n";
 		saveText += tank.height + "\n";
@@ -1231,6 +1284,13 @@ public class Visual extends PApplet{
 			saveText += d.position.toCommaSeparated();
 			saveText += d.orientation.toCommaSeparated();
 			saveText += d.species + "\n";
+		}
+		saveText += "Start plant info\n";
+		for(int i = 0; i < tank.plants.size(); i++){
+			Plant p = tank.plants.get(i);
+			saveText += p.name + "\n";
+			saveText += p.position.toCommaSeparated();
+			saveText += p.orientation.toCommaSeparated();
 		}
 		saveText += "Start fish info\n";
 		for(int i = 0; i < tank.fish.size(); i++){
@@ -1317,7 +1377,7 @@ public class Visual extends PApplet{
 	}
 
 	public Fish makeFish(String[] array, int start) throws CorruptedSaveFileException{
-		for(Fish f: getSpeciesList()){
+		for(Fish f: getFishSpeciesList()){
 			if(f.name.equals(array[start])){
 				return f.createFromParameters(array[start+1],
 						parseStatus(array[start+2]),
@@ -1325,6 +1385,17 @@ public class Visual extends PApplet{
 						Long.parseLong(array[start+4]),
 						Long.parseLong(array[start+5]),
 						Integer.parseInt(array[start+6]));
+			}
+		}
+		throw new CorruptedSaveFileException();
+	}
+
+	public Plant makePlant(String[] array, int start) throws CorruptedSaveFileException{
+		for(Plant p: getPlantSpeciesList()){
+			if(p.name.equals(array[start])){
+				return p.createFromParameters(this,
+						new Vector3D(array[start+1]),
+						new Vector3D(array[start+2]));
 			}
 		}
 		throw new CorruptedSaveFileException();
@@ -1346,10 +1417,16 @@ public class Visual extends PApplet{
 				food.add(new Food(this, new Vector3D(lines[i])));
 			}
 			start = indexOf(lines, "Start dead fish info")+1;
-			end = indexOf(lines, "Start fish info");
+			end = indexOf(lines, "Start plant info");
 			LinkedList<DeadFish> deadFish = new LinkedList<DeadFish>();
 			for(int i = start; i < end; i+=3){
 				deadFish.add(new DeadFish(this, new Vector3D(lines[i]), new Vector3D(lines[i+1]), lines[i+2]));
+			}
+			start = indexOf(lines, "Start plant info")+1;
+			end = indexOf(lines, "Start fish info");
+			LinkedList<Plant> plants = new LinkedList<Plant>();
+			for(int i = start; i < end; i+=4){
+				plants.add(makePlant(lines, i));
 			}
 			start = indexOf(lines, "Start fish info")+1;
 			end = lines.length;
@@ -1357,10 +1434,10 @@ public class Visual extends PApplet{
 			for(int i = start; i < end; i+=7){
 				fish.add(makeFish(lines, i));
 			}
-			Tank tank = new Tank(Double.parseDouble(lines[2]),
+			Tank tank = new Tank(Integer.parseInt(lines[2]),
 					Integer.parseInt(lines[3]),
 					Integer.parseInt(lines[4]),
-					Integer.parseInt(lines[5]),
+					Double.parseDouble(lines[5]),
 					Double.parseDouble(lines[6]),
 					Double.parseDouble(lines[7]),
 					Double.parseDouble(lines[8]),
@@ -1370,10 +1447,9 @@ public class Visual extends PApplet{
 					Double.parseDouble(lines[12]),
 					Double.parseDouble(lines[13]),
 					Double.parseDouble(lines[14]),
-					Double.parseDouble(lines[15]),
-					Integer.parseInt(lines[16]),
-					lines[17],
-					poops, food, deadFish, fish);
+					Integer.parseInt(lines[15]),
+					lines[16],
+					poops, food, deadFish, plants, fish);
 			return tank;
 		}
 		catch(CorruptedSaveFileException e){

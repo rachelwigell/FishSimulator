@@ -9,6 +9,7 @@ import java.util.LinkedList;
 import java.util.Random;
 
 import fish.Fish;
+import fish.Plant;
 import graphics.Visual;
 
 //implement way for pH to rise
@@ -16,7 +17,6 @@ import graphics.Visual;
 
 public class Tank {
 	public double cmFish; //cm
-	public double plants; //cm
 	public double pH; //unitless
 	public double temp; //degrees C
 	public double hardness; //ppm
@@ -42,6 +42,7 @@ public class Tank {
 	public LinkedList<Poop> poops;
 	public LinkedList<Food> food;
 	public LinkedList<DeadFish> deadFish;
+	public LinkedList<Plant> plants;
 	public String name;
 
 	public final double roomTemp = 22;
@@ -77,7 +78,7 @@ public class Tank {
 		}
 
 		this.cmFish = 0;
-		this.plants = 1;
+		this.plants = new LinkedList<Plant>();
 		this.pH=7;
 		this.temp = 24;
 		this.hardness = 1;
@@ -101,8 +102,7 @@ public class Tank {
 		this.name = "";
 	}
 
-	public Tank(double plants,
-			int length,
+	public Tank(int length,
 			int width,
 			int height,
 			double pH,
@@ -120,8 +120,8 @@ public class Tank {
 			LinkedList<Poop> poops,
 			LinkedList<Food> food,
 			LinkedList<DeadFish> deadFish,
+			LinkedList<Plant> plants,
 			LinkedList <Fish> fish){
-		this.plants = plants;
 		this.length = length;
 		this.width = width;
 		this.height = height;
@@ -141,6 +141,7 @@ public class Tank {
 		this.time = getTime();
 		this.poops = poops;
 		this.deadFish = deadFish;
+		this.plants = plants;
 		this.food = food;
 		this.fish = fish;
 		this.cmFish = this.calcTotalFish();
@@ -205,15 +206,15 @@ public class Tank {
 	}
 
 	double changeO2(){
-		double photosynthesis = (.5 + .5*Math.sin(pi/720.0*this.time-pi/2.0))*this.plants*this.co2; //check this
-		double respiration = (this.cmFish+this.plants)*this.o2; // and this
+		double photosynthesis = (.5 + .5*Math.sin(pi/720.0*this.time-pi/2.0))*this.plants.size()*this.co2; //check this
+		double respiration = (this.cmFish+this.plants.size())*this.o2; // and this
 		double o2 = .2*(photosynthesis-respiration+this.surfaceArea)/this.volume+(this.o2+this.co2)*((100-this.temp)-(this.o2+this.co2))/this.volume;
 		return o2;
 	}
 
 	double changeCO2(){
-		double photosynthesis = (.5+.5*Math.sin(pi/720.0*this.time-pi/2.0))*this.plants*this.co2;
-		double respiration = (this.cmFish+this.plants)*this.o2;
+		double photosynthesis = (.5+.5*Math.sin(pi/720.0*this.time-pi/2.0))*this.plants.size()*this.co2;
+		double respiration = (this.cmFish+this.plants.size())*this.o2;
 		double co2 = .15*(respiration-photosynthesis+this.surfaceArea)/this.volume+(this.co2+this.o2)*((100-this.temp)-(this.co2+this.o2))/this.volume;
 		return co2;
 	}
@@ -229,7 +230,7 @@ public class Tank {
 	}
 
 	double changeNitrate(){
-		double nitrate = (.2*this.nitrite*this.nitrobacter-10*this.plants*this.nitrate)/this.volume;
+		double nitrate = (.2*this.nitrite*this.nitrobacter-10*this.plants.size()*this.nitrate)/this.volume;
 		return nitrate;
 	}
 
