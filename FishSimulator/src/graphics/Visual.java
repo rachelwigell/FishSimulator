@@ -61,6 +61,7 @@ public class Visual extends PApplet{
 	Textarea speciesInfo;
 	Textfield nicknameInput;
 	Button confirmAdd;
+	Button confirmPlant;
 	Textarea waterChangeInfo;
 	Slider percentWater;
 	Button confirmWaterChange;
@@ -445,11 +446,18 @@ public class Visual extends PApplet{
 		.setId(3)
 		.disableCollapse()
 		.moveTo("add");
-		
+
 		Plant[] plantList = getPlantSpeciesList();
 		for(int i = 0; i < plantList.length; i++){
 			plantSpecies.addItem(plantList[i].name, i);
 		}
+		
+		confirmPlant = new Button(infoPane, "confirmPlant")
+		.setPosition(fieldX-315, 700)
+		.setSize(310, 20)
+		.align(CENTER, CENTER, CENTER, CENTER)
+		.moveTo("add")
+		.hide();
 
 		/*****PREVIEW UI*****/
 
@@ -627,10 +635,11 @@ public class Visual extends PApplet{
 		int color = spotlightColor();
 		spotLight(color, color, color, fieldX/4, 0, 400, 0, 0, -1, PI/4, 0);
 		if(!loading){
-			drawAllFish();
-			drawAllPlants();
-			drawSinkers();
 			drawTank();
+			drawAllFish();
+			drawSinkers();
+			drawAllPlants();
+			drawPreviewPlant();
 			tank.allEat();
 			if(updateCount > 150){ //operations to happen every 5 seconds
 				tank.progress(this);
@@ -681,10 +690,10 @@ public class Visual extends PApplet{
 			if(mouseX >= backMinX && mouseX <= backMaxX && mouseY <= backMaxY){
 				tank.addFood(new Food(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z)));
 			}
-			else if(mouseX >= leftMinX && mouseX <= backMinX && mouseY <= sidesMaxY){
+			else if(onLeftSide(mouseX, mouseY)){
 				tank.addFood(new Food(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z), true));
 			}
-			else if(mouseX >= backMaxX && mouseX <= rightMaxX && mouseY <= sidesMaxY){
+			else if(onRightSide(mouseX, mouseY)){
 				tank.addFood(new Food(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z), false));
 			}
 			break;
@@ -703,15 +712,17 @@ public class Visual extends PApplet{
 			selectFish(new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z));
 			break;
 		case PLACEPLANT:
-			System.out.println("this code is executing");
 			picker.captureViewMatrix(p3d);
 			picker.calculatePickPoints(mouseX,height-mouseY);
 			start = picker.ptStartPos;
 			end = picker.ptEndPos;
-			if(mouseX > leftMinX && mouseX < rightMaxX && mouseY > backMaxY && mouseY < sidesMaxY){
+			if(onBottom(mouseX, mouseY)){
 				for(Plant p: getPlantSpeciesList()){
 					if(p.name.equals(previewPlant.name)){
 						tank.plants.add(previewPlant.setChosenPosition(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z)));
+						confirmPlant.setCaptionLabel("Add " + previewPlant.name);
+						previewPlant = null;
+						clickMode = ClickMode.INFO;
 					}
 				}
 			}
@@ -755,6 +766,7 @@ public class Visual extends PApplet{
 		.setValueLabel("Change what percent of the water?");
 		fileNameInput.setText(this.tank.name);
 		confirmNew.setCaptionLabel("OK");
+		previewPlant = null;
 	}
 
 	public void updateTankInfo(){
@@ -908,6 +920,17 @@ public class Visual extends PApplet{
 		popMatrix();		
 	}
 
+	public void drawPreviewPlant(){
+		if(previewPlant != null && onBottom(mouseX, mouseY)){
+			picker.captureViewMatrix(p3d);
+			picker.calculatePickPoints(mouseX,height-mouseY);
+			PVector start = picker.ptStartPos;
+			PVector end = picker.ptEndPos;
+			previewPlant.setChosenPosition(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z));
+			drawPlant(previewPlant);
+		}
+	}
+
 	/**************************************************
 	 * ACTION LISTENERS *
 	 *************************************************/
@@ -980,11 +1003,14 @@ public class Visual extends PApplet{
 						+ "\nHardness ranges tolerated: " + choice.minHard + "-" + choice.maxHard + " ppm");
 
 				speciesImage.show()
-				.setImage(loadImage(choice.sprite));
+				.setImage(loadImage(choice.sprite))
+				.setPosition(fieldX-245, 440);
 
 				nicknameInput.show()
 				.setCaptionLabel("Choose a nickname!");	
 
+				confirmPlant.hide();
+				
 				confirmAdd.show()
 				.setCaptionLabel("Add " + choice.name);
 			}
@@ -1000,9 +1026,21 @@ public class Visual extends PApplet{
 			}
 			//plantSpecies listbox
 			if(theControlEvent.group().id() == 3){
-				previewPlant = getPlantSpeciesList()[(int) plantSpecies.value()];
-				System.out.println("set click mode to placeplant");
-				clickMode = ClickMode.PLACEPLANT;
+				restoreDefaults();
+				Plant previewPlant = getPlantSpeciesList()[(int) plantSpecies.value()];
+
+				speciesInfo.show()
+				.setText("Species: " + previewPlant.name);
+
+				speciesImage.show()
+				.setImage(loadImage(previewPlant.sprite))
+				.setPosition(fieldX-80, 500);
+
+				nicknameInput.hide();
+				confirmAdd.hide();
+
+				confirmPlant.show()
+				.setCaptionLabel("Add " + previewPlant.name);
 			}
 		}
 	} 
@@ -1015,6 +1053,12 @@ public class Visual extends PApplet{
 	}
 
 	/*****ADD MENU BUTTONS*****/
+
+	void confirmPlant(float theValue){
+		previewPlant = getPlantSpeciesList()[(int) plantSpecies.value()];
+		confirmPlant.setCaptionLabel("Click on the tank floor to place " + previewPlant.name);
+		clickMode = ClickMode.PLACEPLANT;
+	}
 
 	void confirmAdd(float theValue){
 		String nickname = nicknameInput.getText();
@@ -1207,10 +1251,6 @@ public class Visual extends PApplet{
 			}
 		}
 		fishChoices.addItem(toAdd.nickname + ": " + toAdd.name, tank.fish.size()-1);;
-	}
-	
-	public void addPlantToTank(){
-		
 	}
 
 	public Fish[] getFishSpeciesList(){
@@ -1541,6 +1581,55 @@ public class Visual extends PApplet{
 		if(closest != null){
 			closest.removeFromTank(this.tank);
 		}
+	}
+
+	public float triangleArea(Vector3D point1, Vector3D point2, Vector3D point3){
+		return (float) Math.abs(((point1.x*(point2.y-point3.y)) + point2.x*(point3.y-point1.y) + point3.x*(point1.y-point2.y))/2.0);
+	}
+
+	public boolean onLeftSide(float mouseX, float mouseY){
+		Vector3D point = new Vector3D(mouseX, mouseY, 0);
+		
+		Vector3D leftBottomLeft = new Vector3D(leftMinX, sidesMaxY, 0);
+		Vector3D leftBottomRight = new Vector3D(backMinX, backMaxY, 0);
+		Vector3D leftTopRight = new Vector3D(backMinX, 0, 0);
+		Vector3D leftTopLeft = new Vector3D(leftMinX, 0, 0);
+		
+		float area = triangleArea(leftBottomLeft, leftBottomRight, leftTopLeft) + triangleArea(leftBottomRight, leftTopRight, leftTopLeft);
+		float pointArea  = triangleArea(leftBottomLeft, point, leftBottomRight) + triangleArea(leftBottomRight, point, leftTopRight) +
+				triangleArea(leftTopRight, point, leftTopLeft) + triangleArea(leftTopLeft, point, leftBottomLeft);
+		
+		return pointArea <= area;
+	}
+	
+	public boolean onRightSide(float mouseX, float mouseY){
+		Vector3D point = new Vector3D(mouseX, mouseY, 0);
+		
+		Vector3D rightBottomLeft = new Vector3D(backMaxX, backMaxY, 0);
+		Vector3D rightBottomRight = new Vector3D(rightMaxX, sidesMaxY, 0);
+		Vector3D rightTopRight = new Vector3D(rightMaxX, 0, 0);
+		Vector3D rightTopLeft = new Vector3D(backMaxX, 0, 0);
+		
+		float area = triangleArea(rightBottomLeft, rightBottomRight, rightTopLeft) + triangleArea(rightBottomRight, rightTopRight, rightTopLeft);
+		float pointArea  = triangleArea(rightBottomLeft, point, rightBottomRight) + triangleArea(rightBottomRight, point, rightTopRight) +
+				triangleArea(rightTopRight, point, rightTopLeft) + triangleArea(rightTopLeft, point, rightBottomLeft);
+		
+		return pointArea <= area;
+	}
+
+	public boolean onBottom(float mouseX, float mouseY){
+		Vector3D point = new Vector3D(mouseX, mouseY, 0);
+		
+		Vector3D bottomLeft = new Vector3D(leftMinX, sidesMaxY, 0);
+		Vector3D bottomRight = new Vector3D(rightMaxX, sidesMaxY, 0);
+		Vector3D topRight = new Vector3D(backMaxX, backMaxY, 0);
+		Vector3D topLeft = new Vector3D(backMinX, backMaxY, 0);
+		
+		float area = triangleArea(bottomLeft, bottomRight, topLeft) + triangleArea(bottomRight, topRight, topLeft);
+		float pointArea  = triangleArea(bottomLeft, point, bottomRight) + triangleArea(bottomRight, point, topRight) +
+				triangleArea(topRight, point, topLeft) + triangleArea(topLeft, point, bottomLeft);
+		
+		return pointArea <= area;
 	}
 
 	public boolean raySphereIntersect(Vector3D rayOrigin, Vector3D rayNormal, Vector3D sphereCenter, float sphereRadius){

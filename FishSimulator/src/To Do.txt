@@ -8,3 +8,5 @@ Encode save files so that user cannot alter them
 Separate visual class into tab class
 
 create a plant that users can add and allow them to place it by clicking on the tank floor
+
+Prevent user from adding food or plants outside the tank when they click in the "diagonal" area
