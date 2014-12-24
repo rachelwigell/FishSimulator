@@ -35,6 +35,7 @@ import engine.TankSize;
 import engine.Vector3D;
 import engine.Waste;
 import fish.CherryBarb;
+import fish.CherryShrimp;
 import fish.DwarfPuffer;
 import fish.Fish;
 import fish.Guppy;
@@ -106,7 +107,7 @@ public class Visual extends PApplet{
 		 *************************************************/
 		size(fieldX, fieldY, P3D);
 		camera = new PeasyCam(this, fieldX/2, fieldY/2, 0, fieldZ/2); //initialize the peasycam
-//		camera.setActive(false);
+		camera.setActive(false);
 		frameRate(30); //causes draw() to be called 30 times per second
 
 		/**************************************************
@@ -1233,6 +1234,7 @@ public class Visual extends PApplet{
 
 	public Fish[] getFishSpeciesList(){
 		Fish[] speciesList = { new CherryBarb(this, "Swimmy"),
+				new CherryShrimp(this, "Swimmy"),
 				new DwarfPuffer(this, "Swimmy"),
 				new Guppy(this, "Swimmy"),
 				new IncaSnail(this, "Swimmy"),
