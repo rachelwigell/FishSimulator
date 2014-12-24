@@ -45,10 +45,10 @@ import fish.WhiteCloudMountainMinnow;
 
 public class Visual extends PApplet{
 	private static final long serialVersionUID = 1L;
-	public final int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width;
-	public final int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
-	public final int fieldZ = 700;
-	public final float zoomPercentage = (float) .85;
+	public final static int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width;
+	public final static int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
+	public final static int fieldZ = 700;
+	public final static float zoomPercentage = (float) .85;
 
 	ControlP5 infoPane;
 	PeasyCam camera;
@@ -106,7 +106,7 @@ public class Visual extends PApplet{
 		 *************************************************/
 		size(fieldX, fieldY, P3D);
 		camera = new PeasyCam(this, fieldX/2, fieldY/2, 0, fieldZ/2); //initialize the peasycam
-		camera.setActive(false);
+//		camera.setActive(false);
 		frameRate(30); //causes draw() to be called 30 times per second
 
 		/**************************************************
@@ -849,39 +849,17 @@ public class Visual extends PApplet{
 		popMatrix();
 	}
 
-	void drawFish(Fish fish){
-		noStroke();
-		pushMatrix();
-		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
-		translate(fish.position.x, fish.position.y, fish.position.z);
-		rotateX(fish.orientation.x);
-		rotateY(fish.orientation.y);
-		rotateZ(fish.orientation.z);
-		fish.model.draw();
-		popMatrix();
-		fish.updatePosition(this);
-	}
-
-	void drawPlant(Plant plant){
-		noStroke();
-		pushMatrix();
-		translate((int)(.4*fieldX), (int)(.5*fieldY)+(int)(zoomPercentage*fieldY*.5*(1-tank.waterLevel)), (int)(-fieldZ)+(int)(zoomPercentage*.25*fieldZ));
-		translate(plant.position.x, plant.position.y, plant.position.z);
-		rotateY(plant.orientation.y);
-		plant.model.draw();
-		popMatrix();
-	}
-
 	void drawAllPlants(){
+		hint(ENABLE_DEPTH_TEST);
 		for(Plant p: this.tank.plants){
-			drawPlant(p);
+			p.drawPlant(this);
 		}
 	}
 
 	void drawAllFish(){
 		hint(ENABLE_DEPTH_TEST);
 		for(Fish f: this.tank.fish){
-			drawFish(f);
+			f.drawFish(this);
 		}
 	}
 
@@ -927,7 +905,7 @@ public class Visual extends PApplet{
 			PVector start = picker.ptStartPos;
 			PVector end = picker.ptEndPos;
 			previewPlant.setChosenPosition(this, new Vector3D(start.x, start.y, start.z), new Vector3D(end.x, end.y, end.z));
-			drawPlant(previewPlant);
+			previewPlant.drawPlant(this);
 		}
 	}
 

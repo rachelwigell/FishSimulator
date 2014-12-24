@@ -3,6 +3,7 @@ package fish;
 import engine.Diet;
 import engine.HappinessStatus;
 import engine.Qualify;
+import engine.Tank;
 import engine.Vector3D;
 import engine.Wall;
 import graphics.Visual;
@@ -14,7 +15,7 @@ import saito.objloader.OBJModel;
 
 public class IncaSnail extends Fish{
 	Wall location;
-	
+
 	public IncaSnail(Visual window, String nickname){
 		this.name = "Inca Snail";
 		this.nickname = nickname;
@@ -50,7 +51,7 @@ public class IncaSnail extends Fish{
 		this.acceleration = new Vector3D(0, 0, 0);
 		this.orientation = new Vector3D(0, 0, 0);
 		this.dimensions = new Vector3D(70, 49, 46);
-		this.position = new Vector3D(0, (int)(.5*window.zoomPercentage*window.fieldY*window.tank.waterLevel+this.dimensions.y/2.0), 0);
+		this.position = new Vector3D(0, (int)(.5*Visual.zoomPercentage*Visual.fieldY*window.tank.waterLevel-this.dimensions.y/2.0), 0);
 		this.location = Wall.FLOOR;
 
 		diet.add(Diet.ALGAE);
@@ -58,33 +59,64 @@ public class IncaSnail extends Fish{
 		properties.add(Qualify.SUSCEPTIBLE);
 		properties.add(Qualify.PLANTS);
 	}
-	
+
 	public void updateAcceleration(){
 		Random random = new Random();
 		switch(this.location){
 		case FLOOR:
-			this.acceleration.x += random.nextFloat()*.25-.125;
-			this.acceleration.z += random.nextFloat()*.25-.125;
+			this.acceleration.x += random.nextFloat()*.0625-.03125;
+			this.acceleration.y = 0;
+			this.acceleration.z += random.nextFloat()*.0625-.03125;
 			break;
 		case LEFT:
-			this.acceleration.y += random.nextFloat()*.25-.125;
-			this.acceleration.z += random.nextFloat()*.25-.125;
-			break;
 		case RIGHT:
-			this.acceleration.y += random.nextFloat()*.25-.125;
-			this.acceleration.z += random.nextFloat()*.25-.125;
+			this.acceleration.x = 0;
+			this.acceleration.y += random.nextFloat()*.0625-.03125;
+			this.acceleration.z += random.nextFloat()*.0625-.03125;
 			break;
 		case BACK:
-			this.acceleration.x += random.nextFloat()*.25-.125;
-			this.acceleration.y += random.nextFloat()*.25-.125;
+			this.acceleration.x += random.nextFloat()*.0625-.03125;
+			this.acceleration.y += random.nextFloat()*.0625-.03125;
+			this.acceleration.z = 0;
 			break;
 		}
 	}
-	
+
+	public void updateVelocity(Tank tank){
+		switch(location){
+		case FLOOR:
+			this.velocity.x = centermost(-.5f, this.velocity.x + this.acceleration.x, .5f);
+			this.velocity.y = 0;
+			this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
+			break;
+		case LEFT:
+			this.velocity.x = 0;
+			this.velocity.y = centermost(-.5f, this.velocity.y + this.acceleration.y, .5f);
+			this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
+			break;
+		case RIGHT:
+			this.velocity.x = 0;
+			this.velocity.y = centermost(-.5f, this.velocity.y + this.acceleration.y, .5f);
+			this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
+			break;
+		case BACK:
+			this.velocity.x = centermost(-.5f, this.velocity.x + this.acceleration.x, .5f);
+			this.velocity.y = centermost(-.5f, this.velocity.y + this.acceleration.y, .5f);
+			this.velocity.z = 0;
+			break;
+		}
+		this.velocity = this.velocity.addVector(hungerContribution(tank));
+		this.updateOrientationRelativeToVelocity(this.velocity);
+		this.updateAcceleration();
+		this.transitionWalls(tank);
+	}
+
 	public void updateOrientationRelativeToVelocity(Vector3D velocity){
-		double angle = Math.asin(Math.abs(velocity.z)/velocity.magnitude());
 		switch(this.location){
 		case FLOOR:
+			double angle = Math.asin(Math.abs(velocity.z)/velocity.magnitude());
+			this.orientation.z = 0;
+			this.orientation.x = 0;
 			if(velocity.x < 0 && velocity.z > 0) this.orientation.y = (float) angle;
 			else if(velocity.x > 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI - angle);
 			else if(velocity.x > 0 && velocity.z < 0) this.orientation.y = (float) (Visual.PI + angle);
@@ -95,14 +127,132 @@ public class IncaSnail extends Fish{
 			else if(velocity.x == 0 && velocity.z < 0) this.orientation.y = (float) (3*Visual.PI/2.0);
 			break;
 		case RIGHT:
-			
+			angle = Math.asin(Math.abs(velocity.z)/velocity.magnitude());
+			this.orientation.z = (float) (-Visual.PI/2.0);
+			this.orientation.x = 0;
+			if(velocity.y > 0 && velocity.z > 0) this.orientation.y = (float) angle;
+			else if(velocity.y < 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI - angle);
+			else if(velocity.y < 0 && velocity.z < 0) this.orientation.y = (float) (Visual.PI + angle);
+			else if(velocity.y > 0 && velocity.z < 0) this.orientation.y = (float) -angle;
+			else if(velocity.z == 0 && velocity.y > 0) this.orientation.y = 0;
+			else if(velocity.y == 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI/2.0);
+			else if(velocity.z == 0 && velocity.y < 0) this.orientation.y = (float) Visual.PI;
+			else if(velocity.y == 0 && velocity.z < 0) this.orientation.y = (float) (3*Visual.PI/2.0);
 			break;
 		case LEFT:
-
+			angle = Math.asin(Math.abs(velocity.z)/velocity.magnitude());
+			this.orientation.z = (float) (Visual.PI/2.0);
+			this.orientation.x = 0;
+			if(velocity.y < 0 && velocity.z > 0) this.orientation.y = (float) angle;
+			else if(velocity.y > 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI - angle);
+			else if(velocity.y > 0 && velocity.z < 0) this.orientation.y = (float) (Visual.PI + angle);
+			else if(velocity.y < 0 && velocity.z < 0) this.orientation.y = (float) -angle;
+			else if(velocity.z == 0 && velocity.y < 0) this.orientation.y = 0;
+			else if(velocity.y == 0 && velocity.z > 0) this.orientation.y = (float) (Visual.PI/2.0);
+			else if(velocity.z == 0 && velocity.y > 0) this.orientation.y = (float) Visual.PI;
+			else if(velocity.y == 0 && velocity.z < 0) this.orientation.y = (float) (3*Visual.PI/2.0);
 			break;
 		case BACK:
-			
+			angle = Math.asin(Math.abs(velocity.y)/velocity.magnitude());
+			this.orientation.z = (float) (Visual.PI/2.0);
+			this.orientation.x = (float) (-Visual.PI/2.0);
+			if(velocity.y < 0 && velocity.x < 0) this.orientation.y = (float) angle;
+			else if(velocity.y > 0 && velocity.x < 0) this.orientation.y = (float) (Visual.PI - angle);
+			else if(velocity.y > 0 && velocity.x > 0) this.orientation.y = (float) (Visual.PI + angle);
+			else if(velocity.y < 0 && velocity.x > 0) this.orientation.y = (float) -angle;
+			else if(velocity.x == 0 && velocity.y < 0) this.orientation.y = 0;
+			else if(velocity.y == 0 && velocity.x < 0) this.orientation.y = (float) (Visual.PI/2.0);
+			else if(velocity.x == 0 && velocity.y > 0) this.orientation.y = (float) Visual.PI;
+			else if(velocity.y == 0 && velocity.x > 0) this.orientation.y = (float) (3*Visual.PI/2.0);
 			break;
 		}
+	}
+
+	public void transitionWalls(Tank tank){
+		switch(this.location){
+		case FLOOR:
+			if(this.position.x <= (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0)
+			&& this.velocity.x < 0){
+				this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.x/2.0);
+				this.velocity.y = -.5f;
+				this.location = Wall.LEFT;
+			}
+			else if(this.position.x >= (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0)
+					&& this.velocity.x > 0){
+				this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+				this.velocity.y = -.5f;
+				this.location = Wall.RIGHT;
+			}
+			else if(this.position.z <= (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0)
+					&& this.velocity.z < 0){
+				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+				this.velocity.y = -.5f;
+				this.location = Wall.BACK;
+			}
+			break;
+		case RIGHT:
+			if(this.position.y >= (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.x/2.0)
+			&& this.velocity.y > 0){
+				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel+this.dimensions.y/2.0);
+				this.velocity.x = -.5f;
+				this.location = Wall.FLOOR;
+			}
+			else if(this.position.z <= (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0)
+					&& this.velocity.z < 0){
+				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+				this.velocity.x = -.5f;
+				this.location = Wall.BACK;
+			}
+			break;
+		case LEFT:
+			if(this.position.y >= (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.x/2.0)
+			&& this.velocity.y > 0){
+				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel+this.dimensions.y/2.0);
+				this.velocity.x = .5f;
+				this.location = Wall.FLOOR;
+			}
+			else if(this.position.z <= (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0)
+					&& this.velocity.z < 0){
+				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+				this.velocity.x = .5f;
+				this.location = Wall.BACK;
+			}
+			break;
+		case BACK:
+			if(this.position.x <= (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0)
+			&& this.velocity.x < 0){
+				this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.x/2.0);
+				this.velocity.z = .5f;
+				this.location = Wall.LEFT;
+			}
+			else if(this.position.x >= (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0)
+					&& this.velocity.x > 0){
+				this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+				this.velocity.z = .5f;
+				this.location = Wall.RIGHT;
+			}
+			else if(this.position.y >= (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.x/2.0)
+					&& this.velocity.y > 0){
+				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel+this.dimensions.y/2.0);
+				this.velocity.z = .5f;
+				this.location = Wall.FLOOR;
+			}
+			break;
+		}
+	}
+
+	public void drawFish(Visual visual){
+		visual.noStroke();
+		visual.pushMatrix();
+		visual.translate((int)(.4*visual.fieldX),
+				(int)(.5*visual.fieldY)+(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)),
+				(int)(-visual.fieldZ)+(int)(visual.zoomPercentage*.25*visual.fieldZ));
+		visual.translate(this.position.x, this.position.y, this.position.z);
+		visual.rotateZ(this.orientation.z);
+		visual.rotateX(this.orientation.x);
+		visual.rotateY(this.orientation.y);
+		this.model.draw();
+		visual.popMatrix();
+		this.updatePosition(visual);
 	}
 }

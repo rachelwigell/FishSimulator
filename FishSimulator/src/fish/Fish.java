@@ -234,4 +234,19 @@ public abstract class Fish {
 		if(one <= three && three <= two) return three;
 		return two;
 	}
+	
+	public void drawFish(Visual visual){
+		visual.noStroke();
+		visual.pushMatrix();
+		visual.translate((int)(.4*visual.fieldX),
+				(int)(.5*visual.fieldY)+(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)),
+				(int)(-visual.fieldZ)+(int)(visual.zoomPercentage*.25*visual.fieldZ));
+		visual.translate(this.position.x, this.position.y, this.position.z);
+		visual.rotateX(this.orientation.x);
+		visual.rotateY(this.orientation.y);
+		visual.rotateZ(this.orientation.z);
+		this.model.draw();
+		visual.popMatrix();
+		this.updatePosition(visual);
+	}
 }
