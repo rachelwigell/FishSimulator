@@ -14,6 +14,7 @@ import saito.objloader.OBJModel;
 
 public class DwarfPuffer extends Fish{
 	boolean puffed;
+	OBJModel inactiveModel;
 	
 	public DwarfPuffer(Visual window, String nickname){
 		this.name = "Dwarf Puffer";
@@ -52,6 +53,9 @@ public class DwarfPuffer extends Fish{
 		this.orientation = new Vector3D(0, 0, 0);
 		this.dimensions = new Vector3D(65, 29, 16);
 		this.puffed = false;
+		this.inactiveModel = new OBJModel(window, "dwarfpufferpuffed.obj", Visual.POLYGON);
+		this.inactiveModel.scale(28);
+		this.inactiveModel.translateToCenter();
 
 		diet.add(Diet.FROZEN);
 		diet.add(Diet.LIVE);
@@ -61,17 +65,17 @@ public class DwarfPuffer extends Fish{
 	}
 	
 	public void puff(Visual window){
-		this.model = new OBJModel(window, "dwarfpufferpuffed.obj", Visual.POLYGON);
-		this.model.scale(28);
-		this.model.translateToCenter();
+		OBJModel temp = inactiveModel;
+		this.inactiveModel = this.model;
+		this.model = temp;
 		this.dimensions = new Vector3D(60, 37, 27);
 		this.puffed = true;
 	}
 	
 	public void unpuff(Visual window){
-		this.model = new OBJModel(window, "dwarfpuffer.obj", Visual.POLYGON);
-		this.model.scale(28);
-		this.model.translateToCenter();
+		OBJModel temp = inactiveModel;
+		this.inactiveModel = this.model;
+		this.model = temp;
 		this.dimensions = new Vector3D(65, 29, 16);
 		this.puffed = false;
 	}

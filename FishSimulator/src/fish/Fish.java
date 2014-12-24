@@ -204,8 +204,8 @@ public abstract class Fish {
 
 	public void updateVelocity(Tank tank){
 		this.velocity.x = centermost(-1, this.velocity.x + this.acceleration.x, 1);
-		this.velocity.y = centermost(-1, this.velocity.x + this.acceleration.y, 1);
-		this.velocity.z = centermost(-1, this.velocity.x + this.acceleration.z, 1);
+		this.velocity.y = centermost(-1, this.velocity.y + this.acceleration.y, 1);
+		this.velocity.z = centermost(-1, this.velocity.z + this.acceleration.z, 1);
 		this.velocity = this.velocity.addVector(hungerContribution(tank));
 		this.updateOrientationRelativeToVelocity(this.velocity);
 		this.updateAcceleration();

@@ -1,12 +1,9 @@
 reinstate aggression and predator/prey dynamics
 Make individuals unique with some randomness
-visible plants
 decorative items
 reinstate tank sizes
 Encode save files so that user cannot alter them
 
 Separate visual class into tab class
 
-create a plant that users can add and allow them to place it by clicking on the tank floor
-
-Prevent user from adding food or plants outside the tank when they click in the "diagonal" area
+Make snail stick to walls, not swim.

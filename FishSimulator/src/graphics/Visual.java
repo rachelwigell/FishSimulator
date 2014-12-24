@@ -760,7 +760,6 @@ public class Visual extends PApplet{
 
 	public void restoreDefaults(){
 		helpText.setText("What topic would you like to know more about?");
-		fishChoice = -1;
 		nicknameInput.clear();
 		percentWater.setValue(50)
 		.setValueLabel("Change what percent of the water?");
@@ -880,6 +879,7 @@ public class Visual extends PApplet{
 	}
 
 	void drawAllFish(){
+		hint(ENABLE_DEPTH_TEST);
 		for(Fish f: this.tank.fish){
 			drawFish(f);
 		}
