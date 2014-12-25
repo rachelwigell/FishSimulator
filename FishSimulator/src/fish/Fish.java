@@ -212,17 +212,17 @@ public abstract class Fish {
 	}
 
 	public void updatePosition(Visual visual){
-		this.position.x = centermost((int)(-.4*visual.zoomPercentage*visual.fieldX+this.dimensions.x/2.0), this.position.x+this.velocity.x, (int)(.4*visual.zoomPercentage*visual.fieldX-this.dimensions.x/2.0));
-		this.position.y = centermost((int)(-.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0), this.position.y+this.velocity.y, (int)(.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0));
-		this.position.z = centermost((int)(-.25*visual.zoomPercentage*visual.fieldZ+this.dimensions.x/2.0), this.position.z+this.velocity.z, (int)(.25*visual.zoomPercentage*visual.fieldZ-this.dimensions.x/2.0));
+		this.position.x = centermost((int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0), this.position.x+this.velocity.x, (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0));
+		this.position.y = centermost((int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0), this.position.y+this.velocity.y, (int)(.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0));
+		this.position.z = centermost((int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0), this.position.z+this.velocity.z, (int)(.25*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0));
 		this.updateVelocity(visual.tank);
 	}
 	
 	public void skipAhead(Visual visual){
 		Random random = new Random();
-		this.position.x = (int)(-.4*visual.zoomPercentage*visual.fieldX+this.dimensions.x/2.0) + random.nextFloat() * (int)(.8*visual.zoomPercentage*visual.fieldX-this.dimensions.x/2.0);
-		this.position.y = (int)(-.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + random.nextFloat() * (int)(visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
-		this.position.z = (int)(-.25*visual.zoomPercentage*visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*visual.zoomPercentage*visual.fieldZ-this.dimensions.x/2.0);
+		this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0) + random.nextFloat() * (int)(.8*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+		this.position.y = (int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + random.nextFloat() * (int)(Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
+		this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0);
 	}
 
 	public float centermost(float one, float two, float three){
@@ -238,9 +238,9 @@ public abstract class Fish {
 	public void drawFish(Visual visual){
 		visual.noStroke();
 		visual.pushMatrix();
-		visual.translate((int)(.4*visual.fieldX),
-				(int)(.5*visual.fieldY)+(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)),
-				(int)(-visual.fieldZ)+(int)(visual.zoomPercentage*.25*visual.fieldZ));
+		visual.translate((int)(.4*Visual.fieldX),
+				(int)(.5*Visual.fieldY)+(int)(Visual.zoomPercentage*Visual.fieldY*.5*(1-visual.tank.waterLevel)),
+				(int)(-Visual.fieldZ)+(int)(Visual.zoomPercentage*.25*Visual.fieldZ));
 		visual.translate(this.position.x, this.position.y, this.position.z);
 		visual.rotateX(this.orientation.x);
 		visual.rotateY(this.orientation.y);

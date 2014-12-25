@@ -19,6 +19,6 @@ public class TallPlant extends Plant{
 		this.dimensions = new Vector3D(100, 630, 100);
 		this.model.translate(new PVector(0, 315, 0));
 		Random random = new Random();
-		this.orientation = new Vector3D(0, random.nextFloat()*visual.PI*2, 0);
+		this.orientation = new Vector3D(0, random.nextFloat()*Visual.PI*2, 0);
 	}
 }

@@ -514,12 +514,20 @@ public class Visual extends PApplet{
 		.setPosition(fieldX-90, 120)
 		.setLabel("save")
 		.moveTo("save");
+		
+		new Textarea(infoPane, "saveInfo")
+		.setSize(295, 150)
+		.setPosition(fieldX-315, 165)
+		.setFont(createFont("arial", 12))
+		.setText("Make sure to check in on saved tanks frequently! "
+				+ "Time passes in the tank even when you're not playing.")
+		.moveTo("save");
 
 		/*****LOADING UI******/
 
 		new Button(infoPane, "loadBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 180)
+		.setPosition(fieldX-315, 220)
 		.setLabel("Load a tank")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -527,7 +535,7 @@ public class Visual extends PApplet{
 		.moveTo("save");
 
 		savedTanks = new ListBox(infoPane, "savedTanks")
-		.setPosition(fieldX-315, 220)
+		.setPosition(fieldX-315, 260)
 		.setSize(295, 150)
 		.setLabel("Your saved tanks")
 		.setId(2)
@@ -535,7 +543,7 @@ public class Visual extends PApplet{
 		.moveTo("save");
 
 		confirmLoad = new Button(infoPane, "confirmLoad")
-		.setPosition(fieldX-315, 400)
+		.setPosition(fieldX-315, 420)
 		.setSize(295, 20)
 		.setLabel("load")
 		.align(CENTER, CENTER, CENTER, CENTER)
@@ -545,7 +553,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "newBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 450)
+		.setPosition(fieldX-315, 460)
 		.setLabel("Make a new tank")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -554,13 +562,13 @@ public class Visual extends PApplet{
 
 		new Textarea(infoPane, "newInfo")
 		.setSize(295, 150)
-		.setPosition(fieldX-315, 480)
+		.setPosition(fieldX-315, 490)
 		.setFont(createFont("arial", 12))
 		.setText("Creating a new tank will cause any unsaved changes on this tank to be lost.")
 		.moveTo("save");
 
 		confirmNew = new Button(infoPane, "confirmNew")
-		.setPosition(fieldX-315, 520)
+		.setPosition(fieldX-315, 530)
 		.setSize(295, 20)
 		.setLabel("OK")
 		.align(CENTER, CENTER, CENTER, CENTER)
@@ -627,7 +635,18 @@ public class Visual extends PApplet{
 		.setFont(createFont("arial", 12))
 		.moveTo("help");	
 
+		/**************************************************
+		 * FINAL INITIALIZATION *
+		 *************************************************/
+		
 		determineBounds();
+		infoPane.getTab("default").setActive(false);
+		infoPane.getTab("add").setActive(false);
+		infoPane.getTab("save").setActive(false);
+		infoPane.getTab("help").setActive(true);
+		infoPane.getTab("fishinfo").setActive(false);
+		activeTab = 4; //open with the help menu
+		restoreDefaults();
 	}
 
 	public void draw(){
@@ -760,7 +779,14 @@ public class Visual extends PApplet{
 	}
 
 	public void restoreDefaults(){
-		helpText.setText("What topic would you like to know more about?");
+		helpText.setText("Welcome to AquariSim!"
+				+ "\n\nThis is not your standard aquarium game. This game "
+				+ "simulates the water chemistry of real fish tanks. "
+				+ "Careful - your fish can lose health if the water "
+				+ "conditions are unhealthy! Each species of fish has "
+				+ "a certain range of conditions in which it thrives."
+				+ "\n\nBrowse the topics above to learn how to keep your tank "
+				+ "and fish healthy.");
 		nicknameInput.clear();
 		percentWater.setValue(50)
 		.setValueLabel("Change what percent of the water?");
@@ -948,7 +974,6 @@ public class Visual extends PApplet{
 			if(theControlEvent.group().id() == 0){
 				fishChoice = (int) fishChoices.value();
 				Fish choice = tank.fish.get(fishChoice);
-				System.out.println(fishChoice);
 
 				fishHappiness.show()
 				.setMax(choice.maxHappyFull)
@@ -964,6 +989,8 @@ public class Visual extends PApplet{
 
 				fishImage.show()
 				.setImage(loadImage(choice.sprite));
+				
+				updateFishInfo();
 			}
 			// speciesinfo listbox
 			if(theControlEvent.group().id() == 1){
@@ -1116,7 +1143,7 @@ public class Visual extends PApplet{
 			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
 			fileNameInput.setText(this.tank.name);
-			System.out.println("loaded");
+			System.out.println("loaded " + this.tank.plants.size());
 		}
 		catch(CorruptedSaveFileException e){
 			confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
@@ -1146,10 +1173,9 @@ public class Visual extends PApplet{
 	void hardness(float theValue){
 		helpText.setText("Water hardness is a measure of how many "
 				+ "minerals are dissolved in the water. Each fish has "
-				+ "a range of hardnesses that it prefers. Because the "
-				+ "floor of the aquarium is covered in rocks, "
-				+ "hardness tends to be proportionate to the size "
-				+ "of the aquarium floor. It will fluctuate natrually.");
+				+ "a range of hardnesses that it prefers. Hardness cannot "
+				+ "directly be controlled in this game, but "
+				+ "will fluctuate natrually.");
 	}
 
 	void nitrogenCycle(float theValue){
@@ -1172,12 +1198,10 @@ public class Visual extends PApplet{
 
 	void gases(float theValue){
 		helpText.setText("Dissolved O2 and CO2 are influenced by the ratio "
-				+ "of fish to plants and the surface area of the tank's top. "
-				+ "In the current version of the game, each tank has 1 plant. "
-				+ "The fish are not directly affected by these levels, but their "
-				+ "values do impact other aspects of tank chemistry. Increase "
-				+ "the O2:CO2 ratio by keeping fewer fish or using a tank with "
-				+ "a larger surface.");
+				+ "of fish to plants. The fish are not directly affected by "
+				+ "these levels, but their values do impact other aspects of "
+				+ "tank chemistry. Increase the O2:CO2 ratio by keeping fewer "
+				+ "fish or more plants!");
 	}
 
 	void waterChanges(float theValue){
@@ -1198,8 +1222,7 @@ public class Visual extends PApplet{
 				+ "happy and healthy, read this guide!\n\n"
 				+ "Fish become unhappy when any aspect of the tank's water "
 				+ "chemistry is outside their preferred ranges. They also "
-				+ "become steadily hungrier with time. Hunger begins to affect "
-				+ "a fish's wellbeing when its hunger bar reaches halfway. "
+				+ "become steadily hungrier with time. Hunger causes "
 				+ "If a fish becomes too unhappy or hungry, it will lose some "
 				+ "health. It can also lose health or die if placed in a tank "
 				+ "with fish that bully it!\n\n"
@@ -1309,7 +1332,7 @@ public class Visual extends PApplet{
 		for(int i = 0; i < tank.plants.size(); i++){
 			Plant p = tank.plants.get(i);
 			saveText += p.name + "\n";
-			saveText += p.position.toCommaSeparated();
+			saveText += p.absolutePosition.toCommaSeparated();
 			saveText += p.orientation.toCommaSeparated();
 		}
 		saveText += "Start fish info\n";
@@ -1412,6 +1435,9 @@ public class Visual extends PApplet{
 
 	public Plant makePlant(String[] array, int start) throws CorruptedSaveFileException{
 		for(Plant p: getPlantSpeciesList()){
+			System.out.println(array[start]);
+			System.out.println(array[start+1]);
+			System.out.println(array[start+2]);
 			if(p.name.equals(array[start])){
 				return p.createFromParameters(this,
 						new Vector3D(array[start+1]),
@@ -1445,7 +1471,7 @@ public class Visual extends PApplet{
 			start = indexOf(lines, "Start plant info")+1;
 			end = indexOf(lines, "Start fish info");
 			LinkedList<Plant> plants = new LinkedList<Plant>();
-			for(int i = start; i < end; i+=4){
+			for(int i = start; i < end; i+=3){
 				plants.add(makePlant(lines, i));
 			}
 			start = indexOf(lines, "Start fish info")+1;

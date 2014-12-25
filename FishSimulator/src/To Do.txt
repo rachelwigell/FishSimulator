@@ -6,4 +6,6 @@ Encode save files so that user cannot alter them
 
 Separate visual class into tab class
 
-Make snail stick to walls, not swim.
+shrimp and snails eat algae? visible algae marks?
+
+More species of fish and plants!

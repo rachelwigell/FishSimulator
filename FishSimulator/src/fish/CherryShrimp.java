@@ -5,7 +5,6 @@ import engine.HappinessStatus;
 import engine.Qualify;
 import engine.Tank;
 import engine.Vector3D;
-import engine.Wall;
 import graphics.Visual;
 
 import java.util.LinkedList;
@@ -85,5 +84,12 @@ public class CherryShrimp extends Fish{
 		else if(velocity.x == 0 && velocity.z < 0) this.orientation.y = (float) (Visual.PI/2.0);
 		else if(velocity.z == 0 && velocity.x < 0) this.orientation.y = (float) Visual.PI;
 		else if(velocity.x == 0 && velocity.z > 0) this.orientation.y = (float) (3*Visual.PI/2.0);
+	}
+	
+	public void skipAhead(Visual visual){
+		Random random = new Random();
+		this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0) + random.nextFloat() * (int)(.8*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+		this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0);
+		this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0);
 	}
 }

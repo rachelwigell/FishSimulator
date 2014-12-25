@@ -173,19 +173,19 @@ public class IncaSnail extends Fish{
 		case FLOOR:
 			if(this.position.x <= (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0)
 			&& this.velocity.x < 0){
-				this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.x/2.0);
+				this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.y/2.0);
 				this.velocity.y = -.5f;
 				this.location = Wall.LEFT;
 			}
 			else if(this.position.x >= (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0)
 					&& this.velocity.x > 0){
-				this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+				this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.y/2.0);
 				this.velocity.y = -.5f;
 				this.location = Wall.RIGHT;
 			}
 			else if(this.position.z <= (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0)
 					&& this.velocity.z < 0){
-				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.y/2.0);
 				this.velocity.y = -.5f;
 				this.location = Wall.BACK;
 			}
@@ -193,13 +193,13 @@ public class IncaSnail extends Fish{
 		case RIGHT:
 			if(this.position.y >= (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.x/2.0)
 			&& this.velocity.y > 0){
-				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel+this.dimensions.y/2.0);
+				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.y/2.0);
 				this.velocity.x = -.5f;
 				this.location = Wall.FLOOR;
 			}
 			else if(this.position.z <= (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0)
 					&& this.velocity.z < 0){
-				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.y/2.0);
 				this.velocity.x = -.5f;
 				this.location = Wall.BACK;
 			}
@@ -207,13 +207,13 @@ public class IncaSnail extends Fish{
 		case LEFT:
 			if(this.position.y >= (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.x/2.0)
 			&& this.velocity.y > 0){
-				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel+this.dimensions.y/2.0);
+				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.y/2.0);
 				this.velocity.x = .5f;
 				this.location = Wall.FLOOR;
 			}
 			else if(this.position.z <= (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0)
 					&& this.velocity.z < 0){
-				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+				this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.y/2.0);
 				this.velocity.x = .5f;
 				this.location = Wall.BACK;
 			}
@@ -221,19 +221,19 @@ public class IncaSnail extends Fish{
 		case BACK:
 			if(this.position.x <= (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0)
 			&& this.velocity.x < 0){
-				this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.x/2.0);
+				this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.y/2.0);
 				this.velocity.z = .5f;
 				this.location = Wall.LEFT;
 			}
 			else if(this.position.x >= (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0)
 					&& this.velocity.x > 0){
-				this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+				this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.y/2.0);
 				this.velocity.z = .5f;
 				this.location = Wall.RIGHT;
 			}
 			else if(this.position.y >= (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.x/2.0)
 					&& this.velocity.y > 0){
-				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel+this.dimensions.y/2.0);
+				this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*tank.waterLevel-this.dimensions.y/2.0);
 				this.velocity.z = .5f;
 				this.location = Wall.FLOOR;
 			}
@@ -244,9 +244,9 @@ public class IncaSnail extends Fish{
 	public void drawFish(Visual visual){
 		visual.noStroke();
 		visual.pushMatrix();
-		visual.translate((int)(.4*visual.fieldX),
-				(int)(.5*visual.fieldY)+(int)(visual.zoomPercentage*visual.fieldY*.5*(1-visual.tank.waterLevel)),
-				(int)(-visual.fieldZ)+(int)(visual.zoomPercentage*.25*visual.fieldZ));
+		visual.translate((int)(.4*Visual.fieldX),
+				(int)(.5*Visual.fieldY)+(int)(Visual.zoomPercentage*Visual.fieldY*.5*(1-visual.tank.waterLevel)),
+				(int)(-Visual.fieldZ)+(int)(Visual.zoomPercentage*.25*Visual.fieldZ));
 		visual.translate(this.position.x, this.position.y, this.position.z);
 		visual.rotateZ(this.orientation.z);
 		visual.rotateX(this.orientation.x);
@@ -254,5 +254,42 @@ public class IncaSnail extends Fish{
 		this.model.draw();
 		visual.popMatrix();
 		this.updatePosition(visual);
+	}
+	
+	public void skipAhead(Visual visual){
+		Random random = new Random();
+		switch(random.nextInt(4)){
+		case 0:
+			this.location = Wall.FLOOR;
+			this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0) + random.nextFloat() * (int)(.8*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+			this.position.y = (int)(.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
+			this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0);
+			break;
+		case 1:
+			this.location = Wall.RIGHT;
+			this.position.x = (int)(.4*Visual.zoomPercentage*Visual.fieldX-dimensions.y/2.0);
+			this.position.y = (int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + random.nextFloat() * (int)(Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
+			this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0);
+			break;
+		case 2:
+			this.location = Wall.LEFT;
+			this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+dimensions.y/2.0);
+			this.position.y = (int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + random.nextFloat() * (int)(Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
+			this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0);
+			break;
+		case 3:
+			this.location = Wall.BACK;
+			this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0) + random.nextFloat() * (int)(.8*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
+			this.position.y = (int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + random.nextFloat() * (int)(Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
+			this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0);
+			break;
+		}
+	}
+	
+	public void updatePosition(Visual visual){
+		this.position.x = centermost((int)(-.4*Visual.zoomPercentage*Visual.fieldX), this.position.x+this.velocity.x, (int)(.4*Visual.zoomPercentage*Visual.fieldX));
+		this.position.y = centermost((int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel), this.position.y+this.velocity.y, (int)(.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel));
+		this.position.z = centermost((int)(-.25*Visual.zoomPercentage*Visual.fieldZ), this.position.z+this.velocity.z, (int)(.25*Visual.zoomPercentage*Visual.fieldZ));
+		this.updateVelocity(visual.tank);
 	}
 }

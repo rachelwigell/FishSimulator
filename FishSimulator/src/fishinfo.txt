@@ -34,7 +34,7 @@ dissolved gases
 * CO2 present as byproduct of respiration
 * plants use CO2 during photosynthesis but produce CO2 during respiration
 * low CO2 causes yellowing of plant leaves and slow growth
-* CO2 prescence lowers pH and hardness
+* CO2 presence lowers pH and hardness
 * too much CO2 harms fish
 * Co2 can be added using CO2 system
 
@@ -66,7 +66,7 @@ Nitrogen cycle
 
 Fish species
 
-Dwarf Puffer
+Dwarf Puffer X
 Care difficulty: 2/5
 Size: 2.5cm
 pH: 6.5-8.3 (not strict)
@@ -103,7 +103,7 @@ Breeding: easy to breed, young might be eaten by other fish
 Schooling: not necessary
 Comments: sensitive to metal in water
 
-Inca Snail
+Inca Snail X
 Care difficulty: 1/5
 Size: 5cm
 pH: 7-8.5
@@ -122,7 +122,7 @@ Breeding: will breed easily
 Schooling: unimportant
 Comments: sensitive to metal in water
 
-Guppy
+Guppy X
 Care difficulty: 1/5
 Size: 5cm
 pH: 7-8.5
@@ -212,7 +212,7 @@ Gender ratio: not important
 Breeding: difficult
 Schooling: prefer to be in groups of 3 or more
 
-White Cloud Mountain Minnow
+White Cloud Mountain Minnow X
 Care difficulty: 1/5
 Size: 4cm
 pH: 6-8.5
@@ -248,7 +248,7 @@ Gender ratio: not important
 Breeding: moderate, eggs and fry might be eaten
 Schooling: prefer schools of 5 or more
 
-Cherry Barb
+Cherry Barb X
 Care difficulty: 1/5
 Size: 5cm
 pH: 5.5-8
@@ -319,3 +319,5 @@ Nitrates: Only add to tanks that have completed the nitrogen cycle, try to keep 
 Gender ratio:
 Breeding: difficult
 Schooling: like to school
+
+Ghost shrimp

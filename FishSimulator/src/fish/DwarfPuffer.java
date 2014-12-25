@@ -81,9 +81,9 @@ public class DwarfPuffer extends Fish{
 	}
 	
 	public void updatePosition(Visual visual){
-		this.position.x = centermost((int)(-.4*visual.zoomPercentage*visual.fieldX+this.dimensions.x/2.0), this.position.x+this.velocity.x, (int)(.4*visual.zoomPercentage*visual.fieldX-this.dimensions.x/2.0));
-		this.position.y = centermost((int)(-.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0), this.position.y+this.velocity.y, (int)(.5*visual.zoomPercentage*visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0));
-		this.position.z = centermost((int)(-.25*visual.zoomPercentage*visual.fieldZ+this.dimensions.x/2.0), this.position.z+this.velocity.z, (int)(.25*visual.zoomPercentage*visual.fieldZ-this.dimensions.x/2.0));
+		this.position.x = centermost((int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0), this.position.x+this.velocity.x, (int)(.4*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0));
+		this.position.y = centermost((int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0), this.position.y+this.velocity.y, (int)(.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0));
+		this.position.z = centermost((int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0), this.position.z+this.velocity.z, (int)(.25*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0));
 		
 		Random random = new Random();		
 		if(random.nextInt(100) < 1){
