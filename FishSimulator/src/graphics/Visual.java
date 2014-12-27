@@ -779,12 +779,15 @@ public class Visual extends PApplet{
 	}
 
 	public void restoreDefaults(){
-		helpText.setText("Welcome to AquariSim!"
+		helpText.setText("Welcome to AquiSim!"
 				+ "\n\nThis is not your standard aquarium game. This game "
 				+ "simulates the water chemistry of real fish tanks. "
 				+ "Careful - your fish can lose health if the water "
-				+ "conditions are unhealthy! Each species of fish has "
-				+ "a certain range of conditions in which it thrives."
+				+ "conditions are unhealthy!"
+				+ "\n\nEach species of fish has a certain range of "
+				+ "conditions in which it thrives. Go to the add tab "
+				+ "to explore the available species of fish and "
+				+ "add some to your tank."
 				+ "\n\nBrowse the topics above to learn how to keep your tank "
 				+ "and fish healthy.");
 		nicknameInput.clear();
@@ -792,6 +795,7 @@ public class Visual extends PApplet{
 		.setValueLabel("Change what percent of the water?");
 		fileNameInput.setText(this.tank.name);
 		confirmNew.setCaptionLabel("OK");
+		clickMode = ClickMode.INFO;
 		previewPlant = null;
 	}
 
@@ -994,6 +998,7 @@ public class Visual extends PApplet{
 			}
 			// speciesinfo listbox
 			if(theControlEvent.group().id() == 1){
+				restoreDefaults();
 				int species = (int) fishSpecies.value();
 				Fish choice = getFishSpeciesList()[species];
 

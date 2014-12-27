@@ -68,7 +68,9 @@ public class CherryShrimp extends Fish{
 		this.velocity.x = centermost(-.5f, this.velocity.x + this.acceleration.x, .5f);
 		this.velocity.y = 0;
 		this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
-		this.velocity = this.velocity.addVector(hungerContribution(tank));
+		Vector3D hungerContribution = hungerContribution(tank);
+		hungerContribution.y = 0;
+		this.velocity = this.velocity.addVector(hungerContribution);
 		this.updateOrientationRelativeToVelocity(this.velocity);
 		this.updateAcceleration();
 	}

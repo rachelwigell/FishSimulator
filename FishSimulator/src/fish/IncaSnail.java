@@ -82,30 +82,43 @@ public class IncaSnail extends Fish{
 		}
 	}
 
+	public Vector3D hungerContribution(Tank tank){
+		Vector3D nearestFood = tank.nearestFood(this.position);
+		if(nearestFood == null) return new Vector3D(0,0,0);
+		double percent = Math.max((.5-((double) Math.max(this.fullness, 0)/(double) this.maxHappyFull))*6, 0);
+		Vector3D normal = nearestFood.addVector(this.position.multiplyScalar(-1)).normalize();
+		return normal.multiplyScalar((float) percent);
+	}
+	
 	public void updateVelocity(Tank tank){
+		Vector3D hungerContribution = hungerContribution(tank);
 		switch(location){
 		case FLOOR:
 			this.velocity.x = centermost(-.5f, this.velocity.x + this.acceleration.x, .5f);
 			this.velocity.y = 0;
 			this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
+			hungerContribution.y = 0;
 			break;
 		case LEFT:
 			this.velocity.x = 0;
 			this.velocity.y = centermost(-.5f, this.velocity.y + this.acceleration.y, .5f);
 			this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
+			hungerContribution.x = 0;
 			break;
 		case RIGHT:
 			this.velocity.x = 0;
 			this.velocity.y = centermost(-.5f, this.velocity.y + this.acceleration.y, .5f);
 			this.velocity.z = centermost(-.5f, this.velocity.z + this.acceleration.z, .5f);
+			hungerContribution.x = 0;
 			break;
 		case BACK:
 			this.velocity.x = centermost(-.5f, this.velocity.x + this.acceleration.x, .5f);
 			this.velocity.y = centermost(-.5f, this.velocity.y + this.acceleration.y, .5f);
 			this.velocity.z = 0;
+			hungerContribution.z = 0;
 			break;
 		}
-		this.velocity = this.velocity.addVector(hungerContribution(tank));
+		this.velocity = this.velocity.addVector(hungerContribution);
 		this.updateOrientationRelativeToVelocity(this.velocity);
 		this.updateAcceleration();
 		this.transitionWalls(tank);
