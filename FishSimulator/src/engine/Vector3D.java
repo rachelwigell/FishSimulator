@@ -19,7 +19,6 @@ public class Vector3D {
 			this.z = Float.parseFloat(components[2]);
 		}
 		catch(Exception e){
-			System.out.println("problem parsing vector");
 			throw new CorruptedSaveFileException();
 		}
 	}

@@ -1149,7 +1149,7 @@ public class Visual extends PApplet{
 			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");
 			fileNameInput.setText(this.tank.name);
-			System.out.println("loaded " + this.tank.plants.size());
+			System.out.println("loaded");
 		}
 		catch(CorruptedSaveFileException e){
 			confirmLoad.setLabel("Tank " + filename + " seems to be corrupted.");
@@ -1442,9 +1442,6 @@ public class Visual extends PApplet{
 
 	public Plant makePlant(String[] array, int start) throws CorruptedSaveFileException{
 		for(Plant p: getPlantSpeciesList()){
-			System.out.println(array[start]);
-			System.out.println(array[start+1]);
-			System.out.println(array[start+2]);
 			if(p.name.equals(array[start])){
 				return p.createFromParameters(this,
 						new Vector3D(array[start+1]),
@@ -1486,6 +1483,9 @@ public class Visual extends PApplet{
 			LinkedList<Fish> fish = new LinkedList<Fish>();
 			for(int i = start; i < end; i+=7){
 				fish.add(makeFish(lines, i));
+			}
+			for(int i = 0; i < fish.size(); i++){
+				fishChoices.addItem(fish.get(i).nickname + ": " + fish.get(i).name, i);
 			}
 			Tank tank = new Tank(Integer.parseInt(lines[2]),
 					Integer.parseInt(lines[3]),
