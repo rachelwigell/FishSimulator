@@ -1,0 +1,11 @@
+reinstate aggression and predator/prey dynamics
+Make individuals unique with some randomness
+decorative items
+reinstate tank sizes
+Encode save files so that user cannot alter them
+Separate visual class into tab class
+shrimp and snails eat algae? visible algae marks?
+More species of fish and plants!
+Cap on the number of fish and plants allowed in tank
+plant removal
+Scalable window size and ability to hide the menu

@@ -38,8 +38,8 @@ public class CherryBarb extends Fish{
 		this.ratio = 2;
 		this.schooling = 6;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "cherrybarb.obj", Visual.POLYGON);
-		this.sprite = "cherrybarb.png";
+		this.model = new OBJModel(window, "graphics/cherrybarb.obj", Visual.POLYGON);
+		this.sprite = "graphics/cherrybarb.png";
 		this.model.scale(12);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);

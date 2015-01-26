@@ -41,8 +41,8 @@ public class CherryShrimp extends Fish{
 		this.ratio = 0;
 		this.schooling = 0;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "cherryshrimp.obj", Visual.POLYGON);
-		this.sprite = "cherryshrimp.png";
+		this.model = new OBJModel(window, "graphics/cherryshrimp.obj", Visual.POLYGON);
+		this.sprite = "graphics/cherryshrimp.png";
 		this.model.scale(25);
 		this.model.translateToCenter();
 		this.velocity = new Vector3D(0, 0, 0);

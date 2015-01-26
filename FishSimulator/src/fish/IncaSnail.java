@@ -43,8 +43,8 @@ public class IncaSnail extends Fish{
 		this.ratio = 0;
 		this.schooling = 0;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "incasnail.obj", Visual.POLYGON);
-		this.sprite = "incasnail.png";
+		this.model = new OBJModel(window, "graphics/incasnail.obj", Visual.POLYGON);
+		this.sprite = "graphics/incasnail.png";
 		this.model.scale(8);
 		this.model.translateToCenter();
 		this.velocity = new Vector3D(0, 0, 0);

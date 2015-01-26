@@ -46,9 +46,9 @@ import fish.WhiteCloudMountainMinnow;
 
 public class Visual extends PApplet{
 	private static final long serialVersionUID = 1L;
-	public final static int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width - 100;
-	public final static int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height - 100;
-	public final static int fieldZ = 600;
+	public final static int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width;
+	public final static int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
+	public final static int fieldZ = (int)(1200-fieldX*.2-fieldY*.2);
 	public final static float zoomPercentage = (float) .85;
 
 	ControlP5 infoPane;
@@ -752,7 +752,7 @@ public class Visual extends PApplet{
 	}
 
 	public static void main(String args[]){
-		PApplet.main(new String[] { "graphics.Visual" });
+		PApplet.main(new String[] { "--present", "graphics.Visual" });
 	}
 
 

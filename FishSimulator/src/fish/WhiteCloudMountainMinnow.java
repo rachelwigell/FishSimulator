@@ -38,8 +38,8 @@ public class WhiteCloudMountainMinnow extends Fish {
 		this.ratio = 0;
 		this.schooling = 0;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "whitecloudmountainminnow.obj", Visual.POLYGON);
-		this.sprite = "whitecloudmountainminnow.png";
+		this.model = new OBJModel(window, "graphics/whitecloudmountainminnow.obj", Visual.POLYGON);
+		this.sprite = "graphics/whitecloudmountainminnow.png";
 		this.model.scale(20);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);

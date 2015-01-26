@@ -43,8 +43,8 @@ public class DwarfPuffer extends Fish{
 		this.ratio = 2;
 		this.schooling = 0;
 		this.properties = new LinkedList <Qualify>();
-		this.model = new OBJModel(window, "dwarfpuffer.obj", Visual.POLYGON);
-		this.sprite = "dwarfpuffer.png";
+		this.model = new OBJModel(window, "graphics/dwarfpuffer.obj", Visual.POLYGON);
+		this.sprite = "graphics/dwarfpuffer.png";
 		this.model.scale(28);
 		this.model.translateToCenter();
 		this.position = new Vector3D(0, 0, 0);
@@ -53,7 +53,7 @@ public class DwarfPuffer extends Fish{
 		this.orientation = new Vector3D(0, 0, 0);
 		this.dimensions = new Vector3D(65, 29, 16);
 		this.puffed = false;
-		this.inactiveModel = new OBJModel(window, "dwarfpufferpuffed.obj", Visual.POLYGON);
+		this.inactiveModel = new OBJModel(window, "graphics/dwarfpufferpuffed.obj", Visual.POLYGON);
 		this.inactiveModel.scale(28);
 		this.inactiveModel.translateToCenter();
 

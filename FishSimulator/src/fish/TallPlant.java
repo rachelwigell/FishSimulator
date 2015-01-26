@@ -12,8 +12,8 @@ public class TallPlant extends Plant{
 	
 	public TallPlant(Visual visual){
 		this.name = "Tall Plant";
-		this.model = new OBJModel(visual, "plant.obj", Visual.POLYGON);
-		this.sprite = "plant.png";
+		this.model = new OBJModel(visual, "graphics/plant.obj", Visual.POLYGON);
+		this.sprite = "graphics/plant.png";
 		this.model.translateToCenter();
 		this.model.scale(50, 70, 50);
 		this.dimensions = new Vector3D(100, 630, 100);
