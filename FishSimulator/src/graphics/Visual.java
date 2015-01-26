@@ -1144,7 +1144,7 @@ public class Visual extends PApplet{
 			draw();
 			this.tank = parseFile(getFileText(filename));
 			Long elapsed = System.currentTimeMillis() - getDateSaved(filename);
-			int iterations = (int) (elapsed/5000.0);
+			int iterations = (int) (elapsed/60000.0);
 			this.tank.skipAhead(this, iterations);
 			loading = false;
 			confirmLoad.setLabel("Tank " + filename + " loaded!");

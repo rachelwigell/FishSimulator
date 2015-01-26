@@ -4,6 +4,7 @@ package engine;
  *
  * @author Rachel
  */
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.Random;
@@ -399,36 +400,50 @@ public class Tank {
 		return closest;
 	}
 	
-	public void eat(Fish fish, Food food){
+	public boolean eat(Fish fish, Food food){
 		if(fish.position.distance(food.position) < food.dimensions.x*4){
 			fish.fullness = Math.min(fish.fullness+fish.ease*1800, fish.maxHappyFull);
-			this.food.remove(food);
+			return true;
 		}
+		return false;
 	}
 	
 	public void allEat(){
+		ArrayList<Food> eaten = new ArrayList<Food>();
 		for(Fish fish: this.fish){
 			for(Food food: this.food){
-				this.eat(fish, food);
+				if(this.eat(fish, food)){
+					eaten.add(food);
+				}
+			}
+			for(Food food: eaten){
+				this.food.remove(food);
 			}
 		}
 	}
 	
-	public void randomizedEating(Fish fish, Food food){
+	public boolean randomizedEating(Fish fish, Food food){
 		double percentChance = .005*Math.max(1-((double) Math.max(fish.fullness, 0)/(double) fish.maxHappyFull), 0);
 		Random random = new Random();
 		float rand = random.nextFloat();
 		if(rand < percentChance){
 			fish.fullness = Math.min(fish.fullness+fish.ease*1800, fish.maxHappyFull);
-			this.food.remove(food);
+			return true;
 		}
+		return false;
 	}
 	
 	public void allRandomizedEat(){
+		ArrayList<Food> eaten = new ArrayList<Food>();
 		for(Fish fish: this.fish){
 			for(Food food: this.food){
-				this.randomizedEating(fish, food);
+				if(this.randomizedEating(fish, food)){
+					eaten.add(food);
+				}
 			}
+		}
+		for(Food food: eaten){
+			this.food.remove(food);
 		}
 	}
 	
