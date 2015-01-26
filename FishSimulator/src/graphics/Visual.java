@@ -107,9 +107,6 @@ public class Visual extends PApplet{
 		 * PROCESSING SETTINGS *
 		 *************************************************/
 		size(fieldX, fieldY, P3D);
-		if (frame != null) {
-		    frame.setResizable(true);
-		  }
 		camera = new PeasyCam(this, fieldX/2, fieldY/2, 0, fieldZ/2); //initialize the peasycam
 		camera.setActive(false);
 		frameRate(30); //causes draw() to be called 30 times per second
@@ -133,7 +130,7 @@ public class Visual extends PApplet{
 		 * TAB INITIALIZATION *
 		 *************************************************/
 
-		infoPane.window().setPositionOfTabs(fieldX-320, 60);
+		infoPane.window().setPositionOfTabs(fieldX-320, 0);
 
 		infoPane.addTab("fishinfo")
 		.setTitle("fish info")
@@ -182,36 +179,36 @@ public class Visual extends PApplet{
 		.setColorBackground(color(90, 90, 90))
 		.setColorActive(color(90, 90, 90))
 		.setColorForeground(color(90, 90, 90))
-		.setSize(320, fieldY-136)
-		.setPosition(fieldX-320, 76);
+		.setSize(320, fieldY)
+		.setPosition(fieldX-320, 16);
 
 		infoPane.addButton(" ")
 		.setColorBackground(color(90, 90, 90))
 		.setColorActive(color(90, 90, 90))
 		.setColorForeground(color(90, 90, 90))
-		.setSize(320, fieldY-136)
-		.setPosition(fieldX-320, 76);
+		.setSize(320, fieldY)
+		.setPosition(fieldX-320, 16);
 
 		infoPane.addButton("  ")
 		.setColorBackground(color(90, 90, 90))
 		.setColorActive(color(90, 90, 90))
 		.setColorForeground(color(90, 90, 90))
-		.setSize(320, fieldY-136)
-		.setPosition(fieldX-320, 76);
+		.setSize(320, fieldY)
+		.setPosition(fieldX-320, 16);
 
 		infoPane.addButton("   ")
 		.setColorBackground(color(90, 90, 90))
 		.setColorActive(color(90, 90, 90))
 		.setColorForeground(color(90, 90, 90))
-		.setSize(320, fieldY-136)
-		.setPosition(fieldX-320, 76);
+		.setSize(320, fieldY)
+		.setPosition(fieldX-320, 16);
 
 		infoPane.addButton("    ")
 		.setColorBackground(color(90, 90, 90))
 		.setColorActive(color(90, 90, 90))
 		.setColorForeground(color(90, 90, 90))
-		.setSize(320, fieldY-136)
-		.setPosition(fieldX-320, 76);
+		.setSize(320, fieldY)
+		.setPosition(fieldX-320, 16);
 
 		infoPane.getController(" ").moveTo("fishinfo");
 		infoPane.getController("  ").moveTo("add");
@@ -224,7 +221,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "tankInfoBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 85)
+		.setPosition(fieldX-315, 25)
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
 		.setColorForeground(color(50, 50, 50))
@@ -232,7 +229,7 @@ public class Visual extends PApplet{
 
 		new Textarea(infoPane, "tankLabels")
 		.setSize(295, 400)
-		.setPosition(fieldX-315, 120)
+		.setPosition(fieldX-315, 60)
 		.setFont(createFont("arial", 12))
 		.setText("pH: "
 				+ "\n\nTemperature: "
@@ -250,7 +247,7 @@ public class Visual extends PApplet{
 
 		tankInfo = new Textarea(infoPane, "tankInfo")
 		.setSize(295, 400)
-		.setPosition(fieldX-150, 120)
+		.setPosition(fieldX-150, 60)
 		.setFont(createFont("arial", 12))
 		.moveTo("default");
 
@@ -258,7 +255,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "cleanBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 430)
+		.setPosition(fieldX-315, 370)
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
 		.setColorForeground(color(50, 50, 50))
@@ -266,7 +263,7 @@ public class Visual extends PApplet{
 
 		new Textarea(infoPane, "cleanInfo")
 		.setSize(295, 150)
-		.setPosition(fieldX-315, 460)
+		.setPosition(fieldX-315, 400)
 		.setFont(createFont("arial", 12))
 		.setText("On this screen, click on visible waste to remove it from the tank.")
 		.moveTo("default");
@@ -275,7 +272,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "waterChangeBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 500)
+		.setPosition(fieldX-315, 440)
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
 		.setColorForeground(color(50, 50, 50))
@@ -283,7 +280,7 @@ public class Visual extends PApplet{
 
 		waterChangeInfo = new Textarea(infoPane, "waterChangeInfo")
 		.setSize(295, 100)
-		.setPosition(fieldX-315, 530)
+		.setPosition(fieldX-315, 470)
 		.setFont(createFont("arial", 12))
 		.setText("Changing the water can help bring chemistry back to neutral values,"
 				+ " but be careful of over-changing since this will also get rid of some of"
@@ -292,7 +289,7 @@ public class Visual extends PApplet{
 
 		percentWater = new Slider(infoPane, "percentWater")
 		.setSize(220, 20)
-		.setPosition(fieldX-315, 600)
+		.setPosition(fieldX-315, 540)
 		.setColorBackground(color(20, 20, 20))
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
@@ -304,7 +301,7 @@ public class Visual extends PApplet{
 		.setValueLabel("Change what percent of the water?");
 
 		confirmWaterChange = new Button(infoPane, "confirmWaterChange")
-		.setPosition(fieldX-80, 600)
+		.setPosition(fieldX-80, 540)
 		.setLabel("OK");
 
 		/**************************************************
@@ -315,7 +312,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "fishInfoBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 85)
+		.setPosition(fieldX-315, 25)
 		.setLabel("Fish Status")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -324,7 +321,7 @@ public class Visual extends PApplet{
 
 		fishChoices = new ListBox(infoPane, "fishChoices")
 		.setSize(295, 120)
-		.setPosition(fieldX-315, 150)
+		.setPosition(fieldX-315, 90)
 		.setLabel("your fish")
 		.setId(0)
 		.disableCollapse()
@@ -332,7 +329,7 @@ public class Visual extends PApplet{
 
 		new Textarea(infoPane, "fishInstructions")
 		.setSize(295, 30)
-		.setPosition(fieldX-315, 110)
+		.setPosition(fieldX-315, 50)
 		.setFont(createFont("arial", 12))
 		.setText("Select a fish below to see how it's doing.")
 		.moveTo("fishinfo");
@@ -341,14 +338,14 @@ public class Visual extends PApplet{
 
 		fishInfo = new Textarea(infoPane, "fishInfo")
 		.setSize(295, 300)
-		.setPosition(fieldX-315, 400)
+		.setPosition(fieldX-315, 340)
 		.setFont(createFont("arial", 12))
 		.setText("")
 		.moveTo("fishinfo");
 
 		fishHappiness = new Slider(infoPane, "happiness")
 		.setSize(100, 20)
-		.setPosition(fieldX-315, 310)
+		.setPosition(fieldX-315, 250)
 		.setColorBackground(color(20, 20, 20))
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
@@ -360,7 +357,7 @@ public class Visual extends PApplet{
 
 		fishFullness = new Slider(infoPane, "hunger")
 		.setSize(100, 20)
-		.setPosition(fieldX-315, 340)
+		.setPosition(fieldX-315, 280)
 		.setColorBackground(color(20, 20, 20))
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
@@ -372,7 +369,7 @@ public class Visual extends PApplet{
 
 		fishHealth = new Slider(infoPane, "health")
 		.setSize(100, 20)
-		.setPosition(fieldX-315, 370)
+		.setPosition(fieldX-315, 310)
 		.setColorBackground(color(20, 20, 20))
 		.setColorActive(color(60, 60, 60))
 		.setColorForeground(color(60, 60, 60))
@@ -383,7 +380,7 @@ public class Visual extends PApplet{
 		fishHealth.valueLabel().hide();
 
 		fishImage = new Button(infoPane, "fishImage")
-		.setPosition(fieldX-155, 320)
+		.setPosition(fieldX-155, 260)
 		.moveTo("fishinfo")
 		.hide();
 
@@ -391,7 +388,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "feedBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 620)
+		.setPosition(fieldX-315, 560)
 		.setLabel("Feeding your fish")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -400,7 +397,7 @@ public class Visual extends PApplet{
 
 		new Textarea(infoPane, "feedInfo")
 		.setSize(295, 150)
-		.setPosition(fieldX-315, 650)
+		.setPosition(fieldX-315, 590)
 		.setFont(createFont("arial", 12))
 		.setText("On this screen, click anywhere in the tank to drop food.")
 		.moveTo("fishinfo");
@@ -413,7 +410,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "addFishBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 85)
+		.setPosition(fieldX-315, 25)
 		.setLabel("Add fish")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -421,7 +418,7 @@ public class Visual extends PApplet{
 		.moveTo("add");
 
 		fishSpecies = new ListBox(infoPane, "fishspecies")
-		.setPosition(fieldX-315, 120)
+		.setPosition(fieldX-315, 60)
 		.setSize(295, 120)
 		.setLabel("fish species")
 		.setId(1)
@@ -437,7 +434,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "addPlantBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 270)
+		.setPosition(fieldX-315, 210)
 		.setLabel("Add Plant")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -445,7 +442,7 @@ public class Visual extends PApplet{
 		.moveTo("add");
 
 		plantSpecies = new ListBox(infoPane, "plantSpecies")
-		.setPosition(fieldX-315, 305)
+		.setPosition(fieldX-315, 245)
 		.setSize(295, 120)
 		.setLabel("plant species")
 		.setId(3)
@@ -458,7 +455,7 @@ public class Visual extends PApplet{
 		}
 		
 		confirmPlant = new Button(infoPane, "confirmPlant")
-		.setPosition(fieldX-315, 700)
+		.setPosition(fieldX-315, 640)
 		.setSize(310, 20)
 		.align(CENTER, CENTER, CENTER, CENTER)
 		.moveTo("add")
@@ -468,24 +465,24 @@ public class Visual extends PApplet{
 
 		speciesInfo = new Textarea(infoPane, "speciesInfo")
 		.setSize(295, 150)
-		.setPosition(fieldX-315, 520)
+		.setPosition(fieldX-315, 460)
 		.setFont(createFont("arial", 12))
 		.moveTo("add")
 		.hide();
 
 		speciesImage = new Button(infoPane, "speciesImage")
-		.setPosition(fieldX-245, 440)
+		.setPosition(fieldX-245, 380)
 		.moveTo("add")
 		.hide();
 
 		nicknameInput = new Textfield(infoPane, "nicknameInput")
-		.setPosition(fieldX-315, 650)
+		.setPosition(fieldX-315, 590)
 		.setSize(310, 20)
 		.moveTo("add")
 		.hide();
 
 		confirmAdd = new Button(infoPane, "confirmAdd")
-		.setPosition(fieldX-315, 700)
+		.setPosition(fieldX-315, 640)
 		.setSize(310, 20)
 		.align(CENTER, CENTER, CENTER, CENTER)
 		.moveTo("add")
@@ -500,7 +497,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "saveBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 85)
+		.setPosition(fieldX-315, 25)
 		.setLabel("Save your tank")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -508,20 +505,20 @@ public class Visual extends PApplet{
 		.moveTo("save");
 
 		fileNameInput = new Textfield(infoPane, "fileNameInput")
-		.setPosition(fieldX-315, 120)
+		.setPosition(fieldX-315, 60)
 		.setSize(210, 20)
 		.setCaptionLabel("Give this tank a name!")
 		.setText(this.tank.name)
 		.moveTo("save");
 
 		confirmSave = new Button(infoPane, "confirmSave")
-		.setPosition(fieldX-90, 120)
+		.setPosition(fieldX-90, 60)
 		.setLabel("save")
 		.moveTo("save");
 		
 		new Textarea(infoPane, "saveInfo")
 		.setSize(295, 150)
-		.setPosition(fieldX-315, 165)
+		.setPosition(fieldX-315, 105)
 		.setFont(createFont("arial", 12))
 		.setText("Make sure to check in on saved tanks frequently! "
 				+ "Time passes in the tank even when you're not playing.")
@@ -531,7 +528,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "loadBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 220)
+		.setPosition(fieldX-315, 160)
 		.setLabel("Load a tank")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -539,7 +536,7 @@ public class Visual extends PApplet{
 		.moveTo("save");
 
 		savedTanks = new ListBox(infoPane, "savedTanks")
-		.setPosition(fieldX-315, 260)
+		.setPosition(fieldX-315, 200)
 		.setSize(295, 150)
 		.setLabel("Your saved tanks")
 		.setId(2)
@@ -547,7 +544,7 @@ public class Visual extends PApplet{
 		.moveTo("save");
 
 		confirmLoad = new Button(infoPane, "confirmLoad")
-		.setPosition(fieldX-315, 420)
+		.setPosition(fieldX-315, 360)
 		.setSize(295, 20)
 		.setLabel("load")
 		.align(CENTER, CENTER, CENTER, CENTER)
@@ -557,7 +554,7 @@ public class Visual extends PApplet{
 
 		new Button(infoPane, "newBanner")
 		.setSize(295, 20)
-		.setPosition(fieldX-315, 460)
+		.setPosition(fieldX-315, 400)
 		.setLabel("Make a new tank")
 		.setColorBackground(color(50, 50, 50))
 		.setColorActive(color(50, 50, 50))
@@ -566,13 +563,13 @@ public class Visual extends PApplet{
 
 		new Textarea(infoPane, "newInfo")
 		.setSize(295, 150)
-		.setPosition(fieldX-315, 490)
+		.setPosition(fieldX-315, 430)
 		.setFont(createFont("arial", 12))
 		.setText("Creating a new tank will cause any unsaved changes on this tank to be lost.")
 		.moveTo("save");
 
 		confirmNew = new Button(infoPane, "confirmNew")
-		.setPosition(fieldX-315, 530)
+		.setPosition(fieldX-315, 470)
 		.setSize(295, 20)
 		.setLabel("OK")
 		.align(CENTER, CENTER, CENTER, CENTER)
@@ -583,59 +580,59 @@ public class Visual extends PApplet{
 		 *************************************************/
 
 		infoPane.addButton("pH")
-		.setPosition(fieldX-315, 85)
+		.setPosition(fieldX-315, 25)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("temperature")
-		.setPosition(fieldX-240, 85)
+		.setPosition(fieldX-240, 25)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("hardness")
-		.setPosition(fieldX-165, 85)
+		.setPosition(fieldX-165, 25)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("nitrogenCycle")
 		.setLabel("nitrogen cycle")
-		.setPosition(fieldX-90, 85)
+		.setPosition(fieldX-90, 25)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("bacteria")
-		.setPosition(fieldX-315, 110)
+		.setPosition(fieldX-315, 50)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("gases")
-		.setPosition(fieldX-240, 110)
+		.setPosition(fieldX-240, 50)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("waterChanges")
 		.setLabel("water changes")
-		.setPosition(fieldX-165, 110)
+		.setPosition(fieldX-165, 50)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		infoPane.addButton("fishHealth")
 		.setLabel("fish health")
-		.setPosition(fieldX-90, 110)
+		.setPosition(fieldX-90, 50)
 		.setColorForeground(color(35, 35, 35))
 		.setColorActive(color(0, 0, 0))
 		.moveTo("help");
 
 		helpText = new Textarea(infoPane, "helpText")
-		.setSize(295, fieldY-136)
-		.setPosition(fieldX-315, 135)
+		.setSize(295, fieldY)
+		.setPosition(fieldX-315, 75)
 		.setFont(createFont("arial", 12))
 		.moveTo("help");	
 
@@ -1020,7 +1017,7 @@ public class Visual extends PApplet{
 
 				speciesImage.show()
 				.setImage(loadImage(choice.sprite))
-				.setPosition(fieldX-245, 440);
+				.setPosition(fieldX-245, 380);
 
 				nicknameInput.show()
 				.setCaptionLabel("Choose a nickname!");	
@@ -1050,7 +1047,7 @@ public class Visual extends PApplet{
 
 				speciesImage.show()
 				.setImage(loadImage(previewPlant.sprite))
-				.setPosition(fieldX-80, 500);
+				.setPosition(fieldX-80, 440);
 
 				nicknameInput.hide();
 				confirmAdd.hide();
