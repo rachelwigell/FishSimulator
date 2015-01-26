@@ -40,7 +40,6 @@ import fish.DwarfPuffer;
 import fish.Fish;
 import fish.Guppy;
 import fish.IncaSnail;
-import fish.NeonTetra;
 import fish.Plant;
 import fish.TallPlant;
 import fish.WhiteCloudMountainMinnow;
@@ -1268,7 +1267,7 @@ public class Visual extends PApplet{
 				new DwarfPuffer(this, "Swimmy"),
 				new Guppy(this, "Swimmy"),
 				new IncaSnail(this, "Swimmy"),
-				new NeonTetra(this, "Swimmy"),
+//				new NeonTetra(this, "Swimmy"),
 				new WhiteCloudMountainMinnow(this, "Swimmy")};
 		return speciesList;
 	}
