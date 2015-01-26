@@ -84,7 +84,7 @@ public abstract class Fish {
 
 	public long changeHunger(){
 		int hunger = (int) (this.size/2); //hunger changes relative to fish size
-		this.fullness -= hunger;
+		this.fullness = Math.max(this.fullness - hunger, 0);
 		return hunger;
 	}
 
@@ -114,7 +114,7 @@ public abstract class Fish {
 	//resulting in a health reduction when it hits zero
 	//(fullness is constantly decreasing)
 	public HappinessStatus happy(Tank tank){
-		if(this.fullness < 0){
+		if(this.fullness <= 0){
 			this.timeWell = Long.MAX_VALUE;
 			this.status = HappinessStatus.HUNGRY;
 		}
@@ -220,9 +220,9 @@ public abstract class Fish {
 	
 	public void skipAhead(Visual visual){
 		Random random = new Random();
-		this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0) + random.nextFloat() * (int)(.8*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0);
-		this.position.y = (int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + random.nextFloat() * (int)(Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0);
-		this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0);
+		this.position.x = (int)(-.4*Visual.zoomPercentage*Visual.fieldX+this.dimensions.x/2.0) + 5 + random.nextFloat() * (int)(.8*Visual.zoomPercentage*Visual.fieldX-this.dimensions.x/2.0-10);
+		this.position.y = (int)(-.5*Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel+this.dimensions.y/2.0) + 5 + random.nextFloat() * (int)(Visual.zoomPercentage*Visual.fieldY*visual.tank.waterLevel-this.dimensions.y/2.0-10);
+		this.position.z = (int)(-.25*Visual.zoomPercentage*Visual.fieldZ+this.dimensions.x/2.0) + 5 + random.nextFloat() * (int)(.5*Visual.zoomPercentage*Visual.fieldZ-this.dimensions.x/2.0-10);
 	}
 
 	public float centermost(float one, float two, float three){
