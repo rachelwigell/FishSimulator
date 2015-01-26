@@ -40,15 +40,16 @@ import fish.DwarfPuffer;
 import fish.Fish;
 import fish.Guppy;
 import fish.IncaSnail;
+import fish.NeonTetra;
 import fish.Plant;
 import fish.TallPlant;
 import fish.WhiteCloudMountainMinnow;
 
 public class Visual extends PApplet{
 	private static final long serialVersionUID = 1L;
-	public final static int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width;
-	public final static int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height;
-	public final static int fieldZ = 700;
+	public final static int fieldX = Toolkit.getDefaultToolkit().getScreenSize().width - 100;
+	public final static int fieldY = Toolkit.getDefaultToolkit().getScreenSize().height - 100;
+	public final static int fieldZ = 600;
 	public final static float zoomPercentage = (float) .85;
 
 	ControlP5 infoPane;
@@ -106,6 +107,9 @@ public class Visual extends PApplet{
 		 * PROCESSING SETTINGS *
 		 *************************************************/
 		size(fieldX, fieldY, P3D);
+		if (frame != null) {
+		    frame.setResizable(true);
+		  }
 		camera = new PeasyCam(this, fieldX/2, fieldY/2, 0, fieldZ/2); //initialize the peasycam
 		camera.setActive(false);
 		frameRate(30); //causes draw() to be called 30 times per second
@@ -639,6 +643,7 @@ public class Visual extends PApplet{
 		 * FINAL INITIALIZATION *
 		 *************************************************/
 		
+		frame.setTitle("AquiSim"); 
 		determineBounds();
 		infoPane.getTab("default").setActive(false);
 		infoPane.getTab("add").setActive(false);
@@ -751,7 +756,7 @@ public class Visual extends PApplet{
 	}
 
 	public static void main(String args[]){
-		PApplet.main(new String[] { "--present", "graphics.Visual" });
+		PApplet.main(new String[] { "graphics.Visual" });
 	}
 
 
@@ -1266,6 +1271,7 @@ public class Visual extends PApplet{
 				new DwarfPuffer(this, "Swimmy"),
 				new Guppy(this, "Swimmy"),
 				new IncaSnail(this, "Swimmy"),
+				new NeonTetra(this, "Swimmy"),
 				new WhiteCloudMountainMinnow(this, "Swimmy")};
 		return speciesList;
 	}

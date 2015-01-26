@@ -11,6 +11,14 @@
 	<classpathentry kind="lib" path="jogl-all.jar"/>
 	<classpathentry kind="lib" path="peasycam.jar"/>
 	<classpathentry kind="lib" path="OBJLoader.jar"/>
+	<classpathentry kind="lib" path="gluegen-rt-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="gluegen-rt-natives-linux-armv6hf.jar"/>
+	<classpathentry kind="lib" path="gluegen-rt-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="gluegen-rt-natives-macosx-universal.jar"/>
+	<classpathentry kind="lib" path="jogl-all-natives-linux-amd64.jar"/>
+	<classpathentry kind="lib" path="jogl-all-natives-linux-armv6hf.jar"/>
+	<classpathentry kind="lib" path="jogl-all-natives-linux-i586.jar"/>
+	<classpathentry kind="lib" path="jogl-all-natives-macosx-universal.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.7"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
